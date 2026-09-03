@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { ShieldCheck, Menu, X, ArrowRight, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ShieldCheck, Menu, X, GraduationCap, Scale } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 export function Navbar() {
@@ -72,30 +72,20 @@ export function Navbar() {
         </nav>
 
         {/* Right CTA Actions */}
-        <div className="hidden sm:flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const el = document.getElementById("checker")
-              el?.scrollIntoView({ behavior: "smooth" })
-            }}
-            className="border-slate-200/70 dark:border-slate-700/70 bg-white/70 dark:bg-card/70 backdrop-blur-md text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold h-9 px-4 rounded-lg shadow-2xs hover:bg-white/90 gap-2 transition-all"
+        <div className="hidden sm:flex items-center gap-2.5">
+          <Link
+            href="/login"
+            className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-[#002752] dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
-            <ShieldCheck className="size-4 text-slate-700 dark:text-slate-200" />
-            Check Eligibility
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              const el = document.getElementById("preview")
-              el?.scrollIntoView({ behavior: "smooth" })
-            }}
-            className="text-xs sm:text-sm font-bold h-9 px-4 bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg shadow-xs gap-1.5 transition-all"
+            Researcher Sign In
+          </Link>
+          <Link
+            href="/reviewer/login"
+            className="inline-flex items-center justify-center text-xs sm:text-sm font-bold h-9 px-4 bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg shadow-xs gap-1.5 transition-all"
           >
-            Launch Demo
-            <ArrowRight className="size-4" />
-          </Button>
+            <Scale className="size-3.5 text-amber-400" />
+            <span>IRB Portal</span>
+          </Link>
         </div>
 
         {/* Mobile Hamburger Toggle */}
@@ -157,29 +147,22 @@ export function Navbar() {
               Frequently Asked Questions
             </a>
             <div className="mt-2 flex flex-col gap-2 pt-2 border-t border-border/60">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  document.getElementById("checker")?.scrollIntoView({ behavior: "smooth" })
-                }}
-                className="w-full justify-center text-xs"
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center h-8 rounded-md border border-border bg-background px-3 text-xs font-bold text-foreground hover:bg-muted"
               >
-                <Sparkles className="size-3.5 text-primary mr-1.5" />
-                Check Eligibility
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  document.getElementById("preview")?.scrollIntoView({ behavior: "smooth" })
-                }}
-                className="w-full justify-center text-xs"
+                <GraduationCap className="size-3.5 text-[#198754] mr-1.5" />
+                Researcher / User Login
+              </Link>
+              <Link
+                href="/reviewer/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center h-8 rounded-md bg-[#002752] px-3 text-xs font-bold text-white hover:bg-[#001c3d]"
               >
-                Launch Protocol Inspector
-                <ArrowRight className="size-3.5 ml-1.5" />
-              </Button>
+                <Scale className="size-3.5 text-amber-400 mr-1.5" />
+                IRB Committee Reviewer Login
+              </Link>
             </div>
           </nav>
         </div>
