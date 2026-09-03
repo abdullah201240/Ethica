@@ -14,9 +14,7 @@ import {
   Sparkles,
   CheckCircle2,
   GraduationCap,
-  KeyRound,
   ArrowLeft,
-  FileCheck2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -24,8 +22,6 @@ export default function ReviewerLoginPage() {
   const router = useRouter()
   const [memberId, setMemberId] = React.useState("")
   const [passphrase, setPassphrase] = React.useState("")
-  const [twoFactorCode, setTwoFactorCode] = React.useState("")
-  const [boardType, setBoardType] = React.useState("biomedical")
   const [showPassphrase, setShowPassphrase] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState<string | null>(null)
@@ -33,19 +29,17 @@ export default function ReviewerLoginPage() {
   const handleDemoFill = () => {
     setMemberId("charles.montgomery@diu.edu.bd")
     setPassphrase("IRB_Chair_SecureKey_2026!")
-    setTwoFactorCode("849201")
-    setBoardType("biomedical")
-    setStatusMessage("Demo Committee Chair credentials & 2FA token loaded!")
+    setStatusMessage("Demo Committee Chair credentials loaded!")
     setTimeout(() => setStatusMessage(null), 3500)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setStatusMessage("Verifying institutional credentials & 2FA quorum token...")
+    setStatusMessage("Verifying institutional committee credentials...")
     setTimeout(() => {
       setLoading(false)
-      setStatusMessage("IRB Quorum verification successful! Entering Committee Chamber...")
+      setStatusMessage("IRB verification successful! Entering Committee Chamber...")
       setTimeout(() => {
         router.push("/#preview")
       }, 1000)
@@ -147,34 +141,6 @@ export default function ReviewerLoginPage() {
           {/* Credentials Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             
-            {/* Committee Specialty Board Selector */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
-                Assigned Review Board Specialty
-              </label>
-              <div className="relative">
-                <FileCheck2 className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <select
-                  value={boardType}
-                  onChange={(e) => setBoardType(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white text-xs sm:text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all appearance-none cursor-pointer"
-                >
-                  <option value="biomedical">
-                    Biomedical & Clinical Health Sciences IRB
-                  </option>
-                  <option value="behavioral">
-                    Social & Behavioral Research Ethics Committee
-                  </option>
-                  <option value="ai-ethics">
-                    Data Privacy & AI Ethical Governance Board
-                  </option>
-                  <option value="screening">
-                    Administrative Gatekeeper & Screening Depot
-                  </option>
-                </select>
-              </div>
-            </div>
-
             {/* Reviewer ID / Email */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
@@ -231,35 +197,12 @@ export default function ReviewerLoginPage() {
               </div>
             </div>
 
-            {/* 2FA / Hardware Token Code */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
-                  2FA / Hardware Token Verification Code
-                </label>
-                <span className="text-[0.65rem] font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                  Required for Quorum
-                </span>
-              </div>
-              <div className="relative">
-                <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <input
-                  type="text"
-                  maxLength={6}
-                  placeholder="6-digit authenticator code (e.g. 849201)"
-                  value={twoFactorCode}
-                  onChange={(e) => setTwoFactorCode(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-mono tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
-                />
-              </div>
-            </div>
-
             <Button
               type="submit"
               disabled={loading}
               className="w-full h-12 text-sm sm:text-base font-bold rounded-full bg-gradient-to-r from-[#002752] via-[#003875] to-[#002752] hover:from-[#001c3d] hover:to-[#001c3d] text-white gap-2 transition-all duration-300 cursor-pointer"
             >
-              <span>{loading ? "Verifying Quorum..." : "Access Deliberation Chamber"}</span>
+              <span>{loading ? "Authenticating..." : "Access Deliberation Chamber"}</span>
               <ArrowRight className="size-4" />
             </Button>
           </form>
@@ -286,7 +229,7 @@ export default function ReviewerLoginPage() {
             Cryptographically Audited
           </span>
           <span>•</span>
-          <span>FIPS 140-3 2FA Supported</span>
+          <span>Institutional Quorum Access</span>
         </div>
       </footer>
     </div>
