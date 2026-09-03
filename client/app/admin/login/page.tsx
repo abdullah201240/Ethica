@@ -10,38 +10,39 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  Scale,
   Sparkles,
   CheckCircle2,
   GraduationCap,
+  Scale,
   ArrowLeft,
+  Sliders,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export default function ReviewerLoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter()
-  const [memberId, setMemberId] = React.useState("")
+  const [adminId, setAdminId] = React.useState("")
   const [passphrase, setPassphrase] = React.useState("")
   const [showPassphrase, setShowPassphrase] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState<string | null>(null)
 
   const handleDemoFill = () => {
-    setMemberId("charles.montgomery@diu.edu.bd")
-    setPassphrase("IRB_Chair_SecureKey_2026!")
-    setStatusMessage("Demo Committee Chair credentials loaded!")
+    setAdminId("admin.secretariat@diu.edu.bd")
+    setPassphrase("EthicaAdminMaster2026!")
+    setStatusMessage("Demo Compliance Administrator credentials loaded!")
     setTimeout(() => setStatusMessage(null), 3500)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setStatusMessage("Verifying institutional committee credentials...")
+    setStatusMessage("Authenticating with institutional governance directory...")
     setTimeout(() => {
       setLoading(false)
-      setStatusMessage("IRB verification successful! Entering Committee Chamber...")
+      setStatusMessage("Admin authorization granted! Entering Compliance Console...")
       setTimeout(() => {
-        router.push("/reviewer/dashboard")
+        router.push("/admin/dashboard")
       }, 1000)
     }, 1200)
   }
@@ -51,33 +52,33 @@ export default function ReviewerLoginPage() {
       {/* Soft Ambient Background Luminous Glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 w-[52rem] sm:w-[72rem] h-[28rem] bg-gradient-to-tr from-[#198754]/8 via-[#002752]/6 to-[#E0C23C]/8 blur-3xl rounded-full"
+        className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 w-[52rem] sm:w-[72rem] h-[28rem] bg-gradient-to-tr from-[#198754]/8 via-[#002752]/6 to-sky-100/20 blur-3xl rounded-full"
       />
 
       {/* Top Header Bar */}
       <header className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#002752] via-[#003875] to-[#002752] text-white transition-transform group-hover:scale-105">
-            <Scale className="size-6 text-[#E0C23C]" />
+            <Sliders className="size-5 text-[#198754]" />
           </div>
           <div>
             <span className="font-sans text-xl font-black tracking-tight text-[#002752] dark:text-white block leading-tight">
               ETHICA
             </span>
             <span className="font-mono text-[0.65rem] font-bold text-slate-500 uppercase tracking-wider block">
-              IRB Committee Portal
+              Governance Administration
             </span>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
           <Link
-            href="/login"
+            href="/reviewer/login"
             className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-[#002752] dark:hover:text-white flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200"
           >
-            <GraduationCap className="size-3.5 text-[#198754]" />
-            <span className="hidden sm:inline">Researcher / PI</span>
-            <span>User Login →</span>
+            <Scale className="size-3.5 text-blue-600" />
+            <span className="hidden sm:inline">IRB Committee</span>
+            <span>Reviewer Login →</span>
           </Link>
           <Link
             href="/"
@@ -97,43 +98,43 @@ export default function ReviewerLoginPage() {
           aria-hidden="true"
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[14rem] uppercase tracking-[0.18em] text-[#002752]/[0.03] dark:text-white/[0.025] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
         >
-          DELIBERATION
+          GOVERNANCE
         </div>
 
         <div className="relative z-10 w-full max-w-lg rounded-2xl sm:rounded-3xl border border-slate-200/85 dark:border-slate-800/80 bg-white/95 dark:bg-card/95 backdrop-blur-xl p-6 sm:p-10 space-y-6">
           
           {/* Form Header */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#002752]/10 text-[#002752] dark:text-amber-300 text-xs font-bold border border-[#002752]/20 mb-1">
-              <Scale className="size-3.5 text-[#002752] dark:text-[#E0C23C]" />
-              <span>Ethical Review Board Deliberation</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#198754]/10 text-[#198754] text-xs font-bold border border-[#198754]/25 mb-1">
+              <Sliders className="size-3.5" />
+              <span>Institutional System Administration</span>
             </div>
             <h1 className="font-sans text-2xl sm:text-3xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
-              IRB Committee Sign In
+              Admin Console Sign In
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-              Authorized Institutional Review Board Members & Screening Officers
+              Authorized Institutional Compliance Officers & System Administrators
             </p>
           </div>
 
           {/* Quick Demo Autofill Banner */}
-          <div className="p-3 sm:p-3.5 rounded-xl border border-amber-300/80 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/40 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-amber-900 dark:text-amber-300 font-medium">
-              <Sparkles className="size-4 text-[#E0C23C] shrink-0" />
-              <span>Testing reviewer access?</span>
+          <div className="p-3 sm:p-3.5 rounded-xl border border-emerald-200/80 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-emerald-950/40 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-emerald-800 dark:text-emerald-300 font-medium">
+              <Sparkles className="size-4 text-[#198754] shrink-0" />
+              <span>Testing administrator access?</span>
             </div>
             <button
               type="button"
               onClick={handleDemoFill}
-              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white transition-colors shrink-0 cursor-pointer"
+              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer"
             >
-              Autofill IRB Chair
+              Autofill Admin
             </button>
           </div>
 
           {statusMessage && (
-            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-fade-in">
-              <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
+            <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/50 border border-sky-200 text-sky-800 dark:text-sky-300 text-xs font-semibold flex items-center gap-2 animate-fade-in">
+              <CheckCircle2 className="size-4 text-sky-600 shrink-0" />
               <span>{statusMessage}</span>
             </div>
           )}
@@ -141,19 +142,19 @@ export default function ReviewerLoginPage() {
           {/* Credentials Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             
-            {/* Reviewer ID / Email */}
+            {/* Admin ID / Email */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
-                Committee Member Email / ID
+                Administrator Email / ID
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
                 <input
                   type="email"
                   required
-                  placeholder="chair.irb@diu.edu.bd"
-                  value={memberId}
-                  onChange={(e) => setMemberId(e.target.value)}
+                  placeholder="admin.secretariat@diu.edu.bd"
+                  value={adminId}
+                  onChange={(e) => setAdminId(e.target.value)}
                   className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
                 />
               </div>
@@ -163,17 +164,17 @@ export default function ReviewerLoginPage() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
-                  Institutional Passphrase
+                  Master Administrative Passphrase
                 </label>
                 <a
                   href="#support"
                   onClick={(e) => {
                     e.preventDefault()
-                    setStatusMessage("Contact Institutional Compliance Secretariat for credential reset.")
+                    setStatusMessage("Contact Institutional Governance Board for credential assistance.")
                   }}
                   className="text-xs font-semibold text-[#198754] hover:underline"
                 >
-                  Need credential help?
+                  Forgot credentials?
                 </a>
               </div>
               <div className="relative">
@@ -202,19 +203,22 @@ export default function ReviewerLoginPage() {
               disabled={loading}
               className="w-full h-12 text-sm sm:text-base font-bold rounded-full bg-gradient-to-r from-[#002752] via-[#003875] to-[#002752] hover:from-[#001c3d] hover:to-[#001c3d] text-white gap-2 transition-all duration-300 cursor-pointer"
             >
-              <span>{loading ? "Authenticating..." : "Access Deliberation Chamber"}</span>
+              <span>{loading ? "Authenticating..." : "Access Institutional Console"}</span>
               <ArrowRight className="size-4" />
             </Button>
           </form>
 
-          {/* Switch to User Portal Link */}
-          <div className="pt-2 text-center border-t border-slate-100 dark:border-slate-800">
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Submitting a protocol as a Principal Investigator?{" "}
-              <Link href="/login" className="font-bold text-[#002752] dark:text-sky-400 hover:underline">
-                Researcher Login →
-              </Link>
-            </p>
+          {/* Switch Portal Links */}
+          <div className="pt-2 text-center border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-4 text-xs">
+            <Link href="/login" className="font-semibold text-slate-500 hover:text-[#002752] flex items-center gap-1">
+              <GraduationCap className="size-3.5 text-[#198754]" />
+              <span>Researcher Portal</span>
+            </Link>
+            <span className="text-slate-300">•</span>
+            <Link href="/reviewer/login" className="font-semibold text-slate-500 hover:text-[#002752] flex items-center gap-1">
+              <Scale className="size-3.5 text-blue-600" />
+              <span>IRB Committee Portal</span>
+            </Link>
           </div>
 
         </div>
@@ -222,14 +226,14 @@ export default function ReviewerLoginPage() {
 
       {/* Footer Security Badges */}
       <footer className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/40 dark:bg-card/40 backdrop-blur-md">
-        <span>© {new Date().getFullYear()} Ethica Institutional Review Board Deliberation Hub</span>
+        <span>© {new Date().getFullYear()} Ethica Institutional System Administration Console</span>
         <div className="flex items-center gap-4 text-[0.7rem] font-semibold">
-          <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+          <span className="flex items-center gap-1 text-[#198754]">
             <ShieldCheck className="size-3.5" />
-            Cryptographically Audited
+            ISO 27001 & SOC 2 Audited
           </span>
           <span>•</span>
-          <span>Institutional Quorum Access</span>
+          <span>Role-Based Access Control (RBAC)</span>
         </div>
       </footer>
     </div>

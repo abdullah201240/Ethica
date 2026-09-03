@@ -42,7 +42,7 @@ export default function UserLoginPage() {
       setLoading(false)
       setStatusMessage("Login successful! Redirecting to Investigator Dashboard...")
       setTimeout(() => {
-        router.push("/#preview")
+        router.push("/dashboard")
       }, 1000)
     }, 1200)
   }
