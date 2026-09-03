@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ExternalLink,
   PanelLeft,
+  ChevronDown,
 } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 
@@ -23,6 +24,7 @@ export interface NavItem {
   icon: React.ComponentType<{ className?: string }>
   badge?: string
   badgeVariant?: "default" | "success" | "warning" | "info"
+  group?: string
 }
 
 export interface DashboardShellProps {
@@ -61,285 +63,396 @@ export function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
   const [collapsed, setCollapsed] = React.useState(false)
 
-  const badgeColorClass =
+  // ── Derived color tokens ──────────────────────────────────────────────────
+  const accentGradient =
     roleColor === "green"
-      ? "bg-[#198754]/10 text-[#198754]"
-      : roleColor === "gold"
-        ? "bg-[#E0C23C]/15 text-[#b09214] dark:text-[#E0C23C]"
-        : "bg-[#002752]/10 text-[#002752] dark:text-sky-300"
-
-  const brandIconBg =
-    roleColor === "green"
-      ? "from-[#198754] to-emerald-600"
+      ? "from-[#198754] to-emerald-500"
       : roleColor === "gold"
         ? "from-[#002752] via-[#003875] to-[#198754]"
-        : "from-[#002752] to-[#001c3d]"
+        : "from-[#002752] to-[#003875]"
+
+  const activeNavBg =
+    roleColor === "green"
+      ? "bg-gradient-to-r from-[#198754]/12 to-emerald-500/5 text-[#198754] dark:text-emerald-300 border-l-2 border-[#198754]"
+      : roleColor === "gold"
+        ? "bg-gradient-to-r from-[#E0C23C]/12 to-amber-400/5 text-[#b09214] dark:text-[#E0C23C] border-l-2 border-[#E0C23C]"
+        : "bg-gradient-to-r from-[#002752]/10 to-blue-500/5 text-[#002752] dark:text-sky-300 border-l-2 border-[#002752] dark:border-sky-400"
+
+  const activeNavIconClass =
+    roleColor === "green"
+      ? "text-[#198754] dark:text-emerald-300"
+      : roleColor === "gold"
+        ? "text-[#b09214] dark:text-[#E0C23C]"
+        : "text-[#002752] dark:text-sky-300"
+
+  const activeCollapsedBg =
+    roleColor === "green"
+      ? "bg-gradient-to-br from-[#198754] to-emerald-500 text-white shadow-sm"
+      : roleColor === "gold"
+        ? "bg-gradient-to-br from-[#002752] to-[#003875] text-white shadow-sm"
+        : "bg-gradient-to-br from-[#002752] to-[#003875] text-white shadow-sm"
+
+  // Group nav items by their `group` field
+  const grouped = React.useMemo(() => {
+    const map: Record<string, NavItem[]> = {}
+    navItems.forEach((item) => {
+      const g = item.group ?? "_main"
+      if (!map[g]) map[g] = []
+      map[g].push(item)
+    })
+    return map
+  }, [navItems])
+
+  const groupKeys = Object.keys(grouped)
+
+  const currentPageLabel = navItems.find((n) => n.href === pathname)?.label ?? "Dashboard"
 
   return (
-    <div className="min-h-screen w-full bg-slate-50/70 dark:bg-[#071321] text-slate-900 dark:text-slate-100 flex flex-row font-sans transition-colors duration-200">
-      
-      {/* Mobile Sidebar Backdrop Overlay */}
+    <div className="min-h-screen w-full bg-[#F5F7F9] dark:bg-[#071321] text-slate-900 dark:text-slate-100 flex font-sans">
+
+      {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
         />
       )}
 
-      {/* Responsive Collapsible Sidebar (ChatGPT Style: Top Left Logo & Right Button) */}
+      {/* ════════════════════════════════════════════════════════════════
+          SIDEBAR
+      ════════════════════════════════════════════════════════════════ */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 z-50 h-screen shrink-0 bg-white/95 dark:bg-[#0C1E34]/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-4 transition-all duration-300 ${
-          sidebarOpen ? "translate-x-0 w-64 shadow-xl lg:shadow-none" : "-translate-x-full lg:translate-x-0"
-        } ${collapsed ? "lg:w-20" : "lg:w-64"}`}
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen shrink-0 flex flex-col bg-white dark:bg-[#0C1E34] border-r border-border/75 transition-all duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"
+        } ${collapsed ? "w-[68px]" : "w-[240px]"}`}
       >
-        {/* Top Section: Brand Logo on Left, PanelLeft Toggle on Right */}
-        <div className="space-y-4">
-          
+        {/* ── Brand header ───────────────────────────────────────── */}
+        <div className={`px-3 ${collapsed ? "pt-4 pb-2" : "pt-4 pb-3"}`}>
           {collapsed ? (
-            /* Collapsed Small Mode: Centered Logo + Expand Button */
             <div className="flex flex-col items-center gap-3">
               <Link href="/" className="group" title="Ethica Institutional Portal">
-                <div className={`flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr ${brandIconBg} text-white transition-transform group-hover:scale-105`}>
+                <div
+                  className={`flex size-10 items-center justify-center rounded-xl bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
+                >
                   <ShieldCheck className="size-5" />
                 </div>
               </Link>
               <button
                 type="button"
                 onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 items-center justify-center text-slate-400 hover:text-[#002752] dark:hover:text-sky-300 transition-all duration-150 cursor-pointer"
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
-                <PanelLeft className="size-5 text-[#002752] dark:text-sky-400" />
+                <PanelLeft className="size-4" />
               </button>
             </div>
           ) : (
-            /* Expanded Large Mode (Exactly matching ChatGPT screenshot) */
-            <div className="flex items-center justify-between gap-2 h-10 px-1">
-              {/* Left Side: Brand Logo & Title */}
-              <Link href="/" className="flex items-center gap-2.5 group min-w-0">
-                <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr ${brandIconBg} text-white transition-transform group-hover:scale-105`}>
+            <div className="flex items-center justify-between h-11">
+              <Link href="/" className="flex items-center gap-3 group min-w-0">
+                <div
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
+                >
                   <ShieldCheck className="size-5" />
                 </div>
-                <div className="min-w-0">
-                  <span className="font-sans text-base font-black tracking-tight text-[#002752] dark:text-white block leading-tight">
+                <div className="min-w-0 leading-none">
+                  <span className="block text-[15px] font-black tracking-tight text-[#002752] dark:text-white">
                     ETHICA
                   </span>
-                  <span className="font-mono text-[0.6rem] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block truncate">
+                  <span className="block text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
                     {roleTitle}
                   </span>
                 </div>
               </Link>
-
-              {/* Right Side: PanelLeft Collapse Button (ChatGPT style) */}
               <button
                 type="button"
                 onClick={() => setCollapsed(true)}
-                className="hidden lg:flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="hidden lg:flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-150 cursor-pointer"
                 aria-label="Collapse sidebar"
                 title="Collapse sidebar"
               >
-                <PanelLeft className="size-5" />
+                <PanelLeft className="size-4" />
               </button>
             </div>
           )}
+        </div>
 
-          {/* Role Badge Indicator */}
-          {!collapsed && (
-            <div className={`p-2.5 rounded-xl ${badgeColorClass} flex items-center justify-between`}>
-              <div>
-                <span className="font-mono text-[0.65rem] font-black uppercase tracking-wider block">
+        {/* ── Divider ────────────────────────────────────────────── */}
+        <div className="mx-3 h-px bg-slate-100 dark:bg-white/[0.06] shrink-0" />
+
+        {/* ── Role status pill ───────────────────────────────────── */}
+        {!collapsed && (
+          <div className="px-3 py-2.5 shrink-0">
+            <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-border/60">
+              <div className="min-w-0">
+                <span className="block text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                   {roleBadge}
                 </span>
-                <span className="text-xs font-bold text-slate-800 dark:text-white block">
+                <span className="block text-[12px] font-semibold text-slate-700 dark:text-slate-200 mt-0.5 truncate">
                   {roleTitle}
                 </span>
               </div>
-              <span className="size-2 rounded-full bg-[#198754] animate-pulse" />
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Live</span>
+              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Navigation Menu */}
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  title={collapsed ? item.label : undefined}
-                  className={`flex items-center rounded-lg text-xs font-bold transition-all ${
-                    collapsed
-                      ? "justify-center size-12 mx-auto"
-                      : "justify-between px-3 py-2 w-full"
-                  } ${
-                    isActive
-                      ? "bg-[#002752] text-white dark:bg-sky-500/20 dark:text-sky-300"
-                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <item.icon className="size-4 shrink-0" />
-                    {!collapsed && <span>{item.label}</span>}
-                  </div>
-                  {!collapsed && item.badge && (
-                    <span className="px-1.5 py-0.5 rounded text-[0.65rem] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              )
-            })}
-          </nav>
-        </div>
+        {/* ── Navigation ─────────────────────────────────────────── */}
+        <nav className="flex-1 overflow-y-auto px-2.5 py-1 space-y-0.5 min-h-0">
+          {groupKeys.map((group, gi) => (
+            <div key={group} className={gi > 0 && !collapsed ? "pt-3" : ""}>
+              {!collapsed && group !== "_main" && (
+                <div className="px-2.5 pb-1.5 pt-1">
+                  <span className="text-[9.5px] font-bold uppercase tracking-widest text-slate-400/70 dark:text-slate-600">
+                    {group}
+                  </span>
+                </div>
+              )}
+              {grouped[group].map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    title={collapsed ? item.label : undefined}
+                    className={`group relative flex items-center rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                      collapsed
+                        ? `justify-center size-10 mx-auto my-0.5 ${
+                            isActive ? activeCollapsedBg : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white"
+                          }`
+                        : `gap-3 px-3 py-2 w-full ${
+                            isActive
+                              ? activeNavBg
+                              : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white"
+                          }`
+                    }`}
+                  >
+                    <item.icon
+                      className={`shrink-0 size-4 ${
+                        isActive && !collapsed
+                          ? activeNavIconClass
+                          : isActive && collapsed
+                            ? "text-white"
+                            : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                      }`}
+                    />
+                    {!collapsed && (
+                      <>
+                        <span className="flex-1 truncate">{item.label}</span>
+                        {item.badge && (
+                          <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+                            {item.badge}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          ))}
+        </nav>
 
-        {/* Bottom Sidebar Utility / Sign Out */}
-        <div className="space-y-1.5 pt-4">
+        {/* ── Bottom utilities + user card ───────────────────────── */}
+        <div className="px-2.5 pb-3 pt-2 shrink-0">
+          <div className="mx-0.5 mb-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
+
           <Link
             href="/"
             title={collapsed ? "Institutional Portal" : undefined}
-            className={`flex items-center rounded-lg text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
-              collapsed ? "justify-center size-12 mx-auto" : "justify-between px-3 py-2 w-full"
+            className={`group flex items-center rounded-lg text-[13px] font-medium text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all duration-150 ${
+              collapsed ? "justify-center size-10 mx-auto" : "gap-3 px-3 py-2 w-full"
             }`}
           >
-            <div className="flex items-center gap-2">
-              <ExternalLink className="size-3.5" />
-              {!collapsed && <span>Institutional Portal</span>}
-            </div>
-            {!collapsed && <ChevronRight className="size-3 text-slate-400" />}
+            <ExternalLink className="size-4 shrink-0" />
+            {!collapsed && (
+              <>
+                <span className="flex-1 truncate">Institutional Portal</span>
+                <ChevronRight className="size-3.5 text-slate-300 dark:text-slate-600" />
+              </>
+            )}
           </Link>
 
           <Link
             href={loginRoute}
-            title={collapsed ? "Sign Out Session" : undefined}
-            className={`flex items-center rounded-lg text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer ${
-              collapsed ? "justify-center size-12 mx-auto" : "gap-2 px-3 py-2 w-full"
+            title={collapsed ? "Sign Out" : undefined}
+            className={`group flex items-center rounded-lg text-[13px] font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 ${
+              collapsed ? "justify-center size-10 mx-auto mt-0.5" : "gap-3 px-3 py-2 w-full"
             }`}
           >
-            <LogOut className="size-3.5" />
-            {!collapsed && <span>Sign Out Session</span>}
+            <LogOut className="size-4 shrink-0" />
+            {!collapsed && <span className="flex-1 truncate">Sign Out Session</span>}
           </Link>
+
+          {/* User profile card (expanded only) */}
+          {!collapsed && (
+            <>
+              <div className="mx-0.5 my-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
+              <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer">
+                <div
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                >
+                  {user.avatarInitials}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate">
+                    {user.name}
+                  </span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                    {user.email}
+                  </span>
+                </div>
+                <ChevronDown className="size-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+              </div>
+            </>
+          )}
         </div>
       </aside>
 
-      {/* Main Content Area (Header + Main Body + Footer) */}
+      {/* ════════════════════════════════════════════════════════════════
+          MAIN CONTENT AREA
+      ════════════════════════════════════════════════════════════════ */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        
-        {/* Top Header Bar (No Brand Logo in Header, Borderless, Shadowless) */}
-        <header className="sticky top-0 z-30 w-full h-16 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md px-4 sm:px-6 md:px-8 flex items-center justify-between gap-4">
-          
-          {/* Header Left: Trigger on Mobile & Re-Open Trigger when Collapsed */}
-          <div className="flex items-center gap-2.5">
+
+        {/* ── TOP HEADER BAR ────────────────────────────────────── */}
+        <header className="sticky top-0 z-30 w-full h-[60px] flex items-center px-4 sm:px-5 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
+
+          {/* Left: Mobile toggle + collapsed-desktop expand + breadcrumb */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex lg:hidden size-9 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer"
+              className="flex lg:hidden size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
               aria-label="Toggle Sidebar"
             >
-              {sidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+              {sidebarOpen ? <X className="size-[18px]" /> : <Menu className="size-[18px]" />}
             </button>
 
-            {/* When collapsed on desktop: show small re-open icon button in header */}
             {collapsed && (
               <button
                 type="button"
                 onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-9 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                className="hidden lg:flex size-9 items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-[#002752] dark:hover:text-sky-300 transition-all cursor-pointer"
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
-                <PanelLeft className="size-5 text-[#002752] dark:text-sky-400" />
+                <PanelLeft className="size-[17px]" />
               </button>
             )}
-          </div>
 
-          {/* Global Search & Action Center */}
-          <div className="flex-1 max-w-md hidden md:block">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search protocols, ethics ID, approvals, or guidelines... (⌘K)"
-                className="w-full h-9 pl-9 pr-4 rounded-lg bg-slate-100/80 dark:bg-slate-900/60 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-sky-500"
-              />
+            {/* Page breadcrumb – desktop only */}
+            <div className="hidden lg:flex items-center gap-1.5 pl-0.5">
+              <span className="text-[13px] font-semibold text-slate-800 dark:text-slate-100">
+                {currentPageLabel}
+              </span>
             </div>
           </div>
 
-          {/* Right Header Utilities */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Centre: Search */}
+          <div className="flex-1 max-w-lg hidden md:block mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search protocols, ethics ID, approvals… (⌘K)"
+                className="w-full h-9 pl-9 pr-14 rounded-lg bg-slate-100/80 dark:bg-white/[0.04] border border-transparent hover:border-border/50 focus:border-[#002752]/30 dark:focus:border-sky-500/30 text-[13px] text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752]/20 dark:focus-visible:ring-sky-500/20 transition-all"
+              />
+              <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-medium text-slate-400 bg-slate-200/70 dark:bg-white/5 dark:text-slate-500">
+                ⌘K
+              </kbd>
+            </div>
+          </div>
+
+          {/* Right: actions */}
+          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto shrink-0">
+
+            {/* Primary action button */}
             {actionButton && (
               actionButton.href ? (
                 <Link
                   href={actionButton.href}
-                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-xs font-bold transition-colors cursor-pointer"
+                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95 transition-all duration-150 cursor-pointer`}
                 >
-                  <actionButton.icon className="size-4 text-[#198754]" />
+                  <actionButton.icon className="size-3.5" />
                   <span>{actionButton.label}</span>
                 </Link>
               ) : (
                 <button
                   type="button"
                   onClick={actionButton.onClick}
-                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-xs font-bold transition-colors cursor-pointer"
+                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95 transition-all duration-150 cursor-pointer`}
                 >
-                  <actionButton.icon className="size-4 text-[#198754]" />
+                  <actionButton.icon className="size-3.5" />
                   <span>{actionButton.label}</span>
                 </button>
               )
             )}
 
-            {/* Notifications Indicator */}
+            {/* Notifications */}
             <button
               type="button"
-              className="relative flex size-9 items-center justify-center rounded-lg bg-slate-100/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-              aria-label="Institutional Notifications"
+              className="relative flex size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
+              aria-label="Notifications"
             >
-              <Bell className="size-4" />
-              <span className="absolute top-2 right-2 size-2 rounded-full bg-[#198754]" />
+              <Bell className="size-[17px]" />
+              <span className="absolute top-[9px] right-[9px] size-[7px] rounded-full bg-emerald-500 ring-[1.5px] ring-white dark:ring-[#0C1E34]" />
             </button>
 
-            {/* Next Themes Dark/White Toggle */}
+            {/* Theme toggle */}
             <ThemeToggle />
 
-            {/* User Profile Pill (No Border) */}
-            <div className="flex items-center gap-2.5 pl-1">
-              <div className="flex size-9 items-center justify-center rounded-full bg-[#002752] text-white text-xs font-bold">
+            {/* Divider */}
+            <div className="w-px h-5 bg-border/75 hidden sm:block mx-0.5" />
+
+            {/* User profile pill */}
+            <button
+              type="button"
+              className="flex items-center gap-2 pl-0.5 pr-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
+              aria-label="Profile menu"
+            >
+              <div
+                className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+              >
                 {user.avatarInitials}
               </div>
               <div className="hidden xl:block text-left leading-tight">
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block truncate max-w-[120px]">
+                <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">
                   {user.name}
                 </span>
-                <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block truncate max-w-[120px]">
+                <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[110px]">
                   {user.title}
                 </span>
               </div>
-            </div>
+              <ChevronDown className="hidden xl:block size-3.5 text-slate-300 dark:text-slate-600" />
+            </button>
           </div>
         </header>
 
-        {/* Dashboard Main View Area */}
-        <main className="flex-1 w-full p-4 sm:p-6 md:p-8 lg:p-10 max-w-full overflow-x-hidden">
+        {/* ── MAIN VIEW AREA ──────────────────────────────────────── */}
+        <main className="flex-1 w-full p-4 sm:p-6 md:p-8 max-w-full overflow-x-hidden">
           {children}
         </main>
 
-        {/* Dashboard Global Footer (No Border, No Shadow) */}
-        <footer className="w-full bg-white/70 dark:bg-[#0C1E34]/70 backdrop-blur-md px-4 sm:px-6 md:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+        {/* ── FOOTER ─────────────────────────────────────────────── */}
+        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 dark:text-slate-500">
           <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-emerald-500" />
-            <span className="font-semibold text-slate-700 dark:text-slate-300">
+            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-slate-600 dark:text-slate-300">
               Ethica Ledger: SHA-256 Verified
             </span>
-            <span>•</span>
+            <span className="text-slate-300 dark:text-slate-700">·</span>
             <span>WMA Declaration of Helsinki Aligned</span>
           </div>
-          <div className="flex items-center gap-3 text-[0.7rem]">
-            <span className="flex items-center gap-1">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5">
               <Lock className="size-3 text-[#198754]" />
-              Encrypted Session
+              <span>Encrypted Session</span>
             </span>
-            <span>•</span>
+            <span className="text-slate-300 dark:text-slate-700">·</span>
             <span>© {new Date().getFullYear()} Daffodil International University IRB</span>
           </div>
         </footer>

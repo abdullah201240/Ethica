@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   Scale,
-  Inbox,
   CheckCheck,
   CalendarDays,
   FileSearch,
@@ -13,12 +12,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const reviewerNavItems: NavItem[] = [
-  {
-    label: "Deliberation Queue",
-    href: "/reviewer/dashboard",
-    icon: Inbox,
-    badge: "5 Urgent",
-  },
   {
     label: "Expedited Triage",
     href: "/reviewer/dashboard#triage",
