@@ -9,7 +9,6 @@ import {
   FileSearch,
   Users,
 } from "lucide-react"
-import { ThemeProvider } from "@/components/theme-provider"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const reviewerNavItems: NavItem[] = [
@@ -45,36 +44,30 @@ export default function ReviewerLayout({
   const isAuthPage = pathname === "/reviewer/login" || pathname?.startsWith("/reviewer/login")
 
   if (isAuthPage) {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        {children}
-      </ThemeProvider>
-    )
+    return children
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <DashboardShell
-        role="reviewer"
-        roleTitle="IRB Committee Chair"
-        roleBadge="DELIBERATION"
-        roleColor="gold"
-        user={{
-          name: "Prof. Charles Montgomery",
-          title: "Chair, Biomedical Research Ethics Board",
-          email: "charles.montgomery@diu.edu.bd",
-          avatarInitials: "CM",
-        }}
-        navItems={reviewerNavItems}
-        loginRoute="/reviewer/login"
-        actionButton={{
-          label: "Convene Quorum",
-          icon: Scale,
-          href: "/reviewer/dashboard#convene",
-        }}
-      >
-        {children}
-      </DashboardShell>
-    </ThemeProvider>
+    <DashboardShell
+      role="reviewer"
+      roleTitle="IRB Committee Chair"
+      roleBadge="DELIBERATION"
+      roleColor="gold"
+      user={{
+        name: "Prof. Charles Montgomery",
+        title: "Chair, Biomedical Research Ethics Board",
+        email: "charles.montgomery@diu.edu.bd",
+        avatarInitials: "CM",
+      }}
+      navItems={reviewerNavItems}
+      loginRoute="/reviewer/login"
+      actionButton={{
+        label: "Convene Quorum",
+        icon: Scale,
+        href: "/reviewer/dashboard#convene",
+      }}
+    >
+      {children}
+    </DashboardShell>
   )
 }

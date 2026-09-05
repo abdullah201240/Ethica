@@ -12,7 +12,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/60 dark:bg-[#071321]/60 backdrop-blur-xl supports-[backdrop-filter]:bg-white/50 shadow-[0_4px_30px_rgba(0,0,0,0.02)] transition-all">
       <div className="flex h-16 w-full items-center justify-between px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20">
         {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+        <Link href="/" className="flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
           <div className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-xs">
             <ShieldCheck className="size-6" />
           </div>
@@ -29,7 +29,7 @@ export function Navbar() {
               Research Ethics & Governance
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8 text-sm sm:text-base font-semibold text-muted-foreground">

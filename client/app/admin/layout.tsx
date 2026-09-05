@@ -12,7 +12,6 @@ import {
   ClipboardCheck,
   User,
 } from "lucide-react"
-import { ThemeProvider } from "@/components/theme-provider"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const adminNavItems: NavItem[] = [
@@ -65,37 +64,31 @@ export default function AdminLayout({
   const isAuthPage = pathname === "/admin/login" || pathname?.startsWith("/admin/login")
 
   if (isAuthPage) {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        {children}
-      </ThemeProvider>
-    )
+    return children
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <DashboardShell
-        role="admin"
-        roleTitle="Compliance Secretariat"
-        roleBadge="GOVERNANCE"
-        roleColor="navy"
-        user={{
-          name: "Dr. Marcus Vance",
-          title: "Director of Research Governance & Compliance",
-          email: "admin.secretariat@diu.edu.bd",
-          avatarInitials: "MV",
-        }}
-        navItems={adminNavItems}
-        loginRoute="/admin/login"
-        profileHref="/admin/profile"
-        actionButton={{
-          label: "Export Ledger",
-          icon: Download,
-          href: "/admin/dashboard#export",
-        }}
-      >
-        {children}
-      </DashboardShell>
-    </ThemeProvider>
+    <DashboardShell
+      role="admin"
+      roleTitle="Compliance Secretariat"
+      roleBadge="GOVERNANCE"
+      roleColor="navy"
+      user={{
+        name: "Dr. Marcus Vance",
+        title: "Director of Research Governance & Compliance",
+        email: "admin.secretariat@diu.edu.bd",
+        avatarInitials: "MV",
+      }}
+      navItems={adminNavItems}
+      loginRoute="/admin/login"
+      profileHref="/admin/profile"
+      actionButton={{
+        label: "Export Ledger",
+        icon: Download,
+        href: "/admin/dashboard#export",
+      }}
+    >
+      {children}
+    </DashboardShell>
   )
 }

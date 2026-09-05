@@ -16,6 +16,18 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 import {
   DataTable,
   type ColumnDef,
@@ -90,6 +102,8 @@ export default function AdminProfilePage() {
   const [copiedKey, setCopiedKey] = React.useState(false)
   const [isEditingContact, setIsEditingContact] = React.useState(false)
   const [saveSuccess, setSaveSuccess] = React.useState(false)
+  const [sessionLogs, setSessionLogs] = React.useState<AdminSessionLog[]>(initialSessionLogs)
+  const [sessionNotice, setSessionNotice] = React.useState<string | null>(null)
 
   const [contactForm, setContactForm] = React.useState({
     phone: "+880 2 9138234-5 (Ext: 104)",
@@ -120,6 +134,16 @@ export default function AdminProfilePage() {
     setIsEditingContact(false)
     setSaveSuccess(true)
     setTimeout(() => setSaveSuccess(false), 3000)
+  }
+
+  const handleRevokeSession = (sessionId: string, device: string) => {
+    setSessionLogs((prev) =>
+      prev.map((s) => (s.id === sessionId ? { ...s, status: "Terminated", lastActive: "Just now (Revoked)" } : s))
+    )
+    setSessionNotice(
+      `Hardware token session ${sessionId} (${device}) was revoked. Cryptographic keys invalidated.`
+    )
+    setTimeout(() => setSessionNotice(null), 6000)
   }
 
   const toggleAlert = (key: keyof typeof alertSettings) => {
@@ -211,8 +235,7 @@ export default function AdminProfilePage() {
         accessorKey: "status",
         header: "Status",
         sortable: true,
-        align: "right",
-        headerClassName: "w-[140px]",
+        headerClassName: "w-[130px]",
         cell: ({ row }) => (
           <Badge
             variant="outline"
@@ -228,8 +251,58 @@ export default function AdminProfilePage() {
           </Badge>
         ),
       },
+      {
+        id: "actions",
+        header: "Session Action",
+        align: "right",
+        headerClassName: "w-[120px]",
+        cell: ({ row }) => (
+          <div className="inline-flex items-center justify-end">
+            {row.status === "Active Session" ? (
+              <AlertDialog>
+                <AlertDialogTrigger render={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="xs"
+                    className="h-7 px-2.5 text-[11px] font-bold rounded-md border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                    title="Revoke Cryptographic Session"
+                  >
+                    Revoke
+                  </Button>
+                } />
+                <AlertDialogContent className="sm:max-w-md">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                      Revoke Cryptographic Session
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Are you sure you want to terminate session <strong className="text-slate-900 dark:text-white">{row.id}</strong> on <strong className="text-slate-900 dark:text-white">{row.device}</strong>?
+                      The hardware token and mTLS authorization certificate will be immediately invalidated across the DIU network.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="text-xs font-semibold">Keep Session</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => handleRevokeSession(row.id, row.device)}
+                      className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                    >
+                      Revoke Token
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : (
+              <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">
+                Invalidated
+              </span>
+            )}
+          </div>
+        ),
+      },
     ],
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sessionLogs]
   )
 
   const sessionFilters: DataTableFilter<AdminSessionLog>[] = React.useMemo(
@@ -295,10 +368,13 @@ export default function AdminProfilePage() {
 
             {/* Save Success Alert */}
             {saveSuccess && (
-              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-                <span>Contact details updated and saved to institutional records.</span>
-              </div>
+              <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
+                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                <AlertTitle className="text-xs font-bold">Institutional Profile Updated</AlertTitle>
+                <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
+                  Contact coordinates and emergency contact details have been safely registered to institutional records.
+                </AlertDescription>
+              </Alert>
             )}
 
             {/* Academic Profile Details */}
@@ -621,8 +697,18 @@ export default function AdminProfilePage() {
 
       {/* ── Security & Cryptographic Session Docket (Unified DataTable - Rule 6) ── */}
       <div className="w-full space-y-3">
+        {sessionNotice && (
+          <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
+            <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+            <AlertTitle className="text-xs font-bold">Session Security Invalidation Completed</AlertTitle>
+            <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
+              {sessionNotice}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <DataTable<AdminSessionLog>
-          data={initialSessionLogs}
+          data={sessionLogs}
           columns={sessionColumns}
           title="Cryptographic Access & Active Sessions Docket"
           description="Hardware-authenticated sessions authorized with HSM clearance to seal institutional ethical records"

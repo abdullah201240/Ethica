@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   ShieldCheck,
   Bell,
@@ -19,6 +19,17 @@ import {
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 
 export interface NavItem {
   label: string
@@ -64,8 +75,67 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
   const [collapsed, setCollapsed] = React.useState(false)
+  const [currentHash, setCurrentHash] = React.useState("")
+
+  React.useEffect(() => {
+    const updateHash = () => {
+      setCurrentHash(typeof window !== "undefined" ? window.location.hash || "" : "")
+    }
+    updateHash()
+    window.addEventListener("hashchange", updateHash)
+    window.addEventListener("popstate", updateHash)
+    return () => {
+      window.removeEventListener("hashchange", updateHash)
+      window.removeEventListener("popstate", updateHash)
+    }
+  }, [pathname])
+
+  const isItemActive = React.useCallback(
+    (itemHref: string) => {
+      const [itemPath, itemHash] = itemHref.split("#")
+      const hasHash = Boolean(itemHash)
+
+      if (hasHash) {
+        return pathname === itemPath && currentHash === `#${itemHash}`
+      }
+      if (pathname === itemPath) {
+        if (currentHash) {
+          const matchesOtherHash = navItems.some((other) => {
+            const [, otherHash] = other.href.split("#")
+            return Boolean(otherHash) && currentHash === `#${otherHash}`
+          })
+          return !matchesOtherHash
+        }
+        return true
+      }
+      return false
+    },
+    [pathname, currentHash, navItems]
+  )
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setSidebarOpen(false)
+    const [targetPath, targetHash] = href.split("#")
+
+    if (targetHash && (targetPath === pathname || !targetPath)) {
+      e.preventDefault()
+      setCurrentHash(`#${targetHash}`)
+      window.history.pushState(null, "", `${pathname}#${targetHash}`)
+      const el = document.getElementById(targetHash)
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" })
+      }
+    } else if (!targetHash && targetPath === pathname) {
+      if (currentHash) {
+        setCurrentHash("")
+        window.history.pushState(null, "", pathname)
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
 
   // ── Derived color tokens ──────────────────────────────────────────────────
   const accentGradient =
@@ -108,8 +178,8 @@ export function DashboardShell({
   }, [navItems])
 
   const groupKeys = Object.keys(grouped)
-
-  const currentPageLabel = navItems.find((n) => n.href === pathname)?.label ?? "Dashboard"
+  const activeItem = navItems.find((n) => isItemActive(n.href))
+  const currentPageLabel = activeItem?.label ?? "Dashboard"
 
   return (
     <div className="min-h-screen w-full bg-[#F5F7F9] dark:bg-[#071321] text-slate-900 dark:text-slate-100 flex font-sans">
@@ -220,12 +290,12 @@ export function DashboardShell({
                 </div>
               )}
               {grouped[group].map((item) => {
-                const isActive = pathname === item.href
+                const isActive = isItemActive(item.href)
                 return (
                   <Link
                     key={item.label}
                     href={item.href}
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     title={collapsed ? item.label : undefined}
                     className={`group relative flex items-center rounded-lg text-[13px] font-medium transition-all duration-150 ${
                       collapsed
@@ -285,16 +355,40 @@ export function DashboardShell({
             )}
           </Link>
 
-          <Link
-            href={loginRoute}
-            title={collapsed ? "Sign Out" : undefined}
-            className={`group flex items-center rounded-lg text-[13px] font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 ${
-              collapsed ? "justify-center size-10 mx-auto mt-0.5" : "gap-3 px-3 py-2 w-full"
-            }`}
-          >
-            <LogOut className="size-4 shrink-0" />
-            {!collapsed && <span className="flex-1 truncate">Sign Out Session</span>}
-          </Link>
+          <AlertDialog>
+            <AlertDialogTrigger render={
+              <Button
+                type="button"
+                variant="ghost"
+                title={collapsed ? "Sign Out" : undefined}
+                className={`group flex items-center rounded-lg text-[13px] font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 cursor-pointer ${
+                  collapsed ? "justify-center size-10 mx-auto mt-0.5 p-0" : "gap-3 px-3 py-2 w-full justify-start h-auto"
+                }`}
+              >
+                <LogOut className="size-4 shrink-0" />
+                {!collapsed && <span className="flex-1 truncate text-left">Sign Out Session</span>}
+              </Button>
+            } />
+            <AlertDialogContent className="sm:max-w-md">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                  Confirm Workspace Sign Out
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Are you sure you wish to sign out of your institutional account ({user.name})? Your secure session will be closed and you will be returned to the accreditation login portal.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="text-xs font-semibold">Stay Signed In</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => router.push(loginRoute)}
+                  className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                >
+                  Sign Out
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* User profile card (expanded only) */}
           {!collapsed && (

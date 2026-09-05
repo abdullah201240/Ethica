@@ -17,6 +17,18 @@ import {
   Clock,
   Lock,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 import { addReviewerApplication } from "@/lib/reviewer-applications"
 
 const EXPERTISE_AREAS = [
@@ -77,8 +89,8 @@ export default function ApplyAsReviewerPage() {
 
   const handleNext = () => { if (currentStep < 4) setCurrentStep((s) => s + 1) }
   const handleBack = () => { if (currentStep > 1) setCurrentStep((s) => s - 1) }
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
     const expYears = parseInt(form.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
     addReviewerApplication({
       fullName: form.fullName,
@@ -473,15 +485,16 @@ export default function ApplyAsReviewerPage() {
 
             {/* ── Card footer: navigation ── */}
             <div className="w-full px-6 sm:px-10 py-5 border-t border-border/60 bg-slate-50/60 flex items-center justify-between gap-4">
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={handleBack}
                 disabled={currentStep === 1}
-                className="flex items-center gap-2 h-10 px-5 rounded-lg text-[13px] font-semibold text-slate-500 hover:text-slate-800 bg-white border border-border/75 hover:border-slate-300 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 h-10 px-5 rounded-lg text-[13px] font-semibold text-slate-500 hover:text-slate-800 bg-white border border-border/75 hover:border-slate-300 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ArrowLeft className="size-4" />
                 Back
-              </button>
+              </Button>
 
               {/* Step dots */}
               <div className="flex items-center gap-1.5">
@@ -500,23 +513,46 @@ export default function ApplyAsReviewerPage() {
               </div>
 
               {currentStep < 4 ? (
-                <button
+                <Button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-2 h-10 px-6 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 h-10 px-6 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md cursor-pointer"
                 >
                   Continue
                   <ChevronRight className="size-4" />
-                </button>
+                </Button>
               ) : (
-                <button
-                  type="submit"
-                  disabled={!form.agreeTerms}
-                  className="flex items-center gap-2 h-10 px-6 rounded-lg bg-gradient-to-r from-[#198754] to-emerald-500 hover:opacity-95 text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <CheckCircle2 className="size-4" />
-                  Submit Application
-                </button>
+                <AlertDialog>
+                  <AlertDialogTrigger render={
+                    <Button
+                      type="button"
+                      disabled={!form.agreeTerms}
+                      className="flex items-center gap-2 h-10 px-6 rounded-lg bg-gradient-to-r from-[#198754] to-emerald-500 hover:opacity-95 text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      <CheckCircle2 className="size-4" />
+                      Submit Application
+                    </Button>
+                  } />
+                  <AlertDialogContent className="sm:max-w-md">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                        Confirm Reviewer Application Submission
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        You are about to formally submit your reviewer application for <strong className="text-slate-900 dark:text-white">{form.fullName || "Applicant"}</strong> to the Daffodil International University Institutional Review Board. Please verify that all entered credentials and declarations are accurate.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="text-xs font-semibold">Review Dossier</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleSubmit()}
+                        className="bg-[#198754] hover:bg-[#146c43] text-white text-xs font-bold"
+                      >
+                        Confirm & Submit
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
             </div>
           </div>

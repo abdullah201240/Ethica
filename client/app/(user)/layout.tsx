@@ -10,7 +10,6 @@ import {
   BookOpen,
   PlusCircle,
 } from "lucide-react"
-import { ThemeProvider } from "@/components/theme-provider"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const userNavItems: NavItem[] = [
@@ -52,36 +51,30 @@ export default function UserLayout({
   const isAuthPage = pathname === "/login" || pathname?.startsWith("/login")
 
   if (isAuthPage) {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        {children}
-      </ThemeProvider>
-    )
+    return children
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <DashboardShell
-        role="user"
-        roleTitle="Principal Investigator"
-        roleBadge="INVESTIGATOR"
-        roleColor="green"
-        user={{
-          name: "Dr. Elena Rostova",
-          title: "Associate Professor, Public Health",
-          email: "elena.rostova@diu.edu.bd",
-          avatarInitials: "ER",
-        }}
-        navItems={userNavItems}
-        loginRoute="/login"
-        actionButton={{
-          label: "New Protocol",
-          icon: PlusCircle,
-          href: "/dashboard#new-protocol",
-        }}
-      >
-        {children}
-      </DashboardShell>
-    </ThemeProvider>
+    <DashboardShell
+      role="user"
+      roleTitle="Principal Investigator"
+      roleBadge="INVESTIGATOR"
+      roleColor="green"
+      user={{
+        name: "Dr. Elena Rostova",
+        title: "Associate Professor, Public Health",
+        email: "elena.rostova@diu.edu.bd",
+        avatarInitials: "ER",
+      }}
+      navItems={userNavItems}
+      loginRoute="/login"
+      actionButton={{
+        label: "New Protocol",
+        icon: PlusCircle,
+        href: "/dashboard#new-protocol",
+      }}
+    >
+      {children}
+    </DashboardShell>
   )
 }

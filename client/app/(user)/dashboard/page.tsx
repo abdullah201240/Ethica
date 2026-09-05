@@ -8,17 +8,22 @@ import {
   CheckCircle2,
   AlertCircle,
   Plus,
-  Sparkles,
   Download,
   ExternalLink,
   ChevronRight,
   ShieldCheck,
   Building2,
   Calendar,
+  Award,
+  Sparkles,
+  BookOpen,
+  Check,
 } from "lucide-react"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 interface Protocol {
   id: string
@@ -321,27 +326,32 @@ export default function UserDashboardPage() {
             {row.hasCertificate ? (
               <Link
                 href="/#certificate"
-                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors"
-                title="Download Digital Clearance Certificate"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors cursor-pointer"
+                title="Download Digital Clearance Certificate in New Tab"
               >
                 <Download className="size-3.5" />
                 <span>Certificate</span>
               </Link>
             ) : (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 gap-1 cursor-pointer"
+              <Link
+                href="/#preview"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 gap-1 transition-colors cursor-pointer"
+                title="Inspect Protocol in New Tab"
               >
                 <span>Inspect</span>
                 <ChevronRight className="size-3.5" />
-              </Button>
+              </Link>
             )}
             <Link
               href="/#preview"
-              className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Open Protocol Inspector"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Open Protocol Inspector in New Tab"
             >
               <ExternalLink className="size-3.5" />
             </Link>
@@ -475,6 +485,210 @@ export default function UserDashboardPage() {
         >
           Read Institutional Ethics Guidelines
         </Link>
+      </div>
+
+      {/* ── Section: Clearance Certificates Showcase ──────────────────────── */}
+      <div id="certificates" className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <Award className="size-5 text-[#198754]" />
+              <span>Digital Ethical Clearance Certificates</span>
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Official tamper-evident ethical clearance seals issued by DIU Institutional Review Board
+            </p>
+          </div>
+          <Badge className="bg-[#198754]/10 text-[#198754] border-[#198754]/30 font-mono text-xs font-bold">
+            12 Valid Certificates
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="p-5 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <span className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+                  ETH-2026-074
+                </span>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                  Cognitive Load and Decision Fatigue in Telemedicine Triage Nurses
+                </h4>
+              </div>
+              <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-mono">
+                Exempt - Fast Track
+              </Badge>
+            </div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono space-y-0.5">
+              <div>Seal Hash: 8f92...a34e (SHA-256 Verified)</div>
+              <div>Issued: Aug 14, 2026 • Valid until Aug 14, 2027</div>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#198754] flex items-center gap-1">
+                <Check className="size-3.5" /> Institutional Seal Confirmed
+              </span>
+              <Link
+                href="/#certificate"
+                className="inline-flex items-center gap-1 text-xs font-bold text-[#002752] dark:text-sky-300 hover:underline"
+              >
+                <span>View Full Seal</span>
+                <ExternalLink className="size-3" />
+              </Link>
+            </div>
+          </Card>
+
+          <Card className="p-5 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <span className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+                  ETH-2026-061
+                </span>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                  Anonymized Genomic Sequence Sharing Protocol for Oncology Consortium
+                </h4>
+              </div>
+              <Badge className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 text-[10px] font-mono">
+                Full Committee
+              </Badge>
+            </div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono space-y-0.5">
+              <div>Seal Hash: c104...e571 (SHA-256 Verified)</div>
+              <div>Issued: Jul 19, 2026 • Valid until Jul 19, 2027</div>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#198754] flex items-center gap-1">
+                <Check className="size-3.5" /> Institutional Seal Confirmed
+              </span>
+              <Link
+                href="/#certificate"
+                className="inline-flex items-center gap-1 text-xs font-bold text-[#002752] dark:text-sky-300 hover:underline"
+              >
+                <span>View Full Seal</span>
+                <ExternalLink className="size-3" />
+              </Link>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* ── Section: Fast-Track Eligibility Checker ────────────────────────── */}
+      <div id="eligibility" className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <Sparkles className="size-5 text-amber-500" />
+              <span>Fast-Track & Exemption Eligibility Self-Assessment</span>
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Evaluate whether your planned study qualifies for expedited triage or IRB review exemption
+            </p>
+          </div>
+          <Link
+            href="/#checker"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#002752] dark:text-sky-300 hover:underline"
+          >
+            <span>Launch Interactive Simulator</span>
+            <ExternalLink className="size-3" />
+          </Link>
+        </div>
+
+        <Card className="p-6 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
+              <div className="size-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-xs">
+                1
+              </div>
+              <h4 className="font-bold text-slate-900 dark:text-white">Minimal Risk Threshold</h4>
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+                Surveys, anonymous interviews, non-invasive physiological measurements with no vulnerable cohorts.
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
+              <div className="size-8 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center font-bold text-xs">
+                2
+              </div>
+              <h4 className="font-bold text-slate-900 dark:text-white">De-Identified Data Use</h4>
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+                Secondary analysis of anonymized medical datasets or public institutional records.
+              </p>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
+              <div className="size-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold text-xs">
+                3
+              </div>
+              <h4 className="font-bold text-slate-900 dark:text-white">Educational & QA Studies</h4>
+              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+                Curriculum evaluations, pedagogy effectiveness research, and quality improvement audits.
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* ── Section: Institutional Guidelines & Regulatory Policies ───────── */}
+      <div id="guidelines" className="space-y-4">
+        <div>
+          <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
+            <BookOpen className="size-5 text-[#002752] dark:text-sky-300" />
+            <span>Institutional Bioethics Guidelines & Standard Operating Procedures</span>
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Daffodil International University Research Ethics Board Governance Manual (2026 Edition)
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                Informed Consent Templates
+              </h4>
+              <p className="text-slate-500 dark:text-slate-400">
+                Standard adult consent, pediatric assent, and digital teletherapy participant agreements.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="font-mono text-[10px] text-slate-400">DOCX & PDF</span>
+              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+                Download Kit
+              </span>
+            </div>
+          </Card>
+
+          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                Data Privacy & Security Protocols
+              </h4>
+              <p className="text-slate-500 dark:text-slate-400">
+                Guidelines on participant de-identification, encryption standards, and cloud repository audits.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="font-mono text-[10px] text-slate-400">PDF • 1.8 MB</span>
+              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+                Read Policy
+              </span>
+            </div>
+          </Card>
+
+          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                AI & Algorithm Deliberation Framework
+              </h4>
+              <p className="text-slate-500 dark:text-slate-400">
+                Specialized ethics criteria for generative models, clinical decision support, and training datasets.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span className="font-mono text-[10px] text-slate-400">PDF • 2.2 MB</span>
+              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+                Read Framework
+              </span>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   )

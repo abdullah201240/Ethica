@@ -150,6 +150,14 @@ All metric counters, statistical indicators, and executive KPI summaries across 
   - Structured semantic colors: `navy` (`#002752`), `green` (`#198754`), `amber`, `rose`, `sky`, `gold` (`#E0C23C`).
   - Responsive grid layout: `<KpiGrid columns={4}>` adapts automatically from mobile (2 columns) to desktop (4 columns).
 
+---
+
+## 12. Strict Prohibition of Default Browser Alerts (Mandatory Custom Institutional Alert)
+- **Zero Browser `alert()` / `confirm()` / `prompt()`:** Developers and agents must **NEVER** use native browser dialogs (`window.alert()`, `alert()`, `confirm()`, `prompt()`) anywhere in the application.
+- **Mandatory Institutional Alert Primitives:** Always import and compose alerts and confirmations from the platform's custom UI primitives:
+  - **In-Page Notifications & Status Banners:** [`@/components/ui/alert`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/alert.tsx) (`Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`)
+  - **Modal Confirmations & Critical Decision Prompts:** [`@/components/ui/alert-dialog`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/alert-dialog.tsx) (`AlertDialog`, `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel`)
+
 
 
 

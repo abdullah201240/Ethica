@@ -175,25 +175,74 @@ export const initialReviewerApplications: ReviewerApplication[] = [
 
 const STORAGE_KEY = "ethica_reviewer_applications"
 
+let cachedApplications: ReviewerApplication[] | null = null
+let lastRawString: string | null = null
+
 export function getStoredApplications(): ReviewerApplication[] {
   if (typeof window === "undefined") return initialReviewerApplications
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialReviewerApplications))
-      return initialReviewerApplications
+      if (!cachedApplications) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialReviewerApplications))
+        cachedApplications = initialReviewerApplications
+        lastRawString = JSON.stringify(initialReviewerApplications)
+      }
+      return cachedApplications
     }
+    if (raw === lastRawString && cachedApplications !== null) {
+      return cachedApplications
+    }
+    lastRawString = raw
     const parsed = JSON.parse(raw) as ReviewerApplication[]
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : initialReviewerApplications
+    cachedApplications = Array.isArray(parsed) && parsed.length > 0 ? parsed : initialReviewerApplications
+    return cachedApplications
   } catch {
     return initialReviewerApplications
   }
 }
 
+const listeners = new Set<() => void>()
+
+export function subscribeApplications(callback: () => void): () => void {
+  listeners.add(callback)
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY) {
+      lastRawString = null
+      callback()
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", onStorage)
+  }
+  return () => {
+    listeners.delete(callback)
+    if (typeof window !== "undefined") {
+      window.removeEventListener("storage", onStorage)
+    }
+  }
+}
+
+function notifyListeners(): void {
+  listeners.forEach((listener) => listener())
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("ethica:reviewer-applications-updated"))
+  }
+}
+
+export function getReviewerApplicationById(id: string): ReviewerApplication | undefined {
+  const all = getStoredApplications()
+  return all.find((a) => a.id === id)
+}
+
 export function saveStoredApplications(apps: ReviewerApplication[]): void {
   if (typeof window === "undefined") return
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps))
+    const serialized = JSON.stringify(apps)
+    lastRawString = serialized
+    cachedApplications = apps
+    localStorage.setItem(STORAGE_KEY, serialized)
+    notifyListeners()
   } catch {
     // Ignore storage quota errors
   }

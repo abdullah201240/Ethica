@@ -68,6 +68,13 @@ All UI components and features must adhere strictly to these rules:
     - All statistical metrics and KPI counters must use `@/components/ui/kpi-card` (`KpiCard`, `KpiGrid`).
     - Never write raw ad-hoc metric card `<div>` containers.
 
+11. **Text Selectability & Copyability Mandate:**
+    - All platform copy, headings, metrics, badges, and records must be fully selectable and copyable (`user-select: text`). Never apply `select-none` to content containers.
+
+12. **Strict Prohibition of Default Browser Alerts (Mandatory Custom Institutional Alert):**
+    - Zero browser `alert()`, `confirm()`, `prompt()` calls anywhere in the system.
+    - Always use custom institutional primitives: `@/components/ui/alert` (`Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`) or `@/components/ui/alert-dialog` (`AlertDialog`, `AlertDialogAction`, etc.).
+
 
 
 
