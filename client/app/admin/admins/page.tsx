@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
+import { createAdminMemberSchema } from "@/lib/schemas"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -138,20 +139,22 @@ export default function AdminListPage() {
 
   const handleCreateAdmin = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newAdmin.name.trim()) {
-      setFormError("Administrator full name is required.")
-      return
-    }
-    if (!newAdmin.email.trim() || !newAdmin.email.includes("@")) {
-      setFormError("A valid institutional email is required.")
-      return
-    }
-    if (!newAdmin.role.trim()) {
-      setFormError("Administrative role/designation is required.")
-      return
-    }
-    if (!newAdmin.department.trim()) {
-      setFormError("Department or institutional secretariat is required.")
+
+    const validation = createAdminMemberSchema.safeParse({
+      name: newAdmin.name,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      accessLevel: newAdmin.accessLevel,
+      department: newAdmin.department,
+      phone: newAdmin.phone,
+      status: newAdmin.status,
+      protocols: Number(newAdmin.protocols) || 0,
+      permissions: newAdmin.permissions,
+    })
+
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      setFormError(firstError || "Please check administrator form requirements.")
       return
     }
 

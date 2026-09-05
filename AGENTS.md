@@ -186,6 +186,36 @@ All metric counters, statistical indicators, and executive KPI summaries across 
   - On public and authentication routes (`/`, `/apply`, `/login`, `/admin/login`, `/reviewer/login`), it enforces `forcedTheme="light"` and strips `.dark` from `document.documentElement`, preventing theme leakage or unintended dark rendering from `localStorage`.
   - When navigating between workspace dashboards and public/login pages, the user's workspace theme preference is seamlessly preserved in `localStorage` without polluting the public brand presentation or login experience.
 
+---
+
+## 15. Mandatory Zod Runtime Schema Validation Standard
+Runtime data integrity, input sanitation, and form validation across the entire Ethica platform MUST strictly adhere to the centralized Zod schema framework.
+
+### 15.1 Centralized Schema Architecture
+All validation schemas must be defined and maintained in dedicated domain files within [`client/lib/schemas/`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/):
+- **Authentication & Sessions:** [`auth.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/auth.schema.ts) (`userLoginSchema`, `adminLoginSchema`, `reviewerLoginSchema`)
+- **Reviewer Intake & Application:** [`application.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/application.schema.ts) (`step1PersonalDetailsSchema`, `step2AcademicProfileSchema`, `step3ExpertiseSchema`, `step4ReviewSubmitSchema`, `fullApplicationSchema`, `reviewerApplicationSchema`)
+- **Institutional Governance & Administration:** [`admin-member.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/admin-member.schema.ts) (`createAdminMemberSchema`, `updateAdminMemberSchema`, `adminMemberSchema`)
+- **Platform Directory & RBAC:** [`user.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/user.schema.ts) (`createPlatformUserSchema`, `updatePlatformUserSchema`, `platformUserSchema`)
+- **Administrative Profiles & Security:** [`profile.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/profile.schema.ts) (`adminContactSchema`)
+- **Barrel Export:** All schemas and inferred TypeScript types must be re-exported through [`index.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/index.ts).
+
+### 15.2 Prohibition of Loose Ad-Hoc Validation & Raw Attributes
+- **Zero Loose String Checks:** Developers and agents must **NEVER** use informal manual checks like `!value.trim()` or `!value.includes("@")` for form validation.
+- **No Reliance on HTML5 `required`:** Never rely solely on browser-native `required` or HTML validation attributes. All validation must be controlled programmatically using `zod` schemas via `.safeParse()`. Forms must specify `noValidate` to bypass native browser tooltips in favor of the design system.
+
+### 15.3 Mandatory Field-Level Error Presentation
+- **Inline Error Feedback:** Forms must display clear, accessible inline validation messages (`<p className="text-xs text-rose-600 font-semibold mt-1">`) directly underneath the offending input field.
+- **Accessible Attributes & States:** Mark invalid inputs with `aria-invalid={true}` and highlight them with the institutional warning border (`border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20`).
+- **Reactive Clearing:** Active field error states must automatically clear as soon as the user edits the field or clicks an automated demo fill action.
+
+### 15.4 Step-Gated Multi-Step Navigation
+For multi-step wizards (such as [`/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/apply/page.tsx)), intermediate step navigation buttons ("Continue", "Next Step") MUST validate only the active step's schema using `safeParse()`. Navigation to the subsequent step is strictly blocked until the current step satisfies all schema constraints.
+
+### 15.5 Data Layer Deserialization Guards
+All persistence adapters (such as `client/lib/admin-roster.ts`, `client/lib/reviewer-applications.ts`, and `client/lib/users-directory.ts`) must guard `localStorage` reads with `z.array(schema).safeParse()`. If stored data fails schema verification or is corrupted, fallback gracefully to initial institutional seeds without application crashes.
+
+
 
 
 

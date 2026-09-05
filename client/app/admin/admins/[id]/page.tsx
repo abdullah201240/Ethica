@@ -29,6 +29,7 @@ import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
+import { updateAdminMemberSchema } from "@/lib/schemas"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -162,6 +163,16 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const validation = updateAdminMemberSchema.safeParse(editForm)
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      toast.error("Validation Error", {
+        description: firstError || "Please check administrator profile fields.",
+      })
+      return
+    }
+
     const updated = updateAdminMember(admin.id, {
       name: editForm.name,
       email: editForm.email,

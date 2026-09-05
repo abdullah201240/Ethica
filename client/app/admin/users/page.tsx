@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
+import { createPlatformUserSchema } from "@/lib/schemas"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -111,20 +112,23 @@ export default function AdminUsersDirectoryPage() {
 
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newUser.name.trim()) {
-      setFormError("Full name is required.")
-      return
-    }
-    if (!newUser.email.trim() || !newUser.email.includes("@")) {
-      setFormError("A valid institutional email is required.")
-      return
-    }
-    if (!newUser.role.trim()) {
-      setFormError("Designation / Role is required.")
-      return
-    }
-    if (!newUser.department.trim()) {
-      setFormError("Department / Academic Unit is required.")
+
+    const validation = createPlatformUserSchema.safeParse({
+      name: newUser.name,
+      email: newUser.email,
+      phone: newUser.phone,
+      pillar: newUser.pillar,
+      role: newUser.role,
+      department: newUser.department,
+      institution: newUser.institution,
+      status: newUser.status,
+      verificationStatus: newUser.verificationStatus,
+      bio: newUser.bio,
+    })
+
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      setFormError(firstError || "Please check platform user form fields.")
       return
     }
 

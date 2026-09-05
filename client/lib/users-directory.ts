@@ -1,3 +1,10 @@
+import { z } from "zod"
+import {
+  platformUserSchema,
+  createPlatformUserSchema,
+  type CreatePlatformUserInput,
+} from "@/lib/schemas"
+
 export type UserPillar = "Investigator" | "Reviewer" | "Administrator"
 
 export type UserAccountStatus = "Active" | "Inactive" | "Suspended" | "Pending Verification"
@@ -271,8 +278,13 @@ export function getStoredUsers(): PlatformUser[] {
       return cachedUsers
     }
     lastRawString = raw
-    const parsed = JSON.parse(raw) as PlatformUser[]
-    cachedUsers = Array.isArray(parsed) && parsed.length > 0 ? parsed : initialPlatformUsers
+    const parsed = JSON.parse(raw)
+    const validation = z.array(platformUserSchema).safeParse(parsed)
+    if (validation.success && validation.data.length > 0) {
+      cachedUsers = validation.data as PlatformUser[]
+    } else {
+      cachedUsers = initialPlatformUsers
+    }
     return cachedUsers
   } catch {
     return initialPlatformUsers
@@ -320,42 +332,32 @@ export function saveStoredUsers(users: PlatformUser[]): void {
   }
 }
 
-export function addUser(data: {
-  name: string
-  email: string
-  phone?: string
-  pillar: UserPillar
-  role: string
-  department: string
-  institution?: string
-  status?: UserAccountStatus
-  verificationStatus?: UserVerificationStatus
-  protocolsCount?: number
-  bio?: string
-}): PlatformUser {
+export function addUser(data: CreatePlatformUserInput): PlatformUser {
+  const validated = createPlatformUserSchema.safeParse(data)
+  const safeData = validated.success ? validated.data : data
   const current = getStoredUsers()
   const pillarPrefix =
-    data.pillar === "Investigator" ? "INV" : data.pillar === "Reviewer" ? "REV" : "ADM"
+    safeData.pillar === "Investigator" ? "INV" : safeData.pillar === "Reviewer" ? "REV" : "ADM"
   const randomSuffix = Math.floor(100 + Math.random() * 900)
   const newUser: PlatformUser = {
     id: `USR-${pillarPrefix}-${randomSuffix}`,
-    name: data.name.trim(),
-    email: data.email.trim(),
-    phone: data.phone?.trim() || "+880 1713-000000",
-    pillar: data.pillar,
-    role: data.role.trim() || `${data.pillar} Member`,
-    department: data.department.trim() || "Institutional Research Directorate",
-    institution: data.institution?.trim() || "Daffodil International University",
-    status: data.status || "Active",
-    verificationStatus: data.verificationStatus || "Verified Institutional ID",
-    protocolsCount: data.protocolsCount ?? 0,
+    name: safeData.name.trim(),
+    email: safeData.email.trim(),
+    phone: safeData.phone?.trim() || "+880 1713-000000",
+    pillar: safeData.pillar as UserPillar,
+    role: safeData.role.trim() || `${safeData.pillar} Member`,
+    department: safeData.department.trim() || "Institutional Research Directorate",
+    institution: safeData.institution?.trim() || "Daffodil International University",
+    status: safeData.status || "Active",
+    verificationStatus: safeData.verificationStatus || "Verified Institutional ID",
+    protocolsCount: typeof safeData.protocolsCount === "number" ? safeData.protocolsCount : Number(safeData.protocolsCount) || 0,
     joinedAt: new Date().toLocaleDateString("en-US", {
       month: "short",
       day: "2-digit",
       year: "numeric",
     }),
     lastLogin: "Invited today",
-    bio: data.bio?.trim() || `Registered ${data.pillar} account within the Ethica governance platform.`,
+    bio: safeData.bio?.trim() || `Registered ${safeData.pillar} account within the Ethica governance platform.`,
   }
 
   saveStoredUsers([newUser, ...current])

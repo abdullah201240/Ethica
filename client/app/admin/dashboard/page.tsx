@@ -21,12 +21,14 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { toast } from "@/components/ui/sonner"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
+import { createAdminMemberSchema } from "@/lib/schemas"
 import {
   Dialog,
   DialogTrigger,
@@ -138,14 +140,22 @@ export default function AdminDashboardPage() {
 
   const handleCreateAdmin = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
-    if (!newAdmin.name.trim()) {
-      setFormError("Please enter the administrator's full name.")
+
+    const validation = createAdminMemberSchema.safeParse({
+      name: newAdmin.name,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      department: newAdmin.department,
+      status: newAdmin.status,
+      protocols: Number(newAdmin.protocols) || 0,
+    })
+
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      setFormError(firstError || "Please check the entered administrator details.")
       return
     }
-    if (!newAdmin.email.trim() || !newAdmin.email.includes("@")) {
-      setFormError("Please enter a valid institutional email address.")
-      return
-    }
+
     const created = addAdminMember({
       name: newAdmin.name,
       email: newAdmin.email,
@@ -552,9 +562,9 @@ export default function AdminDashboardPage() {
 
                 <div className="space-y-3 py-1 text-xs">
                   <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       Full Name & Title <span className="text-rose-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       placeholder="e.g. Prof. Mohammad Kabir"
@@ -568,9 +578,9 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       Institutional Email Address <span className="text-rose-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="email"
                       placeholder="e.g. m.kabir@diu.edu.bd"
@@ -584,9 +594,9 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       Governance Role
-                    </label>
+                    </Label>
                     <DropdownMenu>
                       <DropdownMenuTrigger render={
                         <Button
@@ -626,9 +636,9 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       Faculty / Department
-                    </label>
+                    </Label>
                     <DropdownMenu>
                       <DropdownMenuTrigger render={
                         <Button
@@ -668,9 +678,9 @@ export default function AdminDashboardPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                         Assigned Protocols
-                      </label>
+                      </Label>
                       <Input
                         type="number"
                         min={0}
@@ -686,9 +696,9 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                         Initial Status
-                      </label>
+                      </Label>
                       <div className="grid grid-cols-2 gap-1 pt-0.5">
                         <Button
                           type="button"

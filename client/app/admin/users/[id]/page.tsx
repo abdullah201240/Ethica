@@ -27,6 +27,7 @@ import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
+import { updatePlatformUserSchema } from "@/lib/schemas"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -162,6 +163,16 @@ export default function UserDossierDetailPage({ params }: PageProps) {
 
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const validation = updatePlatformUserSchema.safeParse(editForm)
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      toast.error("Validation Error", {
+        description: firstError || "Please check user profile fields.",
+      })
+      return
+    }
+
     const updated = updateUser(user.id, {
       name: editForm.name,
       email: editForm.email,

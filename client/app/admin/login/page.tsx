@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { adminLoginSchema } from "@/lib/schemas"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -28,16 +29,31 @@ export default function AdminLoginPage() {
   const [showPassphrase, setShowPassphrase] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = React.useState<{ adminId?: string; passphrase?: string }>({})
 
   const handleDemoFill = () => {
     setAdminId("admin.secretariat@diu.edu.bd")
     setPassphrase("EthicaAdminMaster2026!")
+    setFieldErrors({})
     setStatusMessage("Demo Compliance Administrator credentials loaded!")
     setTimeout(() => setStatusMessage(null), 3500)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Zod Runtime Schema Validation
+    const validation = adminLoginSchema.safeParse({ adminId, passphrase })
+    if (!validation.success) {
+      const flattened = validation.error.flatten().fieldErrors
+      setFieldErrors({
+        adminId: flattened.adminId?.[0],
+        passphrase: flattened.passphrase?.[0],
+      })
+      return
+    }
+
+    setFieldErrors({})
     setLoading(true)
     setStatusMessage("Authenticating with institutional governance directory...")
     setTimeout(() => {
@@ -143,7 +159,7 @@ export default function AdminLoginPage() {
           )}
 
           {/* Credentials Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
             
             {/* Admin ID / Email */}
             <div className="space-y-1.5">
@@ -155,13 +171,25 @@ export default function AdminLoginPage() {
                 <Input
                   id="adminId"
                   type="email"
-                  required
                   placeholder="admin.secretariat@diu.edu.bd"
                   value={adminId}
-                  onChange={(e) => setAdminId(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
+                  aria-invalid={Boolean(fieldErrors.adminId)}
+                  onChange={(e) => {
+                    setAdminId(e.target.value)
+                    if (fieldErrors.adminId) setFieldErrors(prev => ({ ...prev, adminId: undefined }))
+                  }}
+                  className={`w-full h-11 pl-10 pr-4 rounded-xl border ${
+                    fieldErrors.adminId
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
+                  } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
                 />
               </div>
+              {fieldErrors.adminId && (
+                <p className="text-xs text-rose-600 dark:rose-400 font-semibold mt-1">
+                  {fieldErrors.adminId}
+                </p>
+              )}
             </div>
 
             {/* Passphrase */}
@@ -186,11 +214,18 @@ export default function AdminLoginPage() {
                 <Input
                   id="passphrase"
                   type={showPassphrase ? "text" : "password"}
-                  required
                   placeholder="••••••••••••••••"
                   value={passphrase}
-                  onChange={(e) => setPassphrase(e.target.value)}
-                  className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
+                  aria-invalid={Boolean(fieldErrors.passphrase)}
+                  onChange={(e) => {
+                    setPassphrase(e.target.value)
+                    if (fieldErrors.passphrase) setFieldErrors(prev => ({ ...prev, passphrase: undefined }))
+                  }}
+                  className={`w-full h-11 pl-10 pr-10 rounded-xl border ${
+                    fieldErrors.passphrase
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
+                  } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
                 />
                 <Button
                   type="button"
@@ -203,6 +238,11 @@ export default function AdminLoginPage() {
                   {showPassphrase ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </Button>
               </div>
+              {fieldErrors.passphrase && (
+                <p className="text-xs text-rose-600 dark:rose-400 font-semibold mt-1">
+                  {fieldErrors.passphrase}
+                </p>
+              )}
             </div>
 
             <Button

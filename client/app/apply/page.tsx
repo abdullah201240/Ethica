@@ -49,6 +49,12 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import { addReviewerApplication } from "@/lib/reviewer-applications"
+import {
+  step1PersonalDetailsSchema,
+  step2AcademicProfileSchema,
+  step3ExpertiseSchema,
+  fullApplicationSchema,
+} from "@/lib/schemas"
 
 const EXPERTISE_AREAS = [
   "Biomedical & Clinical Research",
@@ -74,6 +80,7 @@ export default function ApplyAsReviewerPage() {
   const [currentStep, setCurrentStep] = React.useState(1)
   const [submitted, setSubmitted] = React.useState(false)
   const [selectedExpertise, setSelectedExpertise] = React.useState<string[]>([])
+  const [errors, setErrors] = React.useState<Record<string, string>>({})
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const [form, setForm] = React.useState({
@@ -99,18 +106,114 @@ export default function ApplyAsReviewerPage() {
       ...prev,
       [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }))
+    if (errors[name]) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        delete next[name]
+        return next
+      })
+    }
   }
 
   const toggleExpertise = (area: string) => {
-    setSelectedExpertise((prev) =>
-      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
-    )
+    setSelectedExpertise((prev) => {
+      const next = prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
+      if (next.length > 0 && errors.expertise) {
+        setErrors((e) => {
+          const updated = { ...e }
+          delete updated.expertise
+          return updated
+        })
+      }
+      return next
+    })
   }
 
-  const handleNext = () => { if (currentStep < 4) setCurrentStep((s) => s + 1) }
-  const handleBack = () => { if (currentStep > 1) setCurrentStep((s) => s - 1) }
+  const handleNext = () => {
+    if (currentStep === 1) {
+      const res = step1PersonalDetailsSchema.safeParse({
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        institution: form.institution,
+      })
+      if (!res.success) {
+        const flattened = res.error.flatten().fieldErrors
+        const errMap: Record<string, string> = {}
+        for (const [k, v] of Object.entries(flattened)) {
+          if (v?.[0]) errMap[k] = v[0]
+        }
+        setErrors(errMap)
+        return
+      }
+    } else if (currentStep === 2) {
+      const res = step2AcademicProfileSchema.safeParse({
+        degree: form.degree,
+        department: form.department,
+        position: form.position,
+        yearsExperience: form.yearsExperience,
+        orcid: form.orcid,
+      })
+      if (!res.success) {
+        const flattened = res.error.flatten().fieldErrors
+        const errMap: Record<string, string> = {}
+        for (const [k, v] of Object.entries(flattened)) {
+          if (v?.[0]) errMap[k] = v[0]
+        }
+        setErrors(errMap)
+        return
+      }
+    } else if (currentStep === 3) {
+      const res = step3ExpertiseSchema.safeParse({
+        expertise: selectedExpertise,
+        statement: form.statement,
+        cvFileName: form.cvFileName,
+      })
+      if (!res.success) {
+        const flattened = res.error.flatten().fieldErrors
+        const errMap: Record<string, string> = {}
+        for (const [k, v] of Object.entries(flattened)) {
+          if (v?.[0]) errMap[k] = v[0]
+        }
+        setErrors(errMap)
+        return
+      }
+    }
+
+    setErrors({})
+    if (currentStep < 4) setCurrentStep((s) => s + 1)
+  }
+
+  const handleBack = () => {
+    setErrors({})
+    if (currentStep > 1) setCurrentStep((s) => s - 1)
+  }
+
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
+
+    const fullRes = fullApplicationSchema.safeParse({
+      ...form,
+      expertise: selectedExpertise,
+    })
+
+    if (!fullRes.success) {
+      const flattened = fullRes.error.flatten().fieldErrors
+      const errMap: Record<string, string> = {}
+      for (const [k, v] of Object.entries(flattened)) {
+        if (v?.[0]) errMap[k] = v[0]
+      }
+      setErrors(errMap)
+      if (errMap.fullName || errMap.email || errMap.institution) {
+        setCurrentStep(1)
+      } else if (errMap.degree || errMap.department || errMap.position || errMap.yearsExperience) {
+        setCurrentStep(2)
+      } else if (errMap.expertise || errMap.statement) {
+        setCurrentStep(3)
+      }
+      return
+    }
+
     const expYears = parseInt(form.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
     addReviewerApplication({
       fullName: form.fullName,
@@ -270,7 +373,7 @@ export default function ApplyAsReviewerPage() {
         </div>
 
         {/* ── Form card ────────────────────────────────────────────────────── */}
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} noValidate className="w-full">
           <div className="w-full bg-white rounded-2xl border border-border/75 shadow-sm overflow-hidden">
 
             {/* Card header */}
@@ -305,14 +408,23 @@ export default function ApplyAsReviewerPage() {
                         </Label>
                         <Input
                           id={field.name}
-                          required={field.required}
                           type={field.type}
                           name={field.name}
                           value={(form as unknown as Record<string, string>)[field.name]}
                           onChange={handleChange}
                           placeholder={field.placeholder}
-                          className="w-full h-11 px-4 rounded-lg border border-border/75 bg-slate-50 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all"
+                          aria-invalid={Boolean(errors[field.name])}
+                          className={`w-full h-11 px-4 rounded-lg border ${
+                            errors[field.name]
+                              ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                              : "border-border/75 bg-slate-50"
+                          } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
                         />
+                        {errors[field.name] && (
+                          <p className="text-xs text-rose-600 font-semibold mt-1">
+                            {errors[field.name]}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -360,11 +472,23 @@ export default function ApplyAsReviewerPage() {
                           value={String((form as Record<string, unknown>)[field.name] ?? "")}
                           onValueChange={(val) => {
                             setForm((prev) => ({ ...prev, [field.name]: val ?? "" }))
+                            if (errors[field.name]) {
+                              setErrors((prev) => {
+                                const next = { ...prev }
+                                delete next[field.name]
+                                return next
+                              })
+                            }
                           }}
                         >
                           <SelectTrigger
                             id={field.name}
-                            className="w-full h-11 px-4 rounded-lg border border-border/75 bg-slate-50 text-[13px] text-slate-700 focus-visible:ring-2 focus-visible:ring-[#002752]/20 focus-visible:border-[#002752]/40 transition-all cursor-pointer"
+                            aria-invalid={Boolean(errors[field.name])}
+                            className={`w-full h-11 px-4 rounded-lg border ${
+                              errors[field.name]
+                                ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                                : "border-border/75 bg-slate-50"
+                            } text-[13px] text-slate-700 focus-visible:ring-2 focus-visible:ring-[#002752]/20 focus-visible:border-[#002752]/40 transition-all cursor-pointer`}
                           >
                             <SelectValue placeholder="Select…" />
                           </SelectTrigger>
@@ -379,13 +503,22 @@ export default function ApplyAsReviewerPage() {
                       ) : (
                         <Input
                           id={field.name}
-                          required={field.required}
                           name={field.name}
                           value={String((form as Record<string, unknown>)[field.name] ?? "")}
                           onChange={handleChange}
                           placeholder={(field as { placeholder?: string }).placeholder}
-                          className="w-full h-11 px-4 rounded-lg border border-border/75 bg-slate-50 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all"
+                          aria-invalid={Boolean(errors[field.name])}
+                          className={`w-full h-11 px-4 rounded-lg border ${
+                            errors[field.name]
+                              ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                              : "border-border/75 bg-slate-50"
+                          } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
                         />
+                      )}
+                      {errors[field.name] && (
+                        <p className="text-xs text-rose-600 font-semibold mt-1">
+                          {errors[field.name]}
+                        </p>
                       )}
                     </div>
                   ))}
@@ -421,6 +554,11 @@ export default function ApplyAsReviewerPage() {
                         )
                       })}
                     </div>
+                    {errors.expertise && (
+                      <p className="text-xs text-rose-600 font-semibold mt-1">
+                        {errors.expertise}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-1.5">
@@ -429,15 +567,25 @@ export default function ApplyAsReviewerPage() {
                     </Label>
                     <Textarea
                       id="statement"
-                      required
                       name="statement"
                       value={form.statement}
                       onChange={handleChange}
                       rows={7}
+                      aria-invalid={Boolean(errors.statement)}
                       placeholder="Briefly describe your research ethics background, any prior IRB or ethics committee experience, and your motivation for joining the Ethica Review Board…"
-                      className="w-full px-4 py-3 rounded-lg border border-border/75 bg-slate-50 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all resize-none min-h-[160px]"
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        errors.statement
+                          ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                          : "border-border/75 bg-slate-50"
+                      } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all resize-none min-h-[160px]`}
                     />
-                    <p className="text-[10px] text-slate-400">Minimum 100 characters recommended</p>
+                    {errors.statement ? (
+                      <p className="text-xs text-rose-600 font-semibold mt-1">
+                        {errors.statement}
+                      </p>
+                    ) : (
+                      <p className="text-[10px] text-slate-400">Minimum 20 characters recommended</p>
+                    )}
                   </div>
 
                   <div className="space-y-1.5">
@@ -518,22 +666,36 @@ export default function ApplyAsReviewerPage() {
                     <p className="text-xs text-slate-600 leading-relaxed">
                       By submitting this application, I confirm that all information provided is accurate and complete. I understand that the IRB Secretariat may verify my credentials independently. I agree to abide by the Daffodil International University Research Ethics Code of Conduct and maintain confidentiality of all protocols under review.
                     </p>
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id="agreeTerms"
-                        name="agreeTerms"
-                        checked={form.agreeTerms}
-                        onCheckedChange={(checked) =>
-                          setForm((prev) => ({ ...prev, agreeTerms: Boolean(checked) }))
-                        }
-                        className="cursor-pointer"
-                      />
-                      <Label
-                        htmlFor="agreeTerms"
-                        className="text-[13px] font-semibold text-slate-700 cursor-pointer"
-                      >
-                        I agree to the above declaration and DIU IRB Reviewer Code of Conduct
-                      </Label>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id="agreeTerms"
+                          name="agreeTerms"
+                          checked={form.agreeTerms}
+                          onCheckedChange={(checked) => {
+                            setForm((prev) => ({ ...prev, agreeTerms: Boolean(checked) }))
+                            if (errors.agreeTerms) {
+                              setErrors((e) => {
+                                const next = { ...e }
+                                delete next.agreeTerms
+                                return next
+                              })
+                            }
+                          }}
+                          className="cursor-pointer"
+                        />
+                        <Label
+                          htmlFor="agreeTerms"
+                          className="text-[13px] font-semibold text-slate-700 cursor-pointer"
+                        >
+                          I agree to the above declaration and DIU IRB Reviewer Code of Conduct
+                        </Label>
+                      </div>
+                      {errors.agreeTerms && (
+                        <p className="text-xs text-rose-600 font-semibold mt-1">
+                          {errors.agreeTerms}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </>

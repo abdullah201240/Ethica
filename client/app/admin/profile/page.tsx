@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
+import { adminContactSchema } from "@/lib/schemas"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -131,6 +132,16 @@ export default function AdminProfilePage() {
 
   const handleSaveContact = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const validation = adminContactSchema.safeParse(contactForm)
+    if (!validation.success) {
+      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
+      toast.error("Validation Error", {
+        description: firstError || "Please check contact coordinates.",
+      })
+      return
+    }
+
     setIsEditingContact(false)
     toast.success("Institutional Profile Updated", {
       description:

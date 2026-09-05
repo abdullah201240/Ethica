@@ -1,4 +1,6 @@
 import { syncApprovedReviewerToRoster, updateReviewerStatus } from "@/lib/reviewer-roster"
+import { z } from "zod"
+import { reviewerApplicationSchema } from "@/lib/schemas"
 
 export interface ReviewerApplication {
   id: string
@@ -196,8 +198,13 @@ export function getStoredApplications(): ReviewerApplication[] {
       return cachedApplications
     }
     lastRawString = raw
-    const parsed = JSON.parse(raw) as ReviewerApplication[]
-    cachedApplications = Array.isArray(parsed) && parsed.length > 0 ? parsed : initialReviewerApplications
+    const parsed = JSON.parse(raw)
+    const validation = z.array(reviewerApplicationSchema).safeParse(parsed)
+    if (validation.success && validation.data.length > 0) {
+      cachedApplications = validation.data as ReviewerApplication[]
+    } else {
+      cachedApplications = initialReviewerApplications
+    }
     return cachedApplications
   } catch {
     return initialReviewerApplications

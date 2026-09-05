@@ -1,3 +1,6 @@
+import { z } from "zod"
+import { adminMemberSchema, createAdminMemberSchema, type CreateAdminMemberInput } from "@/lib/schemas"
+
 export type AdminAccessLevel =
   | "Super Admin"
   | "System Admin"
@@ -172,8 +175,13 @@ export function getStoredAdminMembers(): AdminMember[] {
       return cachedMembers
     }
     lastRawString = raw
-    const parsed = JSON.parse(raw) as AdminMember[]
-    cachedMembers = Array.isArray(parsed) && parsed.length > 0 ? parsed : initialAdminMembers
+    const parsed = JSON.parse(raw)
+    const validation = z.array(adminMemberSchema).safeParse(parsed)
+    if (validation.success && validation.data.length > 0) {
+      cachedMembers = validation.data as AdminMember[]
+    } else {
+      cachedMembers = initialAdminMembers
+    }
     return cachedMembers
   } catch {
     return initialAdminMembers
@@ -221,29 +229,21 @@ export function saveStoredAdminMembers(members: AdminMember[]): void {
   }
 }
 
-export function addAdminMember(data: {
-  name: string
-  email: string
-  role: string
-  accessLevel?: AdminAccessLevel
-  department: string
-  phone?: string
-  status?: "Active" | "Inactive"
-  protocols?: number
-  permissions?: string[]
-}): AdminMember {
+export function addAdminMember(data: CreateAdminMemberInput): AdminMember {
+  const validated = createAdminMemberSchema.safeParse(data)
+  const safeData = validated.success ? validated.data : data
   const current = getStoredAdminMembers()
   const randomSuffix = Math.floor(100 + Math.random() * 900)
   const newMember: AdminMember = {
     id: `ADM-2026-${randomSuffix}`,
-    name: data.name.trim(),
-    email: data.email.trim(),
-    role: data.role.trim() || "System Administrator",
-    accessLevel: data.accessLevel || "System Admin",
-    department: data.department.trim() || "Research Governance Secretariat",
-    status: data.status || "Active",
-    protocols: data.protocols ?? 0,
-    phone: data.phone?.trim() || "+880 1713-000000",
+    name: safeData.name.trim(),
+    email: safeData.email.trim(),
+    role: safeData.role.trim() || "System Administrator",
+    accessLevel: safeData.accessLevel || "System Admin",
+    department: safeData.department.trim() || "Research Governance Secretariat",
+    status: safeData.status || "Active",
+    protocols: typeof safeData.protocols === "number" ? safeData.protocols : Number(safeData.protocols) || 0,
+    phone: safeData.phone?.trim() || "+880 1713-000000",
     lastActive: "Just now",
     addedAt: new Date().toLocaleDateString("en-US", {
       month: "short",
@@ -251,8 +251,8 @@ export function addAdminMember(data: {
       year: "numeric",
     }),
     permissions:
-      data.permissions && data.permissions.length > 0
-        ? data.permissions
+      safeData.permissions && safeData.permissions.length > 0
+        ? safeData.permissions
         : ["System Administration", "Institutional RBAC Access"],
   }
   saveStoredAdminMembers([newMember, ...current])

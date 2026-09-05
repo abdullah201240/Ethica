@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { userLoginSchema } from "@/lib/schemas"
 
 export default function UserLoginPage() {
   const router = useRouter()
@@ -29,16 +30,31 @@ export default function UserLoginPage() {
   const [rememberMe, setRememberMe] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = React.useState<{ email?: string; password?: string }>({})
 
   const handleDemoFill = () => {
     setEmail("elena.rostova@diu.edu.bd")
     setPassword("EthicaSecure2026!")
+    setFieldErrors({})
     setStatusMessage("Demo Principal Investigator credentials loaded!")
     setTimeout(() => setStatusMessage(null), 3500)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Zod Runtime Schema Validation
+    const validation = userLoginSchema.safeParse({ email, password, rememberMe })
+    if (!validation.success) {
+      const flattened = validation.error.flatten().fieldErrors
+      setFieldErrors({
+        email: flattened.email?.[0],
+        password: flattened.password?.[0],
+      })
+      return
+    }
+
+    setFieldErrors({})
     setLoading(true)
     setStatusMessage("Authenticating with institutional directory...")
     setTimeout(() => {
@@ -183,7 +199,7 @@ export default function UserLoginPage() {
           </div>
 
           {/* Credentials Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
                 Institutional Email
@@ -193,13 +209,25 @@ export default function UserLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  required
                   placeholder="investigator@diu.edu.bd"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    if (fieldErrors.email) setFieldErrors((p) => ({ ...p, email: undefined }))
+                  }}
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  className={`w-full h-11 pl-10 pr-4 rounded-xl border bg-slate-50/60 dark:bg-slate-900/60 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 transition-all ${
+                    fieldErrors.email
+                      ? "border-rose-500 focus-visible:ring-rose-500"
+                      : "border-slate-200/85 dark:border-slate-800 focus-visible:ring-[#002752] dark:focus-visible:ring-white"
+                  }`}
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 pt-0.5 animate-fade-in">
+                  {fieldErrors.email}
+                </p>
+              )}
             </div>
 
             <div className="space-y-1.5">
@@ -223,11 +251,18 @@ export default function UserLoginPage() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  required
                   placeholder="••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    if (fieldErrors.password) setFieldErrors((p) => ({ ...p, password: undefined }))
+                  }}
+                  aria-invalid={Boolean(fieldErrors.password)}
+                  className={`w-full h-11 pl-10 pr-10 rounded-xl border bg-slate-50/60 dark:bg-slate-900/60 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 transition-all ${
+                    fieldErrors.password
+                      ? "border-rose-500 focus-visible:ring-rose-500"
+                      : "border-slate-200/85 dark:border-slate-800 focus-visible:ring-[#002752] dark:focus-visible:ring-white"
+                  }`}
                 />
                 <Button
                   type="button"
@@ -240,6 +275,11 @@ export default function UserLoginPage() {
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </Button>
               </div>
+              {fieldErrors.password && (
+                <p className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 pt-0.5 animate-fade-in">
+                  {fieldErrors.password}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2 pt-1">
