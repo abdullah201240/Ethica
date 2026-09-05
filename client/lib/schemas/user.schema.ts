@@ -53,6 +53,7 @@ export const createPlatformUserSchema = z.object({
   verificationStatus: z.enum(USER_VERIFICATION_STATUSES).default("Verified Institutional ID"),
   protocolsCount: z.coerce.number().int().min(0).default(0),
   bio: z.string().max(500, "Bio cannot exceed 500 characters").optional(),
+  avatar: z.string().optional(),
 })
 
 export type CreatePlatformUserInput = z.input<typeof createPlatformUserSchema>
@@ -76,6 +77,7 @@ export const platformUserSchema = z.object({
   joinedAt: z.string(),
   lastLogin: z.string(),
   bio: z.string().optional(),
+  avatar: z.string().optional(),
 })
 
 export type StoredPlatformUser = z.infer<typeof platformUserSchema>

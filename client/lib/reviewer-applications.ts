@@ -5,6 +5,7 @@ import {
   createReviewerApplicationInputSchema,
   type CreateReviewerApplicationInput,
 } from "@/lib/schemas"
+import { reviewerApplicationsApi } from "@/lib/api/reviewer-applications.api"
 
 export interface ReviewerApplication {
   id: string
@@ -181,57 +182,51 @@ export const initialReviewerApplications: ReviewerApplication[] = [
   },
 ]
 
-const STORAGE_KEY = "ethica_reviewer_applications"
+let cachedApplications: ReviewerApplication[] = [...initialReviewerApplications]
+let isAppsInitialized = false
 
-let cachedApplications: ReviewerApplication[] | null = null
-let lastRawString: string | null = null
-
-export function getStoredApplications(): ReviewerApplication[] {
-  if (typeof window === "undefined") return initialReviewerApplications
+async function fetchApplicationsFromApi(): Promise<void> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      if (!cachedApplications) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialReviewerApplications))
-        cachedApplications = initialReviewerApplications
-        lastRawString = JSON.stringify(initialReviewerApplications)
-      }
-      return cachedApplications
-    }
-    if (raw === lastRawString && cachedApplications !== null) {
-      return cachedApplications
-    }
-    lastRawString = raw
-    const parsed = JSON.parse(raw)
-    const validation = z.array(reviewerApplicationSchema).safeParse(parsed)
+    const data = await reviewerApplicationsApi.getAll()
+    const validation = z.array(reviewerApplicationSchema).safeParse(data)
     if (validation.success && validation.data.length > 0) {
       cachedApplications = validation.data as ReviewerApplication[]
-    } else {
-      cachedApplications = initialReviewerApplications
+      notifyListeners()
     }
-    return cachedApplications
   } catch {
-    return initialReviewerApplications
+    // Retain local in-memory cache
   }
+}
+
+export function getStoredApplications(): ReviewerApplication[] {
+  if (typeof window !== "undefined" && !isAppsInitialized) {
+    isAppsInitialized = true
+    void fetchApplicationsFromApi()
+  }
+  return cachedApplications
 }
 
 const listeners = new Set<() => void>()
 
 export function subscribeApplications(callback: () => void): () => void {
   listeners.add(callback)
-  const onStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) {
-      lastRawString = null
-      callback()
-    }
+  if (typeof window !== "undefined" && !isAppsInitialized) {
+    isAppsInitialized = true
+    void fetchApplicationsFromApi()
   }
+
+  const handleCustomSync = () => {
+    callback()
+  }
+
   if (typeof window !== "undefined") {
-    window.addEventListener("storage", onStorage)
+    window.addEventListener("ethica:reviewer-applications-updated", handleCustomSync)
   }
+
   return () => {
     listeners.delete(callback)
     if (typeof window !== "undefined") {
-      window.removeEventListener("storage", onStorage)
+      window.removeEventListener("ethica:reviewer-applications-updated", handleCustomSync)
     }
   }
 }
@@ -249,16 +244,8 @@ export function getReviewerApplicationById(id: string): ReviewerApplication | un
 }
 
 export function saveStoredApplications(apps: ReviewerApplication[]): void {
-  if (typeof window === "undefined") return
-  try {
-    const serialized = JSON.stringify(apps)
-    lastRawString = serialized
-    cachedApplications = apps
-    localStorage.setItem(STORAGE_KEY, serialized)
-    notifyListeners()
-  } catch {
-    // Ignore storage quota errors
-  }
+  cachedApplications = apps
+  notifyListeners()
 }
 
 export function addReviewerApplication(
@@ -278,8 +265,15 @@ export function addReviewerApplication(
     status: "Pending Verification",
     submittedAt: dateStr,
   }
-  const updated = [created, ...current]
-  saveStoredApplications(updated)
+
+  cachedApplications = [created, ...current]
+  notifyListeners()
+
+  // Asynchronously persist to server REST API
+  reviewerApplicationsApi.create(newApp).catch(() => {
+    // Retain optimistic cache
+  })
+
   return created
 }
 
@@ -311,6 +305,11 @@ export function updateReviewerApplicationStatus(
   })
 
   saveStoredApplications(updated)
+
+  // Asynchronously persist to server REST API
+  reviewerApplicationsApi.updateStatus(id, status, notes).catch(() => {
+    // Retain optimistic cache
+  })
 
   // Automatically synchronize accredited reviewer roster
   if (status === "Approved" && targetApp) {

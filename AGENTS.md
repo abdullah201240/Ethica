@@ -213,7 +213,36 @@ All validation schemas must be defined and maintained in dedicated domain files 
 For multi-step wizards (such as [`/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/apply/page.tsx)), intermediate step navigation buttons ("Continue", "Next Step") MUST validate only the active step's schema using `safeParse()`. Navigation to the subsequent step is strictly blocked until the current step satisfies all schema constraints.
 
 ### 15.5 Data Layer Deserialization Guards
-All persistence adapters (such as `client/lib/admin-roster.ts`, `client/lib/reviewer-applications.ts`, and `client/lib/users-directory.ts`) must guard `localStorage` reads with `z.array(schema).safeParse()`. If stored data fails schema verification or is corrupted, fallback gracefully to initial institutional seeds without application crashes.
+All client API adapters and memory stores (such as `client/lib/admin-roster.ts`, `client/lib/reviewer-roster.ts`, `client/lib/reviewer-applications.ts`, and `client/lib/users-directory.ts`) must guard all incoming server data with `z.array(schema).safeParse()` or `schema.safeParse()`. If remote or cached data fails schema verification or is corrupted, fallback gracefully to initial institutional seeds without application crashes.
+
+---
+
+## 16. Mandatory Zero LocalStorage & API-First Architecture Standard
+The Ethica platform strictly forbids `localStorage` and `sessionStorage` for storing business data, entities, user profiles, rosters, or protocol state. The system is architected as an API-first platform ready for production backend integration:
+
+### 16.1 Strict Prohibition of Browser LocalStorage
+- **Zero `localStorage.getItem` / `localStorage.setItem`:** Developers and agents must **NEVER** use browser `localStorage` or `sessionStorage` to persist or retrieve domain records (applications, reviewers, admins, users, profiles, etc.).
+- **Theme Preference Exception:** Only the client-side theme utility (`next-themes` via `ThemeProvider`) may persist the user's workspace theme mode. All domain data MUST flow through the API layer.
+
+### 16.2 Centralized Server Route Handlers (`app/api/*`)
+All backend data operations are handled by Next.js App Router REST Route Handlers located in [`client/app/api/`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/):
+- **Governance Admins:** [`/api/admin/members`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/admin/members/route.ts), [`/api/admin/members/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/admin/members/%5Bid%5D/route.ts)
+- **Accredited Reviewers:** [`/api/reviewers/roster`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/roster/route.ts), [`/api/reviewers/roster/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/roster/%5Bid%5D/route.ts), [`/api/reviewers/roster/sync`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/roster/sync/route.ts)
+- **Reviewer Intake Applications:** [`/api/reviewers/applications`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/applications/route.ts), [`/api/reviewers/applications/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/applications/%5Bid%5D/route.ts)
+- **Platform User Directory:** [`/api/users`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/users/route.ts), [`/api/users/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/users/%5Bid%5D/route.ts)
+- **Investigator Profile:** [`/api/investigator/profile`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/investigator/profile/route.ts)
+
+### 16.3 Standardized JSON Response Envelopes
+Every API Route Handler returns a consistent institutional JSON envelope:
+- **Success:** `{ success: true, data: T, meta?: { total?: number, timestamp: string } }`
+- **Failure:** `{ success: false, error: string, issues?: Record<string, string[]> }` with appropriate HTTP status codes (`400`, `404`, `500`).
+
+### 16.4 Typed Client API Service Layer (`lib/api/*`)
+All frontend components and store modules communicate with the server through strongly-typed API client services in [`client/lib/api/`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/):
+- **Core Fetcher:** [`client.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/client.ts) (`apiFetch<T>`, `ApiError`)
+- **Domain Services:** `adminMembersApi`, `reviewerRosterApi`, `reviewerApplicationsApi`, `usersDirectoryApi`, `investigatorProfileApi`
+- **Barrel Export:** All API services and types must be exported via [`lib/api/index.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/index.ts).
+
 
 
 

@@ -21,7 +21,7 @@ export const REVIEWER_CLEARANCE_LEVELS = [
 ] as const
 
 /**
- * Schema for stored accredited reviewer records in localStorage
+ * Schema for accredited reviewer records in database/API
  */
 export const reviewerRosterSchema = z.object({
   id: z.string(),

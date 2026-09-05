@@ -46,6 +46,7 @@ export interface DashboardShellProps {
     title: string
     email: string
     avatarInitials: string
+    avatarImage?: string
   }
   navItems: NavItem[]
   loginRoute: string
@@ -396,9 +397,18 @@ export function DashboardShell({
                 aria-label="Profile"
               >
                 <div
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm overflow-hidden`}
                 >
-                  {user.avatarInitials}
+                  {user.avatarImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.avatarImage}
+                      alt={user.name}
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    user.avatarInitials
+                  )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
                   <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">
@@ -417,9 +427,18 @@ export function DashboardShell({
                 aria-label="Profile menu"
               >
                 <div
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm overflow-hidden`}
                 >
-                  {user.avatarInitials}
+                  {user.avatarImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.avatarImage}
+                      alt={user.name}
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    user.avatarInitials
+                  )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
                   <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">

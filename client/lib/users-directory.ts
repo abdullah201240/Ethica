@@ -4,10 +4,12 @@ import {
   createPlatformUserSchema,
   type CreatePlatformUserInput,
 } from "@/lib/schemas"
+import { usersDirectoryApi } from "@/lib/api/users-directory.api"
 
 export type UserPillar = "Investigator" | "Reviewer" | "Administrator"
 
 export type UserAccountStatus = "Active" | "Inactive" | "Suspended" | "Pending Verification"
+export type UserStatus = UserAccountStatus
 
 export type UserVerificationStatus =
   | "Verified Institutional ID"
@@ -29,6 +31,7 @@ export interface PlatformUser {
   joinedAt: string
   lastLogin: string
   bio?: string
+  avatar?: string
 }
 
 export const initialPlatformUsers: PlatformUser[] = [
@@ -258,56 +261,51 @@ export const initialPlatformUsers: PlatformUser[] = [
   },
 ]
 
-const STORAGE_KEY = "ethica_platform_users_directory_v1"
-let cachedUsers: PlatformUser[] | null = null
-let lastRawString: string | null = null
+let cachedUsers: PlatformUser[] = [...initialPlatformUsers]
+let isUsersInitialized = false
 
-export function getStoredUsers(): PlatformUser[] {
-  if (typeof window === "undefined") return initialPlatformUsers
+async function fetchUsersFromApi(): Promise<void> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      if (!cachedUsers) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPlatformUsers))
-        cachedUsers = initialPlatformUsers
-        lastRawString = JSON.stringify(initialPlatformUsers)
-      }
-      return cachedUsers
-    }
-    if (raw === lastRawString && cachedUsers !== null) {
-      return cachedUsers
-    }
-    lastRawString = raw
-    const parsed = JSON.parse(raw)
-    const validation = z.array(platformUserSchema).safeParse(parsed)
+    const data = await usersDirectoryApi.getAll()
+    const validation = z.array(platformUserSchema).safeParse(data)
     if (validation.success && validation.data.length > 0) {
       cachedUsers = validation.data as PlatformUser[]
-    } else {
-      cachedUsers = initialPlatformUsers
+      notifyListeners()
     }
-    return cachedUsers
   } catch {
-    return initialPlatformUsers
+    // Retain in-memory cache on network error
   }
+}
+
+export function getStoredUsers(): PlatformUser[] {
+  if (typeof window !== "undefined" && !isUsersInitialized) {
+    isUsersInitialized = true
+    void fetchUsersFromApi()
+  }
+  return cachedUsers
 }
 
 const listeners = new Set<() => void>()
 
 export function subscribeUsers(callback: () => void): () => void {
   listeners.add(callback)
-  const onStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) {
-      lastRawString = null
-      callback()
-    }
+  if (typeof window !== "undefined" && !isUsersInitialized) {
+    isUsersInitialized = true
+    void fetchUsersFromApi()
   }
+
+  const handleCustomSync = () => {
+    callback()
+  }
+
   if (typeof window !== "undefined") {
-    window.addEventListener("storage", onStorage)
+    window.addEventListener("ethica:users-directory-updated", handleCustomSync)
   }
+
   return () => {
     listeners.delete(callback)
     if (typeof window !== "undefined") {
-      window.removeEventListener("storage", onStorage)
+      window.removeEventListener("ethica:users-directory-updated", handleCustomSync)
     }
   }
 }
@@ -320,16 +318,8 @@ function notifyListeners(): void {
 }
 
 export function saveStoredUsers(users: PlatformUser[]): void {
-  if (typeof window === "undefined") return
-  try {
-    const serialized = JSON.stringify(users)
-    lastRawString = serialized
-    cachedUsers = users
-    localStorage.setItem(STORAGE_KEY, serialized)
-    notifyListeners()
-  } catch {
-    // Ignore storage quota errors
-  }
+  cachedUsers = users
+  notifyListeners()
 }
 
 export function addUser(data: CreatePlatformUserInput): PlatformUser {
@@ -360,7 +350,14 @@ export function addUser(data: CreatePlatformUserInput): PlatformUser {
     bio: safeData.bio?.trim() || `Registered ${safeData.pillar} account within the Ethica governance platform.`,
   }
 
-  saveStoredUsers([newUser, ...current])
+  cachedUsers = [newUser, ...current]
+  notifyListeners()
+
+  // Asynchronously persist to server REST API
+  usersDirectoryApi.create(safeData).catch(() => {
+    // Retain optimistic cache
+  })
+
   return newUser
 }
 
@@ -377,10 +374,28 @@ export function updateUser(
     }
     return user
   })
+
   if (updatedUser) {
-    saveStoredUsers(updatedList)
+    cachedUsers = updatedList
+    notifyListeners()
+
+    // Asynchronously persist to server REST API
+    usersDirectoryApi.update(id, updates).catch(() => {
+      // Retain optimistic cache
+    })
   }
+
   return updatedUser
+}
+
+export function deleteUser(id: string): boolean {
+  const current = getStoredUsers()
+  cachedUsers = current.filter((u) => u.id !== id)
+  notifyListeners()
+  usersDirectoryApi.delete(id).catch(() => {
+    // Retain optimistic cache
+  })
+  return true
 }
 
 export function updateUserStatus(

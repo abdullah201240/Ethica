@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { adminMemberSchema, createAdminMemberSchema, type CreateAdminMemberInput } from "@/lib/schemas"
+import { adminMembersApi } from "@/lib/api/admin-members.api"
 
 export type AdminAccessLevel =
   | "Super Admin"
@@ -155,56 +156,51 @@ export const initialAdminMembers: AdminMember[] = [
   },
 ]
 
-const STORAGE_KEY = "ethica_system_administrators_v3"
-let cachedMembers: AdminMember[] | null = null
-let lastRawString: string | null = null
+let cachedMembers: AdminMember[] = [...initialAdminMembers]
+let isInitialized = false
 
-export function getStoredAdminMembers(): AdminMember[] {
-  if (typeof window === "undefined") return initialAdminMembers
+async function fetchFromApi(): Promise<void> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      if (!cachedMembers) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialAdminMembers))
-        cachedMembers = initialAdminMembers
-        lastRawString = JSON.stringify(initialAdminMembers)
-      }
-      return cachedMembers
-    }
-    if (raw === lastRawString && cachedMembers !== null) {
-      return cachedMembers
-    }
-    lastRawString = raw
-    const parsed = JSON.parse(raw)
-    const validation = z.array(adminMemberSchema).safeParse(parsed)
+    const data = await adminMembersApi.getAll()
+    const validation = z.array(adminMemberSchema).safeParse(data)
     if (validation.success && validation.data.length > 0) {
       cachedMembers = validation.data as AdminMember[]
-    } else {
-      cachedMembers = initialAdminMembers
+      notifyListeners()
     }
-    return cachedMembers
   } catch {
-    return initialAdminMembers
+    // Retain in-memory cached state on offline / connection issue
   }
+}
+
+export function getStoredAdminMembers(): AdminMember[] {
+  if (typeof window !== "undefined" && !isInitialized) {
+    isInitialized = true
+    void fetchFromApi()
+  }
+  return cachedMembers
 }
 
 const listeners = new Set<() => void>()
 
 export function subscribeAdminMembers(callback: () => void): () => void {
   listeners.add(callback)
-  const onStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) {
-      lastRawString = null
-      callback()
-    }
+  if (typeof window !== "undefined" && !isInitialized) {
+    isInitialized = true
+    void fetchFromApi()
   }
+
+  const handleCustomSync = () => {
+    callback()
+  }
+
   if (typeof window !== "undefined") {
-    window.addEventListener("storage", onStorage)
+    window.addEventListener("ethica:admin-roster-updated", handleCustomSync)
   }
+
   return () => {
     listeners.delete(callback)
     if (typeof window !== "undefined") {
-      window.removeEventListener("storage", onStorage)
+      window.removeEventListener("ethica:admin-roster-updated", handleCustomSync)
     }
   }
 }
@@ -217,16 +213,8 @@ function notifyListeners(): void {
 }
 
 export function saveStoredAdminMembers(members: AdminMember[]): void {
-  if (typeof window === "undefined") return
-  try {
-    const serialized = JSON.stringify(members)
-    lastRawString = serialized
-    cachedMembers = members
-    localStorage.setItem(STORAGE_KEY, serialized)
-    notifyListeners()
-  } catch {
-    // Ignore storage quota errors
-  }
+  cachedMembers = members
+  notifyListeners()
 }
 
 export function addAdminMember(data: CreateAdminMemberInput): AdminMember {
@@ -255,7 +243,15 @@ export function addAdminMember(data: CreateAdminMemberInput): AdminMember {
         ? safeData.permissions
         : ["System Administration", "Institutional RBAC Access"],
   }
-  saveStoredAdminMembers([newMember, ...current])
+
+  cachedMembers = [newMember, ...current]
+  notifyListeners()
+
+  // Asynchronously persist to server REST API
+  adminMembersApi.create(safeData).catch(() => {
+    // Keep local optimistic cache
+  })
+
   return newMember
 }
 
@@ -272,9 +268,17 @@ export function updateAdminMember(
     }
     return member
   })
+
   if (updatedMember) {
-    saveStoredAdminMembers(updatedList)
+    cachedMembers = updatedList
+    notifyListeners()
+
+    // Asynchronously persist to server REST API
+    adminMembersApi.update(id, updates).catch(() => {
+      // Retain optimistic state
+    })
   }
+
   return updatedMember
 }
 
@@ -294,6 +298,16 @@ export function toggleAdminMemberStatus(id: string): AdminMember | undefined {
   if (!target) return undefined
   const nextStatus = target.status === "Active" ? "Inactive" : "Active"
   return updateAdminMemberStatus(id, nextStatus)
+}
+
+export function deleteAdminMember(id: string): boolean {
+  const current = getStoredAdminMembers()
+  cachedMembers = current.filter((m) => m.id !== id)
+  notifyListeners()
+  adminMembersApi.delete(id).catch(() => {
+    // Retain optimistic state
+  })
+  return true
 }
 
 export function getAdminMemberById(id: string): AdminMember | undefined {

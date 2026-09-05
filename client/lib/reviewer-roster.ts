@@ -4,6 +4,7 @@ import {
   syncApprovedReviewerSchema,
   type SyncApprovedReviewerInput,
 } from "@/lib/schemas"
+import { reviewerRosterApi } from "@/lib/api/reviewer-roster.api"
 
 export interface AccreditedReviewer {
   id: string
@@ -161,57 +162,51 @@ export const initialAccreditedReviewers: AccreditedReviewer[] = [
   },
 ]
 
-const ROSTER_STORAGE_KEY = "ethica_accredited_reviewers"
+let cachedReviewers: AccreditedReviewer[] = [...initialAccreditedReviewers]
+let isRosterInitialized = false
 
-let cachedReviewers: AccreditedReviewer[] | null = null
-let lastRawRosterString: string | null = null
-
-export function getStoredReviewers(): AccreditedReviewer[] {
-  if (typeof window === "undefined") return initialAccreditedReviewers
+async function fetchRosterFromApi(): Promise<void> {
   try {
-    const raw = localStorage.getItem(ROSTER_STORAGE_KEY)
-    if (!raw) {
-      if (!cachedReviewers) {
-        localStorage.setItem(ROSTER_STORAGE_KEY, JSON.stringify(initialAccreditedReviewers))
-        cachedReviewers = initialAccreditedReviewers
-        lastRawRosterString = JSON.stringify(initialAccreditedReviewers)
-      }
-      return cachedReviewers
-    }
-    if (raw === lastRawRosterString && cachedReviewers !== null) {
-      return cachedReviewers
-    }
-    lastRawRosterString = raw
-    const parsed = JSON.parse(raw)
-    const validation = z.array(reviewerRosterSchema).safeParse(parsed)
+    const data = await reviewerRosterApi.getAll()
+    const validation = z.array(reviewerRosterSchema).safeParse(data)
     if (validation.success && validation.data.length > 0) {
       cachedReviewers = validation.data as AccreditedReviewer[]
-    } else {
-      cachedReviewers = initialAccreditedReviewers
+      notifyRosterListeners()
     }
-    return cachedReviewers
   } catch {
-    return initialAccreditedReviewers
+    // Retain in-memory cache on network error
   }
+}
+
+export function getStoredReviewers(): AccreditedReviewer[] {
+  if (typeof window !== "undefined" && !isRosterInitialized) {
+    isRosterInitialized = true
+    void fetchRosterFromApi()
+  }
+  return cachedReviewers
 }
 
 const rosterListeners = new Set<() => void>()
 
 export function subscribeReviewers(callback: () => void): () => void {
   rosterListeners.add(callback)
-  const onStorage = (e: StorageEvent) => {
-    if (e.key === ROSTER_STORAGE_KEY) {
-      lastRawRosterString = null
-      callback()
-    }
+  if (typeof window !== "undefined" && !isRosterInitialized) {
+    isRosterInitialized = true
+    void fetchRosterFromApi()
   }
+
+  const handleCustomSync = () => {
+    callback()
+  }
+
   if (typeof window !== "undefined") {
-    window.addEventListener("storage", onStorage)
+    window.addEventListener("ethica:reviewer-roster-updated", handleCustomSync)
   }
+
   return () => {
     rosterListeners.delete(callback)
     if (typeof window !== "undefined") {
-      window.removeEventListener("storage", onStorage)
+      window.removeEventListener("ethica:reviewer-roster-updated", handleCustomSync)
     }
   }
 }
@@ -224,16 +219,8 @@ function notifyRosterListeners(): void {
 }
 
 export function saveStoredReviewers(reviewers: AccreditedReviewer[]): void {
-  if (typeof window === "undefined") return
-  try {
-    const serialized = JSON.stringify(reviewers)
-    lastRawRosterString = serialized
-    cachedReviewers = reviewers
-    localStorage.setItem(ROSTER_STORAGE_KEY, serialized)
-    notifyRosterListeners()
-  } catch {
-    // Ignore quota errors
-  }
+  cachedReviewers = reviewers
+  notifyRosterListeners()
 }
 
 function determineBoard(expertise: string[] = []): "Biomedical & Clinical IRB" | "Social & Behavioral IRB" | "AI & Technology Ethics Panel" {
@@ -305,6 +292,12 @@ export function syncApprovedReviewerToRoster(
   }
 
   saveStoredReviewers(updated)
+
+  // Asynchronously sync to server REST API
+  reviewerRosterApi.syncApprovedReviewer(safeApp).catch(() => {
+    // Keep local cache
+  })
+
   return reviewerEntry
 }
 
@@ -327,6 +320,12 @@ export function updateReviewerStatus(
     return r
   })
   saveStoredReviewers(updated)
+
+  // Asynchronously sync to server REST API
+  reviewerRosterApi.updateStatus(id, safeStatus, reason).catch(() => {
+    // Keep local cache
+  })
+
   return updated
 }
 
