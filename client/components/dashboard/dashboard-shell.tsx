@@ -53,12 +53,6 @@ export interface DashboardShellProps {
   }
   navItems: NavItem[]
   loginRoute: string
-  actionButton?: {
-    label: string
-    icon: React.ComponentType<{ className?: string }>
-    onClick?: () => void
-    href?: string
-  }
   profileHref?: string
   children: React.ReactNode
 }
@@ -70,7 +64,6 @@ export function DashboardShell({
   user,
   navItems,
   loginRoute,
-  actionButton,
   profileHref,
   children,
 }: DashboardShellProps) {
@@ -483,29 +476,6 @@ export function DashboardShell({
 
           {/* Right: actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 ml-auto shrink-0">
-
-            {/* Primary action button */}
-            {actionButton && (
-              actionButton.href ? (
-                <Link
-                  href={actionButton.href}
-                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95 transition-all duration-150 cursor-pointer`}
-                >
-                  <actionButton.icon className="size-3.5" />
-                  <span>{actionButton.label}</span>
-                </Link>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={actionButton.onClick}
-                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95`}
-                >
-                  <actionButton.icon className="size-3.5" />
-                  <span>{actionButton.label}</span>
-                </Button>
-              )
-            )}
-
             {/* Notifications */}
             <Button
               type="button"

@@ -13,12 +13,13 @@ import {
   Sparkles,
   FileSearch,
   Users,
+  XCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -83,14 +84,12 @@ const deliberationProtocols = [
 
 export default function ReviewerDashboardPage() {
   const [votedMap, setVotedMap] = React.useState<Record<string, string>>({})
-  const [voteNotice, setVoteNotice] = React.useState<string | null>(null)
 
   const handleVote = (protocolId: string, decision: string) => {
     setVotedMap((prev) => ({ ...prev, [protocolId]: decision }))
-    setVoteNotice(
-      `Official Quorum Vote "${decision}" successfully registered and sealed for protocol ${protocolId}. The vote is cryptographically logged into the DIU IRB committee register.`
-    )
-    setTimeout(() => setVoteNotice(null), 6000)
+    toast.success("Institutional Quorum Ballot Sealed", {
+      description: `Official Quorum Vote "${decision}" successfully registered and sealed for protocol ${protocolId}. The vote is cryptographically logged into the DIU IRB committee register.`,
+    })
   }
 
   return (
@@ -126,17 +125,6 @@ export default function ReviewerDashboardPage() {
           color="gold"
         />
       </KpiGrid>
-
-      {/* Institutional Quorum Notification Alert */}
-      {voteNotice && (
-        <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
-          <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-          <AlertTitle className="text-xs font-bold">Institutional Quorum Ballot Sealed</AlertTitle>
-          <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
-            {voteNotice}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Deliberation Queue Section (Consensus & Triage) */}
       <div id="consensus" className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden">
@@ -217,8 +205,22 @@ export default function ReviewerDashboardPage() {
                 {/* Reviewer Action Buttons with Institutional Confirmation AlertDialog */}
                 <div className="flex items-center gap-2 shrink-0 pt-2 lg:pt-0">
                   {hasVoted ? (
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 text-xs font-bold">
-                      <CheckCircle2 className="size-3.5" />
+                    <div
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold ${
+                        hasVoted === "Approved"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25"
+                          : hasVoted === "Rejected"
+                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25"
+                          : "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25"
+                      }`}
+                    >
+                      {hasVoted === "Approved" ? (
+                        <CheckCircle2 className="size-3.5" />
+                      ) : hasVoted === "Rejected" ? (
+                        <XCircle className="size-3.5" />
+                      ) : (
+                        <Clock className="size-3.5" />
+                      )}
                       <span>Vote Recorded: {hasVoted}</span>
                     </div>
                   ) : (
@@ -285,6 +287,40 @@ export default function ReviewerDashboardPage() {
                               className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold"
                             >
                               Submit Revision Order
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger render={
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 px-2.5 text-xs font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                          >
+                            Reject
+                          </Button>
+                        } />
+                        <AlertDialogContent className="sm:max-w-md">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-base sm:text-lg font-bold text-[#002752] dark:text-white">
+                              Confirm Protocol Disapproval / Rejection
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                              You are casting an official &ldquo;Rejected&rdquo; vote on docket item{" "}
+                              <strong className="text-slate-900 dark:text-white">{protocol.id}</strong> (&ldquo;{protocol.title}&rdquo;).
+                              This records a critical ethical non-compliance determination that halts protocol progression.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-xs font-semibold">Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleVote(protocol.id, "Rejected")}
+                              className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                            >
+                              Seal Rejection Vote
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

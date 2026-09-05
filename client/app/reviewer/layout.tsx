@@ -3,7 +3,6 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import {
-  Scale,
   CheckCheck,
   CalendarDays,
   FileSearch,
@@ -61,11 +60,6 @@ export default function ReviewerLayout({
       }}
       navItems={reviewerNavItems}
       loginRoute="/reviewer/login"
-      actionButton={{
-        label: "Convene Quorum",
-        icon: Scale,
-        href: "/reviewer/dashboard#convene",
-      }}
     >
       {children}
     </DashboardShell>

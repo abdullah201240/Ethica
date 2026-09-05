@@ -8,7 +8,6 @@ import {
   ScrollText,
   ShieldCheck,
   Settings,
-  Download,
   ClipboardCheck,
   User,
 } from "lucide-react"
@@ -82,11 +81,6 @@ export default function AdminLayout({
       navItems={adminNavItems}
       loginRoute="/admin/login"
       profileHref="/admin/profile"
-      actionButton={{
-        label: "Export Ledger",
-        icon: Download,
-        href: "/admin/dashboard#export",
-      }}
     >
       {children}
     </DashboardShell>

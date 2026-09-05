@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import {
-  CheckCircle2,
   Copy,
   Check,
   KeyRound,
@@ -16,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -101,9 +100,7 @@ const initialSessionLogs: AdminSessionLog[] = [
 export default function AdminProfilePage() {
   const [copiedKey, setCopiedKey] = React.useState(false)
   const [isEditingContact, setIsEditingContact] = React.useState(false)
-  const [saveSuccess, setSaveSuccess] = React.useState(false)
   const [sessionLogs, setSessionLogs] = React.useState<AdminSessionLog[]>(initialSessionLogs)
-  const [sessionNotice, setSessionNotice] = React.useState<string | null>(null)
 
   const [contactForm, setContactForm] = React.useState({
     phone: "+880 2 9138234-5 (Ext: 104)",
@@ -126,24 +123,32 @@ export default function AdminProfilePage() {
   const handleCopyFingerprint = () => {
     navigator.clipboard.writeText(publicFingerprint)
     setCopiedKey(true)
+    toast.info("Fingerprint Copied", {
+      description: "Public key cryptographic fingerprint copied to clipboard.",
+    })
     setTimeout(() => setCopiedKey(false), 2000)
   }
 
   const handleSaveContact = (e: React.FormEvent) => {
     e.preventDefault()
     setIsEditingContact(false)
-    setSaveSuccess(true)
-    setTimeout(() => setSaveSuccess(false), 3000)
+    toast.success("Institutional Profile Updated", {
+      description:
+        "Contact coordinates and emergency contact details have been safely registered to institutional records.",
+    })
   }
 
   const handleRevokeSession = (sessionId: string, device: string) => {
     setSessionLogs((prev) =>
-      prev.map((s) => (s.id === sessionId ? { ...s, status: "Terminated", lastActive: "Just now (Revoked)" } : s))
+      prev.map((s) =>
+        s.id === sessionId
+          ? { ...s, status: "Terminated", lastActive: "Just now (Revoked)" }
+          : s
+      )
     )
-    setSessionNotice(
-      `Hardware token session ${sessionId} (${device}) was revoked. Cryptographic keys invalidated.`
-    )
-    setTimeout(() => setSessionNotice(null), 6000)
+    toast.success("Session Security Invalidation Completed", {
+      description: `Hardware token session ${sessionId} (${device}) was revoked. Cryptographic keys invalidated.`,
+    })
   }
 
   const toggleAlert = (key: keyof typeof alertSettings) => {
@@ -365,17 +370,6 @@ export default function AdminProfilePage() {
                 {isEditingContact ? "Cancel Edit" : "Edit Contact Details"}
               </Button>
             </div>
-
-            {/* Save Success Alert */}
-            {saveSuccess && (
-              <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
-                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <AlertTitle className="text-xs font-bold">Institutional Profile Updated</AlertTitle>
-                <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
-                  Contact coordinates and emergency contact details have been safely registered to institutional records.
-                </AlertDescription>
-              </Alert>
-            )}
 
             {/* Academic Profile Details */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -697,16 +691,6 @@ export default function AdminProfilePage() {
 
       {/* ── Security & Cryptographic Session Docket (Unified DataTable - Rule 6) ── */}
       <div className="w-full space-y-3">
-        {sessionNotice && (
-          <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
-            <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-            <AlertTitle className="text-xs font-bold">Session Security Invalidation Completed</AlertTitle>
-            <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
-              {sessionNotice}
-            </AlertDescription>
-          </Alert>
-        )}
-
         <DataTable<AdminSessionLog>
           data={sessionLogs}
           columns={sessionColumns}

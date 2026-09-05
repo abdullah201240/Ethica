@@ -8,7 +8,6 @@ import {
   Award,
   Sparkles,
   BookOpen,
-  PlusCircle,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
@@ -68,11 +67,6 @@ export default function UserLayout({
       }}
       navItems={userNavItems}
       loginRoute="/login"
-      actionButton={{
-        label: "New Protocol",
-        icon: PlusCircle,
-        href: "/dashboard#new-protocol",
-      }}
     >
       {children}
     </DashboardShell>

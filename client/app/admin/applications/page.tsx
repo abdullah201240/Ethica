@@ -20,7 +20,7 @@ import {
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -41,8 +41,6 @@ import {
 } from "@/lib/reviewer-applications"
 
 export default function AdminReviewerApplicationsPage() {
-  const [actionNotice, setActionNotice] = React.useState<string | null>(null)
-
   const isClient = React.useSyncExternalStore(
     () => () => {},
     () => true,
@@ -61,10 +59,9 @@ export default function AdminReviewerApplicationsPage() {
       "Approved",
       "Accreditation approved by Institutional Ethics Secretariat."
     )
-    setActionNotice(
-      `Accreditation approved for ${fullName} (${appId}). Official credentials and voting appointment issued.`
-    )
-    setTimeout(() => setActionNotice(null), 6000)
+    toast.success("Secretariat Determination Recorded", {
+      description: `Accreditation approved for ${fullName} (${appId}). Official credentials and voting appointment issued.`,
+    })
   }
 
   const handleReject = (appId: string, fullName: string) => {
@@ -73,10 +70,9 @@ export default function AdminReviewerApplicationsPage() {
       "Rejected",
       "Application declined by Secretariat due to eligibility thresholds."
     )
-    setActionNotice(
-      `Application declined for ${fullName} (${appId}). Formal determination logged in institutional ledger.`
-    )
-    setTimeout(() => setActionNotice(null), 6000)
+    toast.error("Application Declined", {
+      description: `Application declined for ${fullName} (${appId}). Formal determination logged in institutional ledger.`,
+    })
   }
 
   // ── Metrics Calculation ──────────────────────────────────────────────────
@@ -385,17 +381,6 @@ export default function AdminReviewerApplicationsPage() {
           color="rose"
         />
       </KpiGrid>
-
-      {/* Institutional Determination Alert Banner */}
-      {actionNotice && (
-        <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
-          <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-          <AlertTitle className="text-xs font-bold">Secretariat Determination Recorded</AlertTitle>
-          <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
-            {actionNotice}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Unified Institutional DataTable */}
       <div id="applications-table" className="w-full">

@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -54,8 +54,6 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
   const [application, setApplication] = React.useState<ReviewerApplication | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [decisionNotes, setDecisionNotes] = React.useState("")
-  const [actionSuccess, setActionSuccess] = React.useState<string | null>(null)
-  const [downloadNotice, setDownloadNotice] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
   // Fetch application and subscribe to real-time updates
@@ -102,17 +100,16 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
         : null
     )
 
-    setActionSuccess(
-      status === "Approved"
-        ? "Reviewer accreditation granted successfully. Credentials sealed in institutional registry."
-        : "Application marked as declined. Applicant notification queued."
-    )
+    if (status === "Approved") {
+      toast.success("Reviewer Accreditation Granted", {
+        description: "Credentials verified and sealed into the institutional ethics registry.",
+      })
+    } else {
+      toast.error("Application Declined", {
+        description: "Application marked as declined. Formal determination logged in ledger.",
+      })
+    }
     setIsSubmitting(false)
-
-    // Clear alert after 4 seconds
-    setTimeout(() => {
-      setActionSuccess(null)
-    }, 4000)
   }
 
   if (loading) {
@@ -209,17 +206,6 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </span>
         </div>
       </div>
-
-      {/* ── Action Success Banner ──────────────────────────────────────────── */}
-      {actionSuccess && (
-        <Alert className="border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-200">
-          <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400" />
-          <AlertTitle className="font-bold text-sm">Secretariat Action Recorded</AlertTitle>
-          <AlertDescription className="text-xs text-emerald-700 dark:text-emerald-300">
-            {actionSuccess}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* ── Main Applicant Header Card ─────────────────────────────────────── */}
       <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6">
@@ -421,26 +407,15 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                 size="sm"
                 className="h-8 px-3 text-xs font-bold rounded-lg border-slate-200/90 dark:border-slate-700 gap-1.5 shrink-0 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 onClick={() => {
-                  setDownloadNotice(
-                    `Cryptographic CV dossier "${application.cvFileName || "Curriculum_Vitae.pdf"}" verified via SHA-256 seal and downloaded.`
-                  )
-                  setTimeout(() => setDownloadNotice(null), 5000)
+                  toast.info("Cryptographic Seal Verified", {
+                    description: `CV dossier "${application.cvFileName || "Curriculum_Vitae.pdf"}" verified via SHA-256 seal and downloaded.`,
+                  })
                 }}
               >
                 <Download className="size-3.5" />
                 <span className="hidden sm:inline">Download</span>
               </Button>
             </div>
-
-            {downloadNotice && (
-              <Alert className="border-sky-500/30 bg-sky-500/10 dark:bg-sky-500/15 text-sky-900 dark:text-sky-200">
-                <ShieldCheck className="size-5 text-sky-600 dark:text-sky-400" />
-                <AlertTitle className="font-bold text-xs">Cryptographic Seal Verified</AlertTitle>
-                <AlertDescription className="text-xs text-sky-800 dark:text-sky-300">
-                  {downloadNotice}
-                </AlertDescription>
-              </Alert>
-            )}
           </Card>
         </div>
 
