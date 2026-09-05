@@ -286,7 +286,7 @@ export default function AdminListPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href={`/admin/admins/${encodeURIComponent(row.id)}`}
-                  className="text-micro font-bold text-foreground truncate select-text hover:text-primary dark:hover:text-sky-400 hover:underline"
+                  className="text-body font-bold text-foreground truncate select-text hover:text-primary dark:hover:text-sky-400 hover:underline"
                 >
                   {row.name}
                 </Link>
@@ -299,7 +299,7 @@ export default function AdminListPage() {
                   </Badge>
                 )}
               </div>
-              <div className="text-micro text-muted-foreground truncate flex items-center gap-2 select-text">
+              <div className="text-body text-muted-foreground truncate flex items-center gap-2 select-text">
                 <Mail className="size-3 text-slate-400 shrink-0" />
                 <span>{row.email}</span>
               </div>
@@ -324,12 +324,12 @@ export default function AdminListPage() {
 
         return (
           <div className="space-y-1">
-            <div className="text-micro font-bold text-foreground select-text">
+            <div className="text-body font-bold text-foreground select-text">
               {row.role}
             </div>
             <Badge
               variant="outline"
-              className={`text-micro font-semibold border ${
+              className={`text-body font-semibold border ${
                 accessBadgeStyles[row.accessLevel] || accessBadgeStyles["System Admin"]
               }`}
             >
@@ -345,7 +345,7 @@ export default function AdminListPage() {
       header: "Department / Directorate",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-micro text-slate-600 dark:text-slate-300 truncate max-w-56 block select-text">
+        <span className="text-body text-slate-600 dark:text-slate-300 truncate max-w-56 block select-text">
           {row.department}
         </span>
       ),
@@ -356,7 +356,7 @@ export default function AdminListPage() {
       header: "Workflows / Oversight",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-micro font-mono font-bold text-slate-700 dark:text-slate-300 select-text">
+        <span className="text-body font-mono font-bold text-slate-700 dark:text-slate-300 select-text">
           {row.protocols} cases
         </span>
       ),
@@ -394,7 +394,7 @@ export default function AdminListPage() {
               }
             />
             <span className={cn(
-              "text-micro font-bold select-text",
+              "text-body font-bold select-text",
               isActive
                 ? "text-emerald-700 dark:text-emerald-400"
                 : "text-rose-600 dark:text-rose-400"
@@ -541,7 +541,7 @@ export default function AdminListPage() {
                     <SheetTitle className="text-body font-bold text-primary dark:text-white">
                       Appoint Institutional System Administrator
                     </SheetTitle>
-                    <SheetDescription className="text-micro text-muted-foreground">
+                    <SheetDescription className="text-body text-muted-foreground">
                       Register a new institutional officer with privileged access to the Ethica governance engine.
                     </SheetDescription>
                   </SheetHeader>
@@ -555,20 +555,20 @@ export default function AdminListPage() {
 
                   <form onSubmit={handleCreateAdmin} className="space-y-4 py-2">
                     <div className="space-y-1.5">
-                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                         Full Name & Academic Title <span className="text-rose-500">*</span>
                       </label>
                       <Input
                         value={newAdmin.name}
                         onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })}
                         placeholder="e.g. Dr. Tanvir Ahmed, Ph.D."
-                        className="h-8 text-micro"
+                        className="h-8 text-body"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                           Institutional Email <span className="text-rose-500">*</span>
                         </label>
                         <Input
@@ -576,38 +576,38 @@ export default function AdminListPage() {
                           value={newAdmin.email}
                           onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
                           placeholder="e.g. tanvir.ethics@diu.edu.bd"
-                          className="h-8 text-micro"
+                          className="h-8 text-body"
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                           Official Contact Phone
                         </label>
                         <Input
                           value={newAdmin.phone}
                           onChange={(e) => setNewAdmin({ ...newAdmin, phone: e.target.value })}
                           placeholder="e.g. +880 1713-000000"
-                          className="h-8 text-micro"
+                          className="h-8 text-body"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                           Administrative Designation <span className="text-rose-500">*</span>
                         </label>
                         <Input
                           value={newAdmin.role}
                           onChange={(e) => setNewAdmin({ ...newAdmin, role: e.target.value })}
                           placeholder="e.g. Secretariat Triage Officer"
-                          className="h-8 text-micro"
+                          className="h-8 text-body"
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                           Access Privilege Group
                         </label>
                         <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -640,19 +640,19 @@ export default function AdminListPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                         Department / Institutional Unit <span className="text-rose-500">*</span>
                       </label>
                       <Input
                         value={newAdmin.department}
                         onChange={(e) => setNewAdmin({ ...newAdmin, department: e.target.value })}
                         placeholder="e.g. Research Compliance Secretariat"
-                        className="h-8 text-micro"
+                        className="h-8 text-body"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                         Initial Account Status
                       </label>
                       <div className="flex gap-2">
@@ -687,7 +687,7 @@ export default function AdminListPage() {
 
                     {/* Permissions Multi-select */}
                     <div className="space-y-1.5">
-                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                         Assigned Administrative Privileges
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
@@ -757,61 +757,61 @@ export default function AdminListPage() {
               <SheetTitle className="text-body font-bold text-primary dark:text-white">
                 Edit Administrator Credentials: {selectedAdminForEdit.name}
               </SheetTitle>
-              <SheetDescription className="text-micro text-muted-foreground">
+              <SheetDescription className="text-body text-muted-foreground">
                 Update designation, access privileges, and departmental assignment.
               </SheetDescription>
             </SheetHeader>
 
             <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
               <div className="space-y-1.5">
-                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                   Full Name
                 </label>
                 <Input
                   value={editForm.name}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="h-8 text-micro"
+                  className="h-8 text-body"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                     Institutional Email
                   </label>
                   <Input
                     value={editForm.email}
                     onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                    className="h-8 text-micro"
+                    className="h-8 text-body"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                     Phone
                   </label>
                   <Input
                     value={editForm.phone}
                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    className="h-8 text-micro"
+                    className="h-8 text-body"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                     Administrative Role
                   </label>
                   <Input
                     value={editForm.role}
                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                    className="h-8 text-micro"
+                    className="h-8 text-body"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                     Access Level
                   </label>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -844,13 +844,13 @@ export default function AdminListPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-body font-bold text-slate-700 dark:text-slate-300">
                   Department
                 </label>
                 <Input
                   value={editForm.department}
                   onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-                  className="h-8 text-micro"
+                  className="h-8 text-body"
                 />
               </div>
 

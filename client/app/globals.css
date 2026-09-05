@@ -149,8 +149,8 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *:not(input) {
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
@@ -158,6 +158,14 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Prevent black focus border on all inputs */
+input:focus,
+input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--border) !important;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════

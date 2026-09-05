@@ -38,13 +38,13 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
 
 export const SHEET_SIZES = {
   xs: "w-full max-w-[85vw] sm:max-w-xs", // ~320px
-  sm: "w-full max-w-[85vw] sm:max-w-sm", // ~384px - compact
-  default: "w-full max-w-[85vw] sm:max-w-sm md:max-w-md", // ~384px - 448px (Rule 3)
+  sm: "w-full max-w-[85vw] sm:max-w-sm", // ~384px - slim
   md: "w-full max-w-[85vw] sm:max-w-sm md:max-w-md", // ~384px - 448px
-  lg: "w-full max-w-[90vw] sm:max-w-md md:max-w-lg", // ~448px - 512px
-  xl: "w-full max-w-[90vw] sm:max-w-lg md:max-w-xl", // ~512px - 576px
-  "2xl": "w-full max-w-[95vw] sm:max-w-xl md:max-w-2xl", // ~576px - 672px
-  full: "w-full max-w-[calc(100vw-1.5rem)] sm:max-w-3xl",
+  default: "w-full max-w-[90vw] sm:max-w-md md:max-w-lg", // ~448px - 512px - comfortably balanced
+  lg: "w-full max-w-[90vw] sm:max-w-lg md:max-w-xl", // ~512px - 576px
+  xl: "w-full max-w-[92vw] sm:max-w-xl md:max-w-2xl", // ~576px - 672px
+  "2xl": "w-full max-w-[95vw] sm:max-w-2xl md:max-w-3xl", // ~672px - 768px
+  full: "w-full max-w-[calc(100vw-1.5rem)] sm:max-w-4xl",
 } as const
 
 export type SheetSize = keyof typeof SHEET_SIZES
