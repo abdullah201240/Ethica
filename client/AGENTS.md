@@ -45,4 +45,20 @@ All UI components and features must adhere strictly to these rules:
    - Every table must include search, column sorting, faceted filters, page size selection (`[5, 10, 20, 50]`), and full pagination.
    - Tables must be wrapped in `relative w-full overflow-x-auto` to guarantee zero viewport overflow across mobile, tablet, and desktop.
 
+5. **Strict Prohibition of Raw HTML Form/Table Elements:**
+   - In all functional workspaces (User, Admin, Reviewer), NEVER use raw HTML tags: `<button>`, `<input>`, `<select>`, `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`.
+   - Always import and compose from installed primitives in `@/components/ui/`: `Button`, `Input`, `Select`, `DropdownMenu`, `Table`, `Pagination`, `Badge`, `Card`.
+
+6. **Centralized Section Layout Architecture:**
+   - Layouts must be defined at section roots: `app/(user)/layout.tsx`, `app/admin/layout.tsx`, `app/reviewer/layout.tsx`.
+   - Never isolate layouts in `dashboard/layout.tsx`. Auth pages (`/login`) are automatically bypassed via `usePathname()`.
+
+7. **Pagination UI Standard:**
+   - Uniform square icon-only buttons (`size="icon"`, `size-8` = 32px × 32px).
+   - Never include text strings like "Previous" or "Next" inside pagination buttons.
+
+8. **Base UI DropdownMenuLabel Rule:**
+   - `<DropdownMenuLabel>` must always be nested within `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`.
+
+
 

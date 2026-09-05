@@ -59,7 +59,15 @@ All pages, components, illustrations, and design tokens must strictly adhere to 
 ## 4. Code Standards & Architecture
 - **Framework:** Next.js 16 (App Router) + React 19.
 - **Styling:** Tailwind CSS v4 (`client/app/globals.css`).
-- **Components:** Base UI + Shadcn (`client/components/ui`). Always use the shared components in `components/ui/` instead of raw ad-hoc HTML elements.
+- **Strict Prohibition of Raw HTML Elements:** In all application workspaces and dashboards (User, Admin, Reviewer), developers and agents must **NEVER** use raw HTML tags:
+  - ❌ Forbidden: `<button>`, `<input>`, `<select>`, `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`, `<textarea>`
+  - ✅ Mandatory: Always import and compose from installed primitives in [`client/components/ui/`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/):
+    - **Buttons:** [`@/components/ui/button`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/button.tsx) (`Button`)
+    - **Inputs:** [`@/components/ui/input`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/input.tsx) (`Input`)
+    - **Dropdowns & Selects:** [`@/components/ui/dropdown-menu`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/dropdown-menu.tsx) or [`@/components/ui/select`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/select.tsx)
+    - **Tables & Rosters:** [`@/components/ui/data-table`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/data-table.tsx) or [`@/components/ui/table`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/table.tsx)
+    - **Pagination:** [`@/components/ui/pagination`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/pagination.tsx)
+    - **Surfaces & Badges:** [`@/components/ui/card`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/card.tsx), [`@/components/ui/badge`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/badge.tsx)
 
 ---
 
@@ -87,6 +95,7 @@ Every table view in the system must leverage the built-in DataTable features:
 7. **Institutional Styling:**
    - Outer container: `rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs`.
    - Header row: `bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/85 dark:border-slate-800 text-[0.72rem] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400`.
+
 ### 6.2 Strict Internal Component Composition Mandate
 `DataTable` must NEVER use raw HTML elements (`<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`, `<input>`, `<button>`). Instead, it MUST strictly compose the platform's installed components:
 - **Table Primitives:** [`@/components/ui/table`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/table.tsx) (`Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`)
@@ -94,6 +103,34 @@ Every table view in the system must leverage the built-in DataTable features:
 - **Inputs & Controls:** [`@/components/ui/input`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/input.tsx) (`Input`) and [`@/components/ui/button`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/button.tsx) (`Button`)
 - **Indicators & Surfaces:** [`@/components/ui/badge`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/badge.tsx) (`Badge`) and [`@/components/ui/card`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/card.tsx) (`Card`, `CardHeader`, `CardTitle`, `CardDescription`)
 - **Dropdowns & Selects:** [`@/components/ui/dropdown-menu`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/dropdown-menu.tsx) (`DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`) or [`@/components/ui/select`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/select.tsx) (`Select`, `SelectTrigger`, `SelectContent`, `SelectItem`). Never use raw `<select>` or unstyled native dropdowns *(Note: Base UI requires `<DropdownMenuLabel>` to always be nested inside a `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`)*.
+
+---
+
+## 7. Centralized Section Layout Architecture
+Layouts for the 3 main platform pillars (`user`, `admin`, `reviewer`) must be placed at the root of their respective section directories:
+- **User / Investigator:** [`client/app/(user)/layout.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/layout.tsx)
+- **Governance Admin:** [`client/app/admin/layout.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/layout.tsx)
+- **Committee Reviewer:** [`client/app/reviewer/layout.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/reviewer/layout.tsx)
+
+### Layout Rules:
+1. **Never create isolated `dashboard/layout.tsx` files.** All future pages in a section (e.g. `/admin/roster`, `/admin/audit`, `/protocols`, etc.) automatically inherit their section's central `DashboardShell` without creating nested layout collisions.
+2. **Pathname-Based Auth Bypass:** Each root layout inspects `usePathname()` to render login pages (`/login`, `/admin/login`, `/reviewer/login`) full-screen without dashboard sidebars, while wrapping all other workspace pages in `DashboardShell`.
+
+---
+
+## 8. Pagination UI Standard (Icon-Only, Zero Text Overlap)
+All pagination components across the application must strictly adhere to the uniform icon-only button standard:
+- **Dimensions:** All 5 control types (`<<`, `<`, numbered pages, `>`, `>>`) must use identical square dimensions (`size="icon"`, `size-8` = 32px × 32px, `rounded-lg`).
+- **No Text Labels:** Never include text strings like "Previous" or "Next" inside constrained pagination items. Text causes button cell overflow and collides with adjacent numbered buttons.
+- **States:** Active page must use deep navy (`bg-[#002752] text-white`); boundary limits must use `pointer-events-none opacity-40`.
+
+---
+
+## 9. Base UI DropdownMenuLabel Nesting Rule
+In `@base-ui/react/menu`, the `<Menu.GroupLabel>` primitive (wrapped by `<DropdownMenuLabel>`) strictly requires a parent group context:
+- Always nest `<DropdownMenuLabel>` inside `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`.
+- **Never** render `<DropdownMenuLabel>` directly inside `<DropdownMenuContent>`, as this causes the fatal runtime error: `Base UI: MenuGroupContext is missing. Menu group parts must be used within <Menu.Group> or <Menu.RadioGroup>.`
+
 
 
 
