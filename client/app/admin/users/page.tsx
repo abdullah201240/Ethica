@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   GraduationCap,
   Scale,
+  ToggleLeft,
 } from "lucide-react"
 import {
   DataTable,
@@ -29,7 +30,6 @@ import { toast } from "@/components/ui/sonner"
 import { createPlatformUserSchema } from "@/lib/schemas"
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -39,15 +39,16 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
 import {
   type PlatformUser,
   type UserPillar,
@@ -69,6 +70,7 @@ export default function AdminUsersDirectoryPage() {
 
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false)
+  const [pendingToggleUser, setPendingToggleUser] = React.useState<PlatformUser | null>(null)
   const [formError, setFormError] = React.useState<string | null>(null)
 
   // New user form state
@@ -92,23 +94,23 @@ export default function AdminUsersDirectoryPage() {
   const reviewerCount = users.filter((u) => u.pillar === "Reviewer").length
 
   // Handlers
-  const handleToggleStatus = (user: PlatformUser, nextStatus: UserAccountStatus) => {
-    const updated = updateUserStatus(user.id, nextStatus)
+  const confirmToggleStatus = () => {
+    if (!pendingToggleUser) return
+    const nextStatus: UserAccountStatus =
+      pendingToggleUser.status === "Active" ? "Suspended" : "Active"
+    const updated = updateUserStatus(pendingToggleUser.id, nextStatus)
     if (updated) {
       if (nextStatus === "Active") {
         toast.success("User Account Activated", {
-          description: `${user.name} (${user.id}) has been restored to Active standing with full platform access.`,
-        })
-      } else if (nextStatus === "Suspended") {
-        toast.warning("User Account Suspended", {
-          description: `${user.name} (${user.id}) has been suspended. Protocol submissions, voting, and login access are paused.`,
+          description: `${pendingToggleUser.name} (${pendingToggleUser.id}) has been restored to Active standing with full platform access.`,
         })
       } else {
-        toast.info("User Account Status Updated", {
-          description: `${user.name} (${user.id}) is now marked as ${nextStatus}.`,
+        toast.warning("User Account Suspended", {
+          description: `${pendingToggleUser.name} (${pendingToggleUser.id}) has been suspended. Protocol submissions, voting, and login access are paused.`,
         })
       }
     }
+    setPendingToggleUser(null)
   }
 
   const handleCreateUser = (e: React.FormEvent) => {
@@ -323,36 +325,37 @@ export default function AdminUsersDirectoryPage() {
       accessorKey: "status",
       header: "Account Status",
       sortable: true,
-      headerClassName: "w-[130px]",
+      headerClassName: "w-[100px]",
       cell: ({ row }) => {
-        const statusStyles: Record<UserAccountStatus, string> = {
-          Active:
-            "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
-          Inactive:
-            "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30",
-          "Pending Verification":
-            "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
-          Suspended:
-            "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30",
-        }
+        const isActive = row.status === "Active"
+        const isSuspended = row.status === "Suspended"
+        const isPending = row.status === "Pending Verification"
+
+        const switchColor = isActive
+          ? "data-checked:bg-emerald-500 data-checked:border-emerald-600"
+          : isSuspended
+          ? "data-unchecked:bg-rose-400 dark:data-unchecked:bg-rose-600"
+          : isPending
+          ? "data-unchecked:bg-amber-400 dark:data-unchecked:bg-amber-500"
+          : "data-unchecked:bg-slate-400 dark:data-unchecked:bg-slate-600"
 
         return (
-          <Badge
-            variant="outline"
-            className={`text-xs font-semibold select-text ${statusStyles[row.status]}`}
-          >
-            {row.status}
-          </Badge>
+          <Switch
+            size="sm"
+            checked={isActive}
+            onCheckedChange={() => setPendingToggleUser(row)}
+            aria-label={`Toggle status for ${row.name}`}
+            className={switchColor}
+          />
         )
       },
     },
     {
       id: "actions",
       header: "Governance Actions",
-      headerClassName: "w-[180px] text-right",
+      headerClassName: "w-[120px] text-right",
       cell: ({ row }) => {
         const user = row
-        const isActive = user.status === "Active"
 
         return (
           <div className="flex items-center justify-end gap-1.5">
@@ -369,95 +372,6 @@ export default function AdminUsersDirectoryPage() {
                 <span>Inspect</span>
               </Button>
             </Link>
-
-            {/* Active / Inactive / Suspended Toggle with Confirmation Dialog (Rule 12) */}
-            <AlertDialog>
-              <AlertDialogTrigger render={
-                <Button
-                  type="button"
-                  variant={isActive ? "outline" : "default"}
-                  size="sm"
-                  className={`h-7 px-2.5 text-xs font-bold rounded-md transition-colors cursor-pointer ${
-                    isActive
-                      ? "text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-                      : "bg-[#198754] hover:bg-[#146c43] text-white"
-                  }`}
-                >
-                  {isActive ? (
-                    <>
-                      <UserX className="size-3 mr-1 text-amber-600 dark:text-amber-400" />
-                      <span>Suspend</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserCheck className="size-3 mr-1 text-white" />
-                      <span>Activate</span>
-                    </>
-                  )}
-                </Button>
-              } />
-              <AlertDialogContent className="max-w-md">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
-                    {isActive ? (
-                      <>
-                        <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
-                        <span>Suspend User Account</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400" />
-                        <span>Restore User Account</span>
-                      </>
-                    )}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed pt-2">
-                    {isActive ? (
-                      <>
-                        Are you sure you want to suspend{" "}
-                        <strong className="text-slate-900 dark:text-white">
-                          {user.name}
-                        </strong>{" "}
-                        ({user.id})?
-                        <span className="block mt-2 text-xs text-amber-800 dark:text-amber-300 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
-                          • User will be barred from creating or deliberating protocols.
-                          <br />
-                          • Active sessions and access tokens will be temporarily locked.
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        Are you sure you want to restore{" "}
-                        <strong className="text-slate-900 dark:text-white">
-                          {user.name}
-                        </strong>{" "}
-                        ({user.id}) to <strong>Active</strong> standing?
-                        <span className="block mt-2 text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/20">
-                          • Full platform privileges and login authority will be restored.
-                        </span>
-                      </>
-                    )}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="text-xs font-semibold">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      handleToggleStatus(user, isActive ? "Suspended" : "Active")
-                    }
-                    className={`text-xs font-bold text-white ${
-                      isActive
-                        ? "bg-amber-600 hover:bg-amber-700"
-                        : "bg-emerald-600 hover:bg-emerald-700"
-                    }`}
-                  >
-                    {isActive ? "Confirm Suspension" : "Confirm Activation"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </div>
         )
       },
@@ -561,9 +475,9 @@ export default function AdminUsersDirectoryPage() {
                 </Button>
               </Link>
 
-              {/* Add User Modal */}
-              <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                <DialogTrigger render={
+              {/* Add User Slide-over Sheet */}
+              <Sheet open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                <SheetTrigger render={
                   <Button
                     type="button"
                     className="inline-flex items-center h-8 px-3.5 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
@@ -572,15 +486,15 @@ export default function AdminUsersDirectoryPage() {
                     <span>Invite / Add User</span>
                   </Button>
                 } />
-                <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                  <SheetHeader className="p-0 pb-3">
+                    <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
                       Register Platform User Account
-                    </DialogTitle>
-                    <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+                    </SheetTitle>
+                    <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
                       Provision a new researcher, committee reviewer, or institutional administrator in the Ethica ecosystem.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </SheetDescription>
+                  </SheetHeader>
 
                   {formError && (
                     <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs flex items-center gap-2">
@@ -794,8 +708,8 @@ export default function AdminUsersDirectoryPage() {
                       </div>
                     </div>
 
-                    <DialogFooter className="pt-2">
-                      <DialogClose render={
+                    <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
+                      <SheetClose render={
                         <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
                           Cancel
                         </Button>
@@ -806,14 +720,75 @@ export default function AdminUsersDirectoryPage() {
                       >
                         Create Platform Account
                       </Button>
-                    </DialogFooter>
+                    </SheetFooter>
                   </form>
-                </DialogContent>
-              </Dialog>
+                </SheetContent>
+              </Sheet>
             </div>
           }
         />
       </div>
+
+      {/* Status Toggle Confirmation AlertDialog (Rule 12) */}
+      <AlertDialog
+        open={!!pendingToggleUser}
+        onOpenChange={(open) => { if (!open) setPendingToggleUser(null) }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-[#002752] dark:text-white">
+              <ToggleLeft className="size-5 text-amber-500" />
+              {pendingToggleUser?.status === "Active"
+                ? "Suspend User Account"
+                : "Restore User Account"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-slate-600 dark:text-slate-400">
+              {pendingToggleUser?.status === "Active" ? (
+                <>
+                  You are about to <span className="font-bold text-rose-600">suspend</span> the account of{" "}
+                  <span className="font-bold text-slate-800 dark:text-white">{pendingToggleUser?.name}</span>{" "}
+                  <span className="text-xs text-slate-500">({pendingToggleUser?.pillar})</span>.
+                  <br />
+                  <span className="text-xs mt-1 block text-slate-500">
+                    All protocol submissions, committee voting rights, and platform login access will be paused immediately.
+                  </span>
+                </>
+              ) : (
+                <>
+                  You are about to <span className="font-bold text-emerald-600">restore</span> the account of{" "}
+                  <span className="font-bold text-slate-800 dark:text-white">{pendingToggleUser?.name}</span>{" "}
+                  <span className="text-xs text-slate-500">({pendingToggleUser?.pillar})</span>.
+                  <br />
+                  <span className="text-xs mt-1 block text-slate-500">
+                    Full platform access, protocol capabilities, and standing will be reinstated.
+                  </span>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel render={
+              <Button variant="outline" className="h-8 text-xs font-semibold">
+                Cancel
+              </Button>
+            } />
+            <AlertDialogAction
+              render={
+                <Button
+                  className={`h-8 text-xs font-bold text-white ${
+                    pendingToggleUser?.status === "Active"
+                      ? "bg-rose-600 hover:bg-rose-700"
+                      : "bg-emerald-600 hover:bg-emerald-700"
+                  }`}
+                  onClick={confirmToggleStatus}
+                >
+                  {pendingToggleUser?.status === "Active" ? "Suspend Account" : "Restore Account"}
+                </Button>
+              }
+            />
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DashboardContainer>
   )
 }

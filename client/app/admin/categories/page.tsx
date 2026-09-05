@@ -10,7 +10,6 @@ import {
   Clock,
   Banknote,
   CheckCircle2,
-  XCircle,
   ExternalLink,
   Sparkles,
   Zap,
@@ -23,6 +22,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import {
@@ -432,18 +432,13 @@ export default function AdminCategoriesPage() {
               <Edit2 className="size-3.5" />
             </Button>
 
-            {/* Toggle Status Button */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-xs"
-              onClick={() => handleToggleStatus(row.id, row.status, row.name)}
-              title={row.status === "Active" ? "Pause Category" : "Activate Category"}
+            {/* Toggle Status Switch */}
+            <Switch
+              size="sm"
+              checked={row.status === "Active"}
+              onCheckedChange={() => handleToggleStatus(row.id, row.status, row.name)}
               aria-label={`Toggle status for ${row.name}`}
-              className={row.status === "Active" ? "text-amber-600 hover:text-amber-800" : "text-emerald-600 hover:text-emerald-800"}
-            >
-              {row.status === "Active" ? <XCircle className="size-3.5" /> : <CheckCircle2 className="size-3.5" />}
-            </Button>
+            />
 
             {/* Delete Trigger */}
             <Button

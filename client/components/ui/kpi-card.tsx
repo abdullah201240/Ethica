@@ -134,13 +134,13 @@ export function KpiCard({
       )}
       {...props}
     >
-      <div className="flex items-center justify-between gap-2 text-slate-500 dark:text-slate-400 text-xs font-semibold">
+      <div className="flex items-center justify-between gap-2 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold uppercase tracking-wider">
         <span className="truncate select-text">{label}</span>
         <div className="flex items-center gap-1.5 shrink-0">
           {badge}
           {Icon && (
             <Icon
-              className={cn("size-4 shrink-0", colorStyle.iconColor, iconClassName)}
+              className={cn("size-4.5 sm:size-5 shrink-0", colorStyle.iconColor, iconClassName)}
             />
           )}
         </div>
@@ -148,7 +148,7 @@ export function KpiCard({
 
       <div
         className={cn(
-          "text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight tabular-nums select-text",
+          "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight tabular-nums select-text",
           colorStyle.value
         )}
       >
@@ -156,12 +156,12 @@ export function KpiCard({
       </div>
 
       {(description || trend) && (
-        <div className="flex items-center justify-between gap-2 pt-0.5 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 select-text">
+        <div className="flex items-center justify-between gap-2 pt-0.5 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 select-text">
           {description && <span className="truncate">{description}</span>}
           {trend && (
             <span
               className={cn(
-                "inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0",
+                "inline-flex items-center text-xs font-bold px-2 py-0.5 rounded shrink-0",
                 trend.isPositive
                   ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                   : "bg-rose-500/10 text-rose-600 dark:text-rose-400"

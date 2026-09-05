@@ -450,7 +450,7 @@ export function DataTable<T extends object>({
                           aria-label={`Filter by ${filter.title}`}
                         >
                           <Filter className="size-3.5 text-muted-foreground shrink-0" />
-                          <span className="truncate max-w-[130px]">
+                          <span className="truncate max-w-32">
                             {currentOption
                               ? currentOption.label
                               : `All ${filter.title}s`}
@@ -464,13 +464,13 @@ export function DataTable<T extends object>({
                         value={currentValue}
                         onValueChange={(val) => handleFilterChange(filter.id, val)}
                       >
-                        <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-2 py-1.5">
+                        <DropdownMenuLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2 py-1.5">
                           Filter by {filter.title}
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioItem
                           value="all"
-                          className="text-xs font-medium cursor-pointer py-1.5 px-2"
+                          className="text-xs sm:text-sm font-medium cursor-pointer py-1.5 px-2"
                         >
                           All {filter.title}s
                         </DropdownMenuRadioItem>
@@ -478,13 +478,13 @@ export function DataTable<T extends object>({
                           <DropdownMenuRadioItem
                             key={opt.value}
                             value={opt.value}
-                            className="text-xs font-medium cursor-pointer py-1.5 px-2 flex items-center justify-between"
+                            className="text-xs sm:text-sm font-medium cursor-pointer py-1.5 px-2 flex items-center justify-between"
                           >
                             <span>{opt.label}</span>
                             {opt.badge != null && (
                               <Badge
                                 variant="outline"
-                                className="text-[10px] ml-2 px-1.5 py-0 font-mono"
+                                className="text-xs ml-2 px-1.5 py-0 font-mono"
                               >
                                 {opt.badge}
                               </Badge>
@@ -505,14 +505,14 @@ export function DataTable<T extends object>({
                 variant="ghost"
                 size="sm"
                 onClick={handleResetFilters}
-                className="h-8 gap-1.5 px-2.5 text-xs font-bold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="h-8 gap-1.5 px-2.5 text-xs sm:text-sm font-bold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                 title="Reset active search and filters"
               >
                 <RotateCcw className="size-3" />
                 <span>Reset</span>
                 <Badge
                   variant="outline"
-                  className="size-4 p-0 rounded-full font-mono text-[10px] items-center justify-center border-slate-300 dark:border-slate-700"
+                  className="size-4 p-0 rounded-full font-mono text-xs items-center justify-center border-slate-300 dark:border-slate-700"
                 >
                   {activeFilterCount}
                 </Badge>
@@ -523,7 +523,7 @@ export function DataTable<T extends object>({
           {/* Right: Page Size Selector using UI DropdownMenu */}
           <div className="flex items-center gap-3 self-end lg:self-center shrink-0">
             {showPageSize && (
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
                 <span className="hidden sm:inline">Rows per page:</span>
                 <span className="sm:hidden">Show:</span>
                 <DropdownMenu>
@@ -533,7 +533,7 @@ export function DataTable<T extends object>({
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="h-8 gap-1.5 px-2.5 text-xs font-bold bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 rounded-lg text-slate-800 dark:text-slate-200"
+                        className="h-8 gap-1.5 px-2.5 text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 rounded-lg text-slate-800 dark:text-slate-200"
                         aria-label="Select rows per page"
                       >
                         <span>{pageSize}</span>
@@ -546,7 +546,7 @@ export function DataTable<T extends object>({
                       value={String(pageSize)}
                       onValueChange={(val) => handlePageSizeChange(Number(val))}
                     >
-                      <DropdownMenuLabel className="text-[10px] uppercase font-bold text-muted-foreground px-2 py-1">
+                      <DropdownMenuLabel className="text-xs uppercase font-bold text-muted-foreground px-2 py-1">
                         Rows per page
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
@@ -588,7 +588,7 @@ export function DataTable<T extends object>({
                   <TableHead
                     key={colId}
                     className={cn(
-                      "px-4 py-3 text-[0.72rem] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap select-none h-auto",
+                      "px-4 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap select-none h-auto",
                       col.align === "center"
                         ? "text-center"
                         : col.align === "right"

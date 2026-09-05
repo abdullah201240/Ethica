@@ -4,18 +4,29 @@ import * as React from "react"
 import Link from "next/link"
 import {
   ShieldCheck,
-  UserCheck,
-  UserX,
   UserPlus,
   Eye,
   KeyRound,
   Mail,
   Lock,
   Users,
-  CheckCircle2,
-  AlertTriangle,
   Clock,
+  UserCheck,
+  UserX,
+  AlertTriangle,
+  CheckCircle2,
+  ToggleLeft,
 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
 import {
   DataTable,
   type ColumnDef,
@@ -28,17 +39,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
 import { createAdminMemberSchema } from "@/lib/schemas"
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
+
+import { Switch } from "@/components/ui/switch"
 import {
   Sheet,
   SheetContent,
@@ -85,6 +87,7 @@ export default function AdminListPage() {
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false)
   const [selectedAdminForEdit, setSelectedAdminForEdit] = React.useState<AdminMember | null>(null)
+  const [pendingToggleAdmin, setPendingToggleAdmin] = React.useState<AdminMember | null>(null)
   const [formError, setFormError] = React.useState<string | null>(null)
 
   // New admin form state
@@ -123,19 +126,21 @@ export default function AdminListPage() {
   ).length
 
   // Handlers
-  const handleToggleStatus = (admin: AdminMember) => {
-    const updated = toggleAdminMemberStatus(admin.id)
+  const confirmToggleStatus = () => {
+    if (!pendingToggleAdmin) return
+    const updated = toggleAdminMemberStatus(pendingToggleAdmin.id)
     if (updated) {
       if (updated.status === "Active") {
         toast.success("Administrator Account Activated", {
-          description: `${admin.name} (${updated.id}) restored to Active status with full governance authority.`,
+          description: `${pendingToggleAdmin.name} (${updated.id}) restored to Active status with full governance authority.`,
         })
       } else {
         toast.warning("Administrator Account Suspended", {
-          description: `${admin.name} (${updated.id}) marked Inactive. Governance permissions and signing privileges paused.`,
+          description: `${pendingToggleAdmin.name} (${updated.id}) marked Inactive. Governance permissions and signing privileges paused.`,
         })
       }
     }
+    setPendingToggleAdmin(null)
   }
 
   const handleCreateAdmin = (e: React.FormEvent) => {
@@ -372,18 +377,21 @@ export default function AdminListPage() {
       accessorKey: "status",
       header: "Account Status",
       sortable: true,
-      cell: ({ row }) => (
-        <Badge
-          variant="outline"
-          className={`text-xs font-semibold select-text ${
-            row.status === "Active"
-              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
-              : "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30"
-          }`}
-        >
-          {row.status}
-        </Badge>
-      ),
+      cell: ({ row }) => {
+        const isActive = row.status === "Active"
+        return (
+          <Switch
+            size="sm"
+            checked={isActive}
+            onCheckedChange={() => setPendingToggleAdmin(row)}
+            aria-label={`Toggle status for ${row.name}`}
+            className={isActive
+              ? "data-checked:bg-emerald-500 data-checked:border-emerald-600"
+              : "data-unchecked:bg-rose-400 dark:data-unchecked:bg-rose-600"
+            }
+          />
+        )
+      },
     },
     {
       id: "actions",
@@ -416,101 +424,6 @@ export default function AdminListPage() {
             <Lock className="size-3.5 mr-1 text-slate-500" />
             <span>Edit</span>
           </Button>
-
-          {/* Active / Inactive Status Management with Confirmation */}
-          <AlertDialog>
-            <AlertDialogTrigger render={
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className={`h-7 px-2.5 text-xs font-bold rounded-md transition-colors ${
-                  row.status === "Active"
-                    ? "text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-                    : "text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
-                }`}
-              >
-                {row.status === "Active" ? (
-                  <>
-                    <UserX className="size-3 mr-1 text-amber-600 dark:text-amber-400" />
-                    <span>Deactivate</span>
-                  </>
-                ) : (
-                  <>
-                    <UserCheck className="size-3 mr-1 text-emerald-600 dark:text-emerald-400" />
-                    <span>Activate</span>
-                  </>
-                )}
-              </Button>
-            } />
-            <AlertDialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-md">
-              <AlertDialogHeader>
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`size-10 rounded-full flex items-center justify-center shrink-0 ${
-                      row.status === "Active"
-                        ? "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300"
-                        : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300"
-                    }`}
-                  >
-                    {row.status === "Active" ? (
-                      <AlertTriangle className="size-5" />
-                    ) : (
-                      <CheckCircle2 className="size-5" />
-                    )}
-                  </div>
-                  <div>
-                    <AlertDialogTitle className="text-base font-bold text-slate-900 dark:text-white">
-                      {row.status === "Active"
-                        ? "Suspend Administrative Authority?"
-                        : "Restore Administrative Authority?"}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      {row.name} • {row.id} ({row.role})
-                    </AlertDialogDescription>
-                  </div>
-                </div>
-              </AlertDialogHeader>
-
-              <div className="py-2 text-xs text-slate-600 dark:text-slate-300 space-y-2">
-                {row.status === "Active" ? (
-                  <>
-                    <p>
-                      Suspending this administrator will immediately revoke their active governance session, pause cryptographic signing keys, and disallow protocol triage decisions.
-                    </p>
-                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-800 dark:text-amber-200">
-                      <strong>Security Note:</strong> Active protocol oversight assignments ({row.protocols} cases) will remain archived in the audit ledger.
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      Reactivating this administrator will restore their institutional governance authority, re-enable protocol triage privileges, and allow access to the administrative dashboard.
-                    </p>
-                    <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-2.5 text-emerald-800 dark:text-emerald-200">
-                      <strong>Verification Note:</strong> Cryptographic token access and multi-factor credentials will be re-validated.
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel className="h-8 text-xs">
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => handleToggleStatus(row)}
-                  className={`h-8 text-xs font-bold text-white ${
-                    row.status === "Active"
-                      ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800"
-                      : "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800"
-                  }`}
-                >
-                  {row.status === "Active" ? "Confirm Deactivation" : "Confirm Activation"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       ),
     },
@@ -803,8 +716,8 @@ export default function AdminListPage() {
                       </div>
                     </div>
 
-                    <DialogFooter className="pt-2">
-                      <DialogClose render={
+                    <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
+                      <SheetClose render={
                         <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
                           Cancel
                         </Button>
@@ -815,32 +728,32 @@ export default function AdminListPage() {
                       >
                         Appoint Administrator
                       </Button>
-                    </DialogFooter>
+                    </SheetFooter>
                   </form>
-                </DialogContent>
-              </Dialog>
+                </SheetContent>
+              </Sheet>
             </div>
           }
         />
       </div>
 
-      {/* Edit Admin Modal */}
+      {/* Edit Admin Sheet */}
       {selectedAdminForEdit && (
-        <Dialog
+        <Sheet
           open={!!selectedAdminForEdit}
           onOpenChange={(open) => {
             if (!open) setSelectedAdminForEdit(null)
           }}
         >
-          <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+          <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+            <SheetHeader className="p-0 pb-3">
+              <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
                 Edit Administrator Credentials: {selectedAdminForEdit.name}
-              </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+              </SheetTitle>
+              <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
                 Update designation, access privileges, and departmental assignment.
-              </DialogDescription>
-            </DialogHeader>
+              </SheetDescription>
+            </SheetHeader>
 
             <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
               <div className="space-y-1.5">
@@ -934,8 +847,8 @@ export default function AdminListPage() {
                 />
               </div>
 
-              <DialogFooter>
-                <DialogClose render={
+              <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
+                <SheetClose render={
                   <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
                     Cancel
                   </Button>
@@ -946,11 +859,70 @@ export default function AdminListPage() {
                 >
                   Save Changes
                 </Button>
-              </DialogFooter>
+              </SheetFooter>
             </form>
-          </DialogContent>
-        </Dialog>
+          </SheetContent>
+        </Sheet>
       )}
+
+      {/* Status Toggle Confirmation AlertDialog */}
+      <AlertDialog
+        open={!!pendingToggleAdmin}
+        onOpenChange={(open) => { if (!open) setPendingToggleAdmin(null) }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-[#002752] dark:text-white">
+              <ToggleLeft className="size-5 text-amber-500" />
+              {pendingToggleAdmin?.status === "Active"
+                ? "Suspend Administrator Account"
+                : "Restore Administrator Account"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-slate-600 dark:text-slate-400">
+              {pendingToggleAdmin?.status === "Active" ? (
+                <>
+                  You are about to <span className="font-bold text-rose-600">suspend</span> the account of{" "}
+                  <span className="font-bold text-slate-800 dark:text-white">{pendingToggleAdmin?.name}</span>.
+                  <br />
+                  <span className="text-xs mt-1 block text-slate-500">
+                    All governance permissions, signing privileges, and platform access will be paused immediately.
+                  </span>
+                </>
+              ) : (
+                <>
+                  You are about to <span className="font-bold text-emerald-600">restore</span> the account of{" "}
+                  <span className="font-bold text-slate-800 dark:text-white">{pendingToggleAdmin?.name}</span>.
+                  <br />
+                  <span className="text-xs mt-1 block text-slate-500">
+                    Full governance authority and platform access will be reinstated.
+                  </span>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel render={
+              <Button variant="outline" className="h-8 text-xs font-semibold">
+                Cancel
+              </Button>
+            } />
+            <AlertDialogAction
+              render={
+                <Button
+                  className={`h-8 text-xs font-bold text-white ${
+                    pendingToggleAdmin?.status === "Active"
+                      ? "bg-rose-600 hover:bg-rose-700"
+                      : "bg-emerald-600 hover:bg-emerald-700"
+                  }`}
+                  onClick={confirmToggleStatus}
+                >
+                  {pendingToggleAdmin?.status === "Active" ? "Suspend Account" : "Restore Account"}
+                </Button>
+              }
+            />
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DashboardContainer>
   )
 }

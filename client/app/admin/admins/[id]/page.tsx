@@ -6,12 +6,10 @@ import {
   ArrowLeft,
   ShieldCheck,
   UserCheck,
-  UserX,
   Building2,
   Mail,
   Phone,
   Calendar,
-  AlertTriangle,
   Award,
   CheckCircle2,
   Lock,
@@ -31,26 +29,16 @@ import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
 import { updateAdminMemberSchema } from "@/lib/schemas"
+import { Switch } from "@/components/ui/switch"
 import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet"
 import {
   type AdminAccessLevel,
   getStoredAdminMembers,
@@ -319,101 +307,20 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Header Action: Activate / Deactivate Toggle */}
+          {/* Status Switch */}
           <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0">
-            <AlertDialog>
-              <AlertDialogTrigger render={
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className={`h-9 px-4 text-xs font-bold rounded-lg cursor-pointer ${
-                    isActive
-                      ? "text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-                      : "text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
-                  }`}
-                >
-                  {isActive ? (
-                    <>
-                      <UserX className="size-3.5 mr-1.5 text-amber-600 dark:text-amber-400" />
-                      <span>Suspend Authority (Inactive)</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserCheck className="size-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>Restore Authority (Active)</span>
-                    </>
-                  )}
-                </Button>
-              } />
-              <AlertDialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-md">
-                <AlertDialogHeader>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`size-10 rounded-full flex items-center justify-center shrink-0 ${
-                        isActive
-                          ? "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300"
-                          : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300"
-                      }`}
-                    >
-                      {isActive ? (
-                        <AlertTriangle className="size-5" />
-                      ) : (
-                        <CheckCircle2 className="size-5" />
-                      )}
-                    </div>
-                    <div>
-                      <AlertDialogTitle className="text-base font-bold text-slate-900 dark:text-white">
-                        {isActive
-                          ? "Suspend Administrative Authority?"
-                          : "Restore Administrative Authority?"}
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        {admin.name} • {admin.id} ({admin.role})
-                      </AlertDialogDescription>
-                    </div>
-                  </div>
-                </AlertDialogHeader>
-
-                <div className="py-2 text-xs text-slate-600 dark:text-slate-300 space-y-2">
-                  {isActive ? (
-                    <>
-                      <p>
-                        Suspending this administrator will immediately revoke their active governance session, pause cryptographic signing keys, and disallow protocol triage decisions.
-                      </p>
-                      <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-800 dark:text-amber-200">
-                        <strong>Security Note:</strong> Active protocol oversight assignments ({admin.protocols} cases) will remain archived in the audit ledger.
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>
-                        Reactivating this administrator will restore their institutional governance authority, re-enable protocol triage privileges, and allow access to the administrative dashboard.
-                      </p>
-                      <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-2.5 text-emerald-800 dark:text-emerald-200">
-                        <strong>Verification Note:</strong> Cryptographic token access and multi-factor credentials will be re-validated.
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="h-8 text-xs">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleToggleStatus}
-                    className={`h-8 text-xs font-bold text-white ${
-                      isActive
-                        ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800"
-                        : "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800"
-                    }`}
-                  >
-                    {isActive ? "Confirm Deactivation" : "Confirm Activation"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <div className="flex items-center gap-2.5">
+              <Switch
+                checked={isActive}
+                onCheckedChange={() => handleToggleStatus()}
+                aria-label="Toggle administrator status"
+              />
+              <span className={`text-xs font-semibold ${
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+              }`}>
+                {isActive ? "Active" : "Inactive"}
+              </span>
+            </div>
           </div>
         </div>
       </Card>
@@ -599,17 +506,17 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* ── Edit Admin Credentials Modal ────────────────────────────────────── */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+      {/* ── Edit Admin Credentials Slide-over Sheet ─────────────────────────── */}
+      <Sheet open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+          <SheetHeader className="p-0 pb-3">
+            <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
               Edit Administrator Credentials: {admin.name}
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+            </SheetTitle>
+            <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
               Update designation, access privileges, and departmental assignment.
-            </DialogDescription>
-          </DialogHeader>
+            </SheetDescription>
+          </SheetHeader>
 
           <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
             <div className="space-y-1.5">
@@ -703,8 +610,8 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               />
             </div>
 
-            <DialogFooter>
-              <DialogClose render={
+            <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
+              <SheetClose render={
                 <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
                   Cancel
                 </Button>
@@ -715,10 +622,10 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               >
                 Save Changes
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </DashboardContainer>
   )
 }

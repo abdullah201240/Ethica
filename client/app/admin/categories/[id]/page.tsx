@@ -12,8 +12,6 @@ import {
   Zap,
   Edit2,
   Trash2,
-  CheckCircle2,
-  XCircle,
   Copy,
   Check,
   AlertTriangle,
@@ -44,6 +42,7 @@ import {
   SheetDescription,
   SheetFooter,
 } from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -328,55 +327,19 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
           {/* Header Action: Toggle Status */}
           <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0">
-            <AlertDialog>
-              <AlertDialogTrigger render={
-                <Button
-                  type="button"
-                  variant={isActive ? "outline" : "default"}
-                  size="sm"
-                  className={`h-9 px-4 text-xs font-bold rounded-lg cursor-pointer ${
-                    isActive
-                      ? "text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-                      : "bg-[#198754] hover:bg-[#146c43] text-white"
-                  }`}
-                >
-                  {isActive ? (
-                    <>
-                      <XCircle className="size-3.5 mr-1.5 text-amber-600 dark:text-amber-400" />
-                      <span>Suspend Category Intake</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="size-3.5 mr-1.5 text-white" />
-                      <span>Activate Category Intake</span>
-                    </>
-                  )}
-                </Button>
-              } />
-              <AlertDialogContent className="max-w-md">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-base font-bold text-slate-900 dark:text-white">
-                    {isActive ? "Suspend Research Category?" : "Activate Research Category?"}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {isActive
-                      ? `Marking ${category.name} as Inactive will hide it from the researcher application wizard. Ongoing reviews under this category will continue undisturbed.`
-                      : `Activating ${category.name} will immediately allow researchers across Daffodil International University to submit protocol clearance applications under this category.`}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className="gap-2">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleToggleStatus}
-                    className={`text-xs font-bold ${
-                      isActive ? "bg-amber-600 hover:bg-amber-700 text-white" : "bg-[#198754] hover:bg-[#146c43] text-white"
-                    }`}
-                  >
-                    {isActive ? "Confirm Suspension" : "Confirm Activation"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            {/* Status Toggle */}
+            <div className="flex items-center gap-2.5">
+              <Switch
+                checked={isActive}
+                onCheckedChange={() => handleToggleStatus()}
+                aria-label="Toggle category status"
+              />
+              <span className={`text-xs font-bold ${
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+              }`}>
+                {isActive ? "Active (Intake Open)" : "Inactive / Suspended"}
+              </span>
+            </div>
           </div>
         </div>
       </Card>

@@ -29,27 +29,17 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { toast } from "@/components/ui/sonner"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
+import { Switch } from "@/components/ui/switch"
 import { createAdminMemberSchema } from "@/lib/schemas"
 import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -300,76 +290,12 @@ export default function AdminDashboardPage() {
           const isActive = row.status === "Active"
           return (
             <div className="flex items-center justify-end">
-              {isActive ? (
-                <AlertDialog>
-                  <AlertDialogTrigger render={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-7 px-2.5 text-xs font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer gap-1"
-                      title="Deactivate Administrator Account"
-                    >
-                      <UserX className="size-3.5" />
-                      <span>Deactivate</span>
-                    </Button>
-                  } />
-                  <AlertDialogContent className="sm:max-w-md">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
-                        Deactivate Administrator Account
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        Are you sure you want to deactivate <strong className="text-slate-900 dark:text-white">{row.name}</strong> ({row.email})?
-                        Their institutional governance permissions, protocol assignment authority, and credential signing access will be suspended immediately.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel className="text-xs font-semibold">Keep Active</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleToggleStatus(row.id, row.name)}
-                        className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
-                      >
-                        Confirm Deactivation
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              ) : (
-                <AlertDialog>
-                  <AlertDialogTrigger render={
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="h-7 px-2.5 text-xs font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white cursor-pointer gap-1"
-                      title="Activate Administrator Account"
-                    >
-                      <UserCheck className="size-3.5" />
-                      <span>Activate</span>
-                    </Button>
-                  } />
-                  <AlertDialogContent className="sm:max-w-md">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
-                        Restore Administrator Account
-                      </AlertDialogTitle>
-                      <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        Are you sure you want to activate <strong className="text-slate-900 dark:text-white">{row.name}</strong> ({row.email})?
-                        Full institutional governance authority and protocol assignment privileges will be restored immediately.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel className="text-xs font-semibold">Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleToggleStatus(row.id, row.name)}
-                        className="bg-[#198754] hover:bg-[#146c43] text-white text-xs font-bold"
-                      >
-                        Restore & Activate
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+              <Switch
+                size="sm"
+                checked={isActive}
+                onCheckedChange={() => handleToggleStatus(row.id, row.name)}
+                aria-label={`Toggle status for ${row.name}`}
+              />
             </div>
           )
         },
@@ -532,8 +458,8 @@ export default function AdminDashboardPage() {
                 <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
                 <span>Reviewer Roster</span>
               </Link>
-              <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                <DialogTrigger render={
+              <Sheet open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                <SheetTrigger render={
                   <Button
                     type="button"
                     className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
@@ -542,15 +468,15 @@ export default function AdminDashboardPage() {
                     <span>Add Administrator</span>
                   </Button>
                 } />
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+              <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                <SheetHeader className="p-0 pb-3">
+                  <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
                     Appoint Institutional Administrator
-                  </DialogTitle>
-                  <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+                  </SheetTitle>
+                  <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
                     Register a new ethics governance officer, committee secretariat member, or triage lead into the RBAC directory.
-                  </DialogDescription>
-                </DialogHeader>
+                  </SheetDescription>
+                </SheetHeader>
 
                 {formError && (
                   <Alert className="border-rose-500/30 bg-rose-50/90 dark:bg-rose-950/40 text-rose-950 dark:text-rose-200 py-2">
@@ -732,7 +658,7 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
-                <DialogFooter className="gap-2 sm:gap-0 pt-2">
+                <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
                   <Button
                     type="button"
                     variant="outline"
@@ -751,9 +677,9 @@ export default function AdminDashboardPage() {
                   >
                     Confirm & Appoint
                   </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
             </div>
           }
         />

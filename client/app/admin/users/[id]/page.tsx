@@ -41,14 +41,14 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet"
 import {
   type UserAccountStatus,
   type UserPillar,
@@ -563,17 +563,17 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* ── Edit Profile Modal ──────────────────────────────────────────────── */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+      {/* ── Edit Profile Slide-over Sheet ────────────────────────────────────── */}
+      <Sheet open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+          <SheetHeader className="p-0 pb-3">
+            <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
               Edit User Profile: {user.name}
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+            </SheetTitle>
+            <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
               Update institutional coordinates, contact information, and role designation.
-            </DialogDescription>
-          </DialogHeader>
+            </SheetDescription>
+          </SheetHeader>
 
           <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
             <div className="space-y-1.5">
@@ -650,8 +650,8 @@ export default function UserDossierDetailPage({ params }: PageProps) {
               />
             </div>
 
-            <DialogFooter>
-              <DialogClose render={
+            <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
+              <SheetClose render={
                 <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
                   Cancel
                 </Button>
@@ -662,10 +662,10 @@ export default function UserDossierDetailPage({ params }: PageProps) {
               >
                 Save Changes
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </DashboardContainer>
   )
 }

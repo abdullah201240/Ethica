@@ -39,14 +39,15 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet"
 import {
   Tabs,
   TabsList,
@@ -581,8 +582,8 @@ export default function InvestigatorProfilePage() {
                   </div>
 
                   {/* Quick Photo Edit Badge */}
-                  <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
-                    <DialogTrigger
+                  <Sheet open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
+                    <SheetTrigger
                       render={
                         <Button
                           type="button"
@@ -595,18 +596,18 @@ export default function InvestigatorProfilePage() {
                       }
                     />
 
-                    {/* ── Profile Picture Upload Modal (Two Options) ──────── */}
-                    <DialogContent className="max-w-xl">
-                      <DialogHeader>
-                        <DialogTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
+                    {/* ── Profile Picture Upload Slide-over Sheet (Two Options) ──────── */}
+                    <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                      <SheetHeader className="p-0 pb-3">
+                        <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
                           <ImageIcon className="size-5 text-[#198754]" />
                           Update Profile Picture
-                        </DialogTitle>
-                        <DialogDescription className="text-xs text-muted-foreground">
+                        </SheetTitle>
+                        <SheetDescription className="text-xs text-muted-foreground">
                           Choose how you would like to set your institutional investigator photo.
                           Select between local device file upload or direct HTTPS web URL.
-                        </DialogDescription>
-                      </DialogHeader>
+                        </SheetDescription>
+                      </SheetHeader>
 
                       {/* Tabbed Two-Option Interface */}
                       <Tabs
@@ -831,7 +832,7 @@ export default function InvestigatorProfilePage() {
                         </div>
                       )}
 
-                      <DialogFooter className="flex flex-row items-center justify-between sm:justify-between gap-2 pt-2 border-t border-border/70">
+                      <SheetFooter className="p-0 pt-3 flex flex-row items-center justify-between sm:justify-between gap-2 border-t border-border/70">
                         <Button
                           type="button"
                           variant="ghost"
@@ -854,9 +855,9 @@ export default function InvestigatorProfilePage() {
                         >
                           Apply Profile Picture
                         </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                      </SheetFooter>
+                    </SheetContent>
+                  </Sheet>
                 </div>
 
                 {/* Name, Credentials, and Badges */}
