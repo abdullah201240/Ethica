@@ -61,6 +61,7 @@ import {
   type UpdateResearchCategoryInput,
 } from "@/lib/schemas"
 import {
+  initialCategories,
   getStoredCategories,
   subscribeCategories,
   addCategory,
@@ -71,7 +72,11 @@ import {
 import { categoriesApi } from "@/lib/api/categories.api"
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = React.useState<ResearchCategory[]>(getStoredCategories)
+  const categories = React.useSyncExternalStore(
+    subscribeCategories,
+    getStoredCategories,
+    () => initialCategories
+  )
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const [categoryToEdit, setCategoryToEdit] = React.useState<ResearchCategory | null>(null)
@@ -95,32 +100,6 @@ export default function AdminCategoriesPage() {
   // ── Edit Form State ────────────────────────────────────────────────────────
   const [editForm, setEditForm] = React.useState<UpdateResearchCategoryInput>({})
   const [editErrors, setEditErrors] = React.useState<Record<string, string>>({})
-
-  // ── Sync Store with API & Reactive Events ───────────────────────────────────
-  React.useEffect(() => {
-    const sync = () => {
-      setCategories(getStoredCategories())
-    }
-
-    const unsubscribe = subscribeCategories(sync)
-
-    // Background fetch to sync with server DB
-    categoriesApi
-      .getAll()
-      .then((serverData) => {
-        if (serverData && serverData.length > 0) {
-          // If server returns items, ensure local storage and state reflect it
-          setCategories(serverData)
-        }
-      })
-      .catch((err) => {
-        console.warn("Could not sync categories from server, using local store:", err)
-      })
-
-    return () => {
-      unsubscribe()
-    }
-  }, [])
 
   // ── KPI Computations ───────────────────────────────────────────────────────
   const totalCategories = categories.length
