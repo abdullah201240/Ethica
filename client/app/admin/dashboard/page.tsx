@@ -15,6 +15,7 @@ import {
   Database,
   Search,
 } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 const auditLedgerLogs = [
   {
@@ -275,13 +276,13 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none" />
-            <input
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none z-10" />
+            <Input
               type="text"
               placeholder="Filter members or roles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-8 pl-8 pr-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-sky-500"
+              className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800"
             />
           </div>
         </div>

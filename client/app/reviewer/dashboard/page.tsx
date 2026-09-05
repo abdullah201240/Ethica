@@ -257,20 +257,23 @@ export default function ReviewerDashboardPage() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-1.5">
-                      <button
+                      <Button
                         type="button"
+                        size="sm"
                         onClick={() => handleVote(protocol.id, "Approved")}
-                        className="h-8 px-3 text-xs font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors cursor-pointer"
+                        className="h-8 px-3 text-xs font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white cursor-pointer"
                       >
                         Approve
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleVote(protocol.id, "Revision")}
-                        className="h-8 px-3 text-xs font-bold rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border border-amber-400/30 transition-colors cursor-pointer"
+                        className="h-8 px-3 text-xs font-bold rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border-amber-400/30 cursor-pointer"
                       >
                         Request Revision
-                      </button>
+                      </Button>
                     </div>
                   )}
 

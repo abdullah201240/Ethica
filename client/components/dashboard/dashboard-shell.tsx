@@ -17,6 +17,8 @@ import {
   ChevronDown,
 } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export interface NavItem {
   label: string
@@ -137,15 +139,17 @@ export function DashboardShell({
                   <ShieldCheck className="size-5" />
                 </div>
               </Link>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 items-center justify-center text-slate-400 hover:text-[#002752] dark:hover:text-sky-300 transition-all duration-150 cursor-pointer"
+                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-[#002752] dark:hover:text-sky-300"
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
                 <PanelLeft className="size-4" />
-              </button>
+              </Button>
             </div>
           ) : (
             <div className="flex items-center justify-between h-11">
@@ -164,15 +168,17 @@ export function DashboardShell({
                   </span>
                 </div>
               </Link>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => setCollapsed(true)}
-                className="hidden lg:flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-150 cursor-pointer"
+                className="hidden lg:flex size-8 shrink-0 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 aria-label="Collapse sidebar"
                 title="Collapse sidebar"
               >
                 <PanelLeft className="size-4" />
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -323,16 +329,16 @@ export function DashboardShell({
 
           {/* Left: Mobile toggle + collapsed-desktop expand + breadcrumb */}
           <div className="flex items-center gap-2 shrink-0">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex lg:hidden size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
+              className="flex lg:hidden size-9 text-slate-500 dark:text-slate-400"
               aria-label="Toggle Sidebar"
             >
               {sidebarOpen ? <X className="size-[18px]" /> : <Menu className="size-[18px]" />}
-            </button>
-
-
+            </Button>
 
             {/* Page breadcrumb – desktop only */}
             <div className="hidden lg:flex items-center gap-1.5 pl-0.5">
@@ -345,11 +351,11 @@ export function DashboardShell({
           {/* Centre: Search */}
           <div className="flex-1 max-w-lg hidden md:block mx-auto">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none" />
-              <input
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none z-10" />
+              <Input
                 type="text"
                 placeholder="Search protocols, ethics ID, approvals… (⌘K)"
-                className="w-full h-9 pl-9 pr-14 rounded-lg bg-slate-100/80 dark:bg-white/[0.04] border border-transparent hover:border-border/50 focus:border-[#002752]/30 dark:focus:border-sky-500/30 text-[13px] text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752]/20 dark:focus-visible:ring-sky-500/20 transition-all"
+                className="w-full h-9 pl-9 pr-14 rounded-lg bg-slate-100/80 dark:bg-white/[0.04] border-transparent hover:border-border/50 text-[13px]"
               />
               <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-medium text-slate-400 bg-slate-200/70 dark:bg-white/5 dark:text-slate-500">
                 ⌘K
@@ -371,26 +377,28 @@ export function DashboardShell({
                   <span>{actionButton.label}</span>
                 </Link>
               ) : (
-                <button
+                <Button
                   type="button"
                   onClick={actionButton.onClick}
-                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95 transition-all duration-150 cursor-pointer`}
+                  className={`hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-gradient-to-r ${accentGradient} text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:opacity-95`}
                 >
                   <actionButton.icon className="size-3.5" />
                   <span>{actionButton.label}</span>
-                </button>
+                </Button>
               )
             )}
 
             {/* Notifications */}
-            <button
+            <Button
               type="button"
-              className="relative flex size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
+              variant="ghost"
+              size="icon"
+              className="relative flex size-9 text-slate-500 dark:text-slate-400"
               aria-label="Notifications"
             >
               <Bell className="size-[17px]" />
               <span className="absolute top-[9px] right-[9px] size-[7px] rounded-full bg-emerald-500 ring-[1.5px] ring-white dark:ring-[#0C1E34]" />
-            </button>
+            </Button>
 
             {/* Theme toggle */}
             <ThemeToggle />
@@ -399,9 +407,10 @@ export function DashboardShell({
             <div className="w-px h-5 bg-border/75 hidden sm:block mx-0.5" />
 
             {/* User profile pill */}
-            <button
+            <Button
               type="button"
-              className="flex items-center gap-2 pl-0.5 pr-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
+              variant="ghost"
+              className="flex items-center gap-2 pl-0.5 pr-2 py-1 h-auto rounded-lg"
               aria-label="Profile menu"
             >
               <div
@@ -418,7 +427,7 @@ export function DashboardShell({
                 </span>
               </div>
               <ChevronDown className="hidden xl:block size-3.5 text-slate-300 dark:text-slate-600" />
-            </button>
+            </Button>
           </div>
         </header>
 

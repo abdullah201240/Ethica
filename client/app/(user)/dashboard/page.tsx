@@ -17,6 +17,7 @@ import {
   Calendar,
 } from "lucide-react"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
+import { Button } from "@/components/ui/button"
 
 interface Protocol {
   id: string
@@ -326,13 +327,15 @@ export default function UserDashboardPage() {
                 <span>Certificate</span>
               </Link>
             ) : (
-              <button
+              <Button
                 type="button"
-                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors gap-1 cursor-pointer"
+                variant="outline"
+                size="sm"
+                className="h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 gap-1 cursor-pointer"
               >
                 <span>Inspect</span>
                 <ChevronRight className="size-3.5" />
-              </button>
+              </Button>
             )}
             <Link
               href="/#preview"
