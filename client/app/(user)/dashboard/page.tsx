@@ -83,7 +83,7 @@ export default function UserDashboardPage() {
   })
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-4">
       
       {/* Welcome Banner Card */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8">
@@ -245,87 +245,155 @@ export default function UserDashboardPage() {
           </div>
         </div>
 
-        {/* Protocols List Items */}
-        <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
-          {filtered.map((protocol) => (
-            <div
-              key={protocol.id}
-              className="p-4 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
-            >
-              <div className="space-y-2 flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#002752]/10 dark:bg-white/10 text-[#002752] dark:text-sky-300">
-                    {protocol.id}
-                  </span>
-                  
-                  {/* Status Badge */}
-                  <span
-                    className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
-                      protocol.statusColor === "emerald"
-                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
-                        : protocol.statusColor === "amber"
-                          ? "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/30"
-                          : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30"
-                    }`}
-                  >
-                    {protocol.status}
-                  </span>
-
-                  {/* Risk Badge */}
-                  <span className="text-[0.65rem] font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                    {protocol.risk}
-                  </span>
-                </div>
-
-                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
-                  {protocol.title}
-                </h3>
-
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1">
-                    <Building2 className="size-3.5" />
-                    {protocol.department}
-                  </span>
-                  <span>•</span>
-                  <span>Board: {protocol.board}</span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="size-3.5" />
-                    Submitted {protocol.submissionDate}
-                  </span>
-                </div>
-              </div>
-
-              {/* Protocol Action Buttons */}
-              <div className="flex items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
-                {protocol.hasCertificate ? (
-                  <Link
-                    href="/#certificate"
-                    className="inline-flex items-center h-8 px-3 text-xs font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1.5 transition-colors"
-                  >
-                    <Download className="size-3.5" />
-                    <span>Certificate PDF</span>
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    className="inline-flex items-center h-8 px-3 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <span>Inspect Stages</span>
-                    <ChevronRight className="size-3.5 ml-1" />
-                  </button>
-                )}
-
-                <Link
-                  href="/#preview"
-                  className="size-8 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                  title="Open Protocol Inspector"
+        {/* Protocols Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800">
+                <th className="text-left px-4 sm:px-6 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Protocol ID
+                </th>
+                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  Title &amp; Department
+                </th>
+                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Status
+                </th>
+                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Risk Level
+                </th>
+                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Submitted
+                </th>
+                <th className="text-center px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Days
+                </th>
+                <th className="text-right px-4 sm:px-6 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800">
+              {filtered.map((protocol) => (
+                <tr
+                  key={protocol.id}
+                  className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                 >
-                  <ExternalLink className="size-3.5" />
-                </Link>
-              </div>
+                  {/* Protocol ID */}
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                    <span className="font-mono text-xs font-bold px-2 py-1 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10">
+                      {protocol.id}
+                    </span>
+                  </td>
+
+                  {/* Title + Department */}
+                  <td className="px-4 py-4 max-w-xs">
+                    <p className="font-semibold text-slate-900 dark:text-white text-[13px] leading-snug line-clamp-2">
+                      {protocol.title}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-1 text-[0.7rem] text-slate-400 dark:text-slate-500">
+                      <Building2 className="size-3 shrink-0" />
+                      <span className="truncate">{protocol.department}</span>
+                      <span className="text-slate-300 dark:text-slate-700">·</span>
+                      <span className="truncate">{protocol.board}</span>
+                    </div>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[0.7rem] font-bold px-2.5 py-1 rounded-md border ${
+                        protocol.statusColor === "emerald"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                          : protocol.statusColor === "amber"
+                            ? "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/20"
+                            : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+                      }`}
+                    >
+                      <span
+                        className={`size-1.5 rounded-full ${
+                          protocol.statusColor === "emerald"
+                            ? "bg-emerald-500"
+                            : protocol.statusColor === "amber"
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                        }`}
+                      />
+                      {protocol.status}
+                    </span>
+                  </td>
+
+                  {/* Risk */}
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <span
+                      className={`text-[0.7rem] font-semibold px-2 py-1 rounded-md ${
+                        protocol.riskColor === "emerald"
+                          ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400"
+                          : protocol.riskColor === "purple"
+                            ? "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400"
+                            : "bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-400"
+                      }`}
+                    >
+                      {protocol.risk}
+                    </span>
+                  </td>
+
+                  {/* Submitted */}
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                      <Calendar className="size-3.5 text-slate-400 shrink-0" />
+                      {protocol.submissionDate}
+                    </div>
+                  </td>
+
+                  {/* Days in review */}
+                  <td className="px-4 py-4 text-center whitespace-nowrap">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-200 tabular-nums">
+                      {protocol.daysInReview}d
+                    </span>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right">
+                    <div className="inline-flex items-center gap-2">
+                      {protocol.hasCertificate ? (
+                        <Link
+                          href="/#certificate"
+                          className="inline-flex items-center h-8 px-3 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1.5 transition-colors"
+                        >
+                          <Download className="size-3.5" />
+                          Certificate
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="inline-flex items-center h-8 px-3 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors gap-1"
+                        >
+                          Inspect
+                          <ChevronRight className="size-3.5" />
+                        </button>
+                      )}
+                      <Link
+                        href="/#preview"
+                        className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Open Protocol Inspector"
+                      >
+                        <ExternalLink className="size-3.5" />
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Empty state */}
+          {filtered.length === 0 && (
+            <div className="py-16 text-center text-slate-400 dark:text-slate-600">
+              <FileText className="size-8 mx-auto mb-3 opacity-40" />
+              <p className="text-sm font-semibold">No protocols match this filter</p>
             </div>
-          ))}
+          )}
         </div>
 
       </div>

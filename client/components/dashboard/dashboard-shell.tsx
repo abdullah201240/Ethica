@@ -332,17 +332,7 @@ export function DashboardShell({
               {sidebarOpen ? <X className="size-[18px]" /> : <Menu className="size-[18px]" />}
             </button>
 
-            {collapsed && (
-              <button
-                type="button"
-                onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-9 items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-[#002752] dark:hover:text-sky-300 transition-all cursor-pointer"
-                title="Expand sidebar"
-                aria-label="Expand sidebar"
-              >
-                <PanelLeft className="size-[17px]" />
-              </button>
-            )}
+
 
             {/* Page breadcrumb – desktop only */}
             <div className="hidden lg:flex items-center gap-1.5 pl-0.5">

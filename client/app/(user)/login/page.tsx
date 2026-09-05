@@ -109,7 +109,7 @@ export default function UserLoginPage() {
               <GraduationCap className="size-3.5" />
               <span>Researcher & PI Portal</span>
             </div>
-            <h1 className="font-sans text-2xl sm:text-3xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
+            <h1 className="font-sans text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight uppercase whitespace-nowrap">
               Sign In to Your Workspace
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
