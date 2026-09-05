@@ -382,45 +382,35 @@ export default function AdminListPage() {
       cell: ({ row }) => {
         const isActive = row.status === "Active"
         return (
-          <div className="flex items-center gap-3">
-            <Switch
-              size="lg"
-              checked={isActive}
-              onCheckedChange={() => setPendingToggleAdmin(row)}
-              aria-label={`Toggle status for ${row.name}`}
-              className={isActive
-                ? "data-checked:bg-emerald-600 data-checked:border-emerald-700 shadow-xs"
-                : "data-unchecked:bg-rose-500 dark:data-unchecked:bg-rose-600 shadow-xs"
-              }
-            />
-            <span className={cn(
-              "text-body font-bold select-text",
-              isActive
-                ? "text-emerald-700 dark:text-emerald-400"
-                : "text-rose-600 dark:text-rose-400"
-            )}>
-              {isActive ? "Active" : "Suspended"}
-            </span>
-          </div>
+          <Switch
+            size="sm"
+            checked={isActive}
+            onCheckedChange={() => setPendingToggleAdmin(row)}
+            aria-label={`Toggle status for ${row.name}`}
+            className={isActive
+              ? "data-checked:bg-emerald-600 data-checked:border-emerald-700 shadow-xs"
+              : "data-unchecked:bg-rose-500 dark:data-unchecked:bg-rose-600 shadow-xs"
+            }
+          />
         )
       },
     },
     {
       id: "actions",
       header: "Governance Actions",
-      headerClassName: "w-48 text-right",
+      headerClassName: "w-36 text-right",
       align: "right",
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1">
           {/* View Details / Security Dossier Dynamic Page Link */}
           <Link href={`/admin/admins/${encodeURIComponent(row.id)}`}>
             <Button
               type="button"
               variant="default"
-              className="h-9 px-3.5 text-body font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
+              className="h-7 px-2.5 text-micro font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1 cursor-pointer"
               title="View Security Dossier"
             >
-              <Eye className="size-4" />
+              <Eye className="size-3.5" />
               <span>Dossier</span>
             </Button>
           </Link>
@@ -430,10 +420,10 @@ export default function AdminListPage() {
             type="button"
             variant="outline"
             onClick={() => handleOpenEdit(row)}
-            className="h-9 px-3.5 text-body font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1.5 cursor-pointer"
+            className="h-7 px-2.5 text-micro font-bold rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1 cursor-pointer"
             title="Edit Administrator Credentials"
           >
-            <Lock className="size-4 text-slate-500 dark:text-slate-400" />
+            <Lock className="size-3.5 text-slate-500 dark:text-slate-400" />
             <span>Edit</span>
           </Button>
         </div>

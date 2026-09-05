@@ -21,6 +21,11 @@ import {
   FileCheck2,
   RefreshCw,
   Image as ImageIcon,
+  Lock,
+  KeyRound,
+  Eye,
+  EyeOff,
+  Globe,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -64,6 +69,7 @@ import {
   userAvatarFileSchema,
   userAvatarUrlSchema,
   investigatorProfileSchema,
+  changePasswordSchema,
   type InvestigatorProfileInput,
 } from "@/lib/schemas"
 
@@ -185,7 +191,18 @@ export default function InvestigatorProfilePage() {
   const [profile, setProfile] = React.useState<InvestigatorProfileInput>(getInitialProfile)
   const [isEditingProfile, setIsEditingProfile] = React.useState(false)
   const [editForm, setEditForm] = React.useState<InvestigatorProfileInput>(getInitialProfile)
-  const [copiedKey, setCopiedKey] = React.useState(false)
+
+  // ── Password Management State ────────────────────────────────────────────
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false)
+  const [showNewPassword, setShowNewPassword] = React.useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
+  const [passwordForm, setPasswordForm] = React.useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  })
+  const [passwordErrors, setPasswordErrors] = React.useState<Record<string, string>>({})
 
   // ── Profile Picture Dialog State ─────────────────────────────────────────
   const [avatarDialogOpen, setAvatarDialogOpen] = React.useState(false)
@@ -206,9 +223,6 @@ export default function InvestigatorProfilePage() {
   const [urlDraftUrl, setUrlDraftUrl] = React.useState<string | null>(null)
   const [isTestingUrl, setIsTestingUrl] = React.useState(false)
   const [urlVerified, setUrlVerified] = React.useState(false)
-
-  // ── Cryptographic Credential Fingerprint ─────────────────────────────────
-  const pkiFingerprint = "7B4E 92A1 3C58 D094 881F 20E6 AB93 4511 23DF 88C2"
 
   // ── Sync with REST API & Custom Events ───────────────────────────────────
   React.useEffect(() => {
@@ -256,14 +270,36 @@ export default function InvestigatorProfilePage() {
     })
   }
 
-  // ── Copy Cryptographic Fingerprint ──────────────────────────────────────
-  const handleCopyFingerprint = () => {
-    navigator.clipboard.writeText(pkiFingerprint)
-    setCopiedKey(true)
-    toast.info("Security Seal Copied", {
-      description: "SHA-256 FIPS 140-3 token fingerprint copied to clipboard.",
+  // ── Change Password Handler ─────────────────────────────────────────────
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault()
+    setPasswordErrors({})
+
+    const validation = changePasswordSchema.safeParse(passwordForm)
+    if (!validation.success) {
+      const fieldErrors = validation.error.flatten().fieldErrors
+      const formatted: Record<string, string> = {}
+      for (const [key, msgs] of Object.entries(fieldErrors)) {
+        if (msgs?.[0]) formatted[key] = msgs[0]
+      }
+      setPasswordErrors(formatted)
+      const firstError = Object.values(fieldErrors)[0]?.[0]
+      toast.error("Password Validation Error", {
+        description: firstError || "Please ensure password meets all complexity requirements.",
+      })
+      return
+    }
+
+    setIsPasswordModalOpen(false)
+    setPasswordForm({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     })
-    setTimeout(() => setCopiedKey(false), 2000)
+    setPasswordErrors({})
+    toast.success("Password Updated Successfully", {
+      description: "Your researcher account password has been safely updated.",
+    })
   }
 
   // ── Handle Option 1: Local Device File Selection ─────────────────────────
@@ -1152,7 +1188,7 @@ export default function InvestigatorProfilePage() {
           </DashboardCard>
         </div>
 
-        {/* Right 1-Column: Accreditations & Cryptographic Seals ───────────── */}
+        {/* Right 1-Column: Accreditations & Account Security ───────────── */}
         <div className="space-y-6">
           {/* Institutional Ethics Accreditations */}
           <DashboardCard className="space-y-4">
@@ -1200,46 +1236,75 @@ export default function InvestigatorProfilePage() {
             </div>
           </DashboardCard>
 
-          {/* Cryptographic Signature & PKI Seal */}
+          {/* Account Security & Sign-in */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
-              <ShieldCheck className="size-4 text-secondary" />
-              FIPS 140-3 Cryptographic Seal
-            </h3>
+            <div className="flex items-center justify-between border-b border-border/75 pb-3">
+              <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
+                <ShieldCheck className="size-4 text-secondary" />
+                Account Security & Sign-in
+              </h3>
+              <Badge className="bg-[#198754] text-white text-xs font-bold">
+                Active
+              </Badge>
+            </div>
 
-            <div className="space-y-2 text-base">
-              <p className="text-muted-foreground text-base">
-                Your protocol submissions and clearance approvals are cryptographically signed using your institutional private key.
-              </p>
-
-              <div className="p-3 rounded-lg bg-muted border border-border/75 space-y-1.5 font-mono text-base">
-                <span className="text-muted-foreground block text-base uppercase font-sans font-bold">
-                  Public SHA-256 Fingerprint:
-                </span>
-                <span className="text-primary dark:text-sky-300 font-bold block break-all">
-                  {pkiFingerprint}
-                </span>
+            <div className="space-y-3 text-base">
+              {/* Password Setting */}
+              <div className="p-3.5 rounded-xl bg-muted/40 border border-border/75 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-muted-foreground block font-medium text-xs">Account Password</span>
+                    <span className="font-mono text-sm font-bold text-foreground block">
+                      ••••••••••••••••
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsPasswordModalOpen(true)}
+                    className="h-7 px-2.5 text-xs font-bold rounded gap-1"
+                  >
+                    <Lock className="size-3" />
+                    <span>Change Password</span>
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Last updated 60 days ago. Keep your account secure with a strong password.
+                </p>
               </div>
 
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopyFingerprint}
-                className="w-full h-8 text-base font-bold rounded-md"
-              >
-                {copiedKey ? (
-                  <>
-                    <Check className="size-3.5 text-emerald-600 mr-1.5" />
-                    Fingerprint Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="size-3.5 mr-1.5" />
-                    Copy Public Fingerprint
-                  </>
-                )}
-              </Button>
+              {/* Two-Factor Authentication */}
+              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <KeyRound className="size-3.5 text-emerald-600" />
+                    <span className="font-bold text-foreground text-sm">Two-Factor Auth (2FA)</span>
+                  </div>
+                  <Badge variant="outline" className="text-xs text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                    Enabled
+                  </Badge>
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  DIU Authenticator / TOTP verification enabled on login.
+                </p>
+              </div>
+
+              {/* Institutional Single Sign-On */}
+              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Globe className="size-3.5 text-primary dark:text-sky-400" />
+                    <span className="font-bold text-foreground text-sm">Institutional SSO</span>
+                  </div>
+                  <Badge variant="outline" className="text-xs text-primary dark:text-sky-300 border-primary/20">
+                    Connected
+                  </Badge>
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Linked to your DIU Google Workspace account ({profile.email}).
+                </p>
+              </div>
             </div>
           </DashboardCard>
         </div>
@@ -1257,6 +1322,199 @@ export default function InvestigatorProfilePage() {
           initialPageSize={5}
         />
       </div>
+
+      {/* ── Change Password Slide-over Sheet ──────────────────────────────── */}
+      <Sheet open={isPasswordModalOpen} onOpenChange={setIsPasswordModalOpen}>
+        <SheetContent side="right" size="default" className="p-6">
+          <SheetHeader className="p-0 pb-4 border-b border-border/75">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-lg bg-primary/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center">
+                <Lock className="size-4" />
+              </div>
+              <div>
+                <SheetTitle className="text-lg font-bold text-primary dark:text-white">
+                  Change Account Password
+                </SheetTitle>
+                <SheetDescription className="text-xs text-muted-foreground mt-0.5">
+                  Update your credentials for the Ethica Researcher Portal.
+                </SheetDescription>
+              </div>
+            </div>
+          </SheetHeader>
+
+          <form onSubmit={handleChangePassword} className="space-y-4 py-4" noValidate>
+            {/* Current Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">
+                Current Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={passwordForm.currentPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, currentPassword: e.target.value }))
+                    if (passwordErrors.currentPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.currentPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Enter current password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.currentPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.currentPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                >
+                  {showCurrentPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.currentPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.currentPassword}
+                </p>
+              )}
+            </div>
+
+            {/* New Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">
+                New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showNewPassword ? "text" : "password"}
+                  value={passwordForm.newPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))
+                    if (passwordErrors.newPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.newPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Enter new strong password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.newPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.newPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                >
+                  {showNewPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.newPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.newPassword}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm New Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">
+                Confirm New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))
+                    if (passwordErrors.confirmPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.confirmPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Re-type new password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.confirmPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.confirmPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.confirmPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            {/* Requirements list */}
+            <div className="p-3 rounded-lg bg-muted/40 border border-border/75 space-y-1.5 text-xs text-muted-foreground">
+              <span className="font-bold text-foreground block">Password Requirements:</span>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${passwordForm.newPassword.length >= 8 ? "text-emerald-600" : "text-muted-foreground"}`} />
+                <span>At least 8 characters long</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${/[A-Z]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-muted-foreground"}`} />
+                <span>At least one uppercase letter (A-Z)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${/[0-9]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-muted-foreground"}`} />
+                <span>At least one numerical digit (0-9)</span>
+              </div>
+            </div>
+
+            <SheetFooter className="p-0 pt-4 flex flex-row items-center justify-end gap-2 border-t border-border/75">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setIsPasswordModalOpen(false)
+                  setPasswordErrors({})
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-[#002752] hover:bg-[#001c3d] text-white font-bold"
+              >
+                Update Password
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
     </DashboardContainer>
   )
 }

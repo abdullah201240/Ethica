@@ -341,27 +341,13 @@ export default function AdminUsersDirectoryPage() {
           : "data-unchecked:bg-slate-400 dark:data-unchecked:bg-slate-600 shadow-xs"
 
         return (
-          <div className="flex items-center gap-2">
-            <Switch
-              size="sm"
-              checked={isActive}
-              onCheckedChange={() => setPendingToggleUser(row)}
-              aria-label={`Toggle status for ${row.name}`}
-              className={switchColor}
-            />
-            <span className={cn(
-              "text-micro font-bold select-text",
-              isActive
-                ? "text-emerald-700 dark:text-emerald-400"
-                : isSuspended
-                ? "text-rose-600 dark:text-rose-400"
-                : isPending
-                ? "text-amber-700 dark:text-amber-400"
-                : "text-slate-600 dark:text-slate-400"
-            )}>
-              {row.status}
-            </span>
-          </div>
+          <Switch
+            size="sm"
+            checked={isActive}
+            onCheckedChange={() => setPendingToggleUser(row)}
+            aria-label={`Toggle status for ${row.name}`}
+            className={switchColor}
+          />
         )
       },
     },

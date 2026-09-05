@@ -85,11 +85,21 @@ export default function ProfileLoading() {
             </div>
           </div>
 
-          {/* Cryptographic Seal Card Skeleton */}
+          {/* Account Security & Sign-in Card Skeleton */}
           <div className="rounded-none sm:rounded-2xl border-y sm:border border-border/75 bg-card p-5 sm:p-6 space-y-4 shadow-xs">
-            <Skeleton className="h-4 w-40 rounded-md" />
-            <Skeleton className="h-14 w-full rounded-xl" />
-            <Skeleton className="h-8 w-full rounded-md" />
+            <div className="flex items-center justify-between border-b border-border/70 pb-3">
+              <div className="flex items-center gap-2">
+                <Skeleton className="size-4 rounded-full" />
+                <Skeleton className="h-4 w-44 rounded-md" />
+              </div>
+              <Skeleton className="h-4 w-14 rounded-md" />
+            </div>
+
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-xl" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+            </div>
           </div>
         </div>
       </div>

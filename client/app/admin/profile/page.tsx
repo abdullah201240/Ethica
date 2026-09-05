@@ -2,21 +2,32 @@
 
 import * as React from "react"
 import {
-  Copy,
-  Check,
+  ShieldCheck,
   KeyRound,
   Laptop,
   Smartphone,
   Globe,
-  Save,
   Clock,
   Fingerprint,
+  Lock,
+  Eye,
+  EyeOff,
+  Save,
+  CheckCircle2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
-import { adminContactSchema } from "@/lib/schemas"
+import { adminContactSchema, changePasswordSchema } from "@/lib/schemas"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -38,71 +49,81 @@ import { DashboardContainer, DashboardCard } from "@/components/dashboard/dashbo
 interface AdminSessionLog {
   id: string
   device: string
-  deviceType: "desktop" | "mobile" | "server"
+  deviceType: "desktop" | "mobile"
   ipAddress: string
   location: string
   authMethod: string
   lastActive: string
-  status: "Active Session" | "Terminated" | "Key Rotated"
+  status: "Active Session" | "Signed Out"
 }
 
 const initialSessionLogs: AdminSessionLog[] = [
   {
     id: "SESS-2026-881",
-    device: "MacBook Pro 16\" (macOS Sonoma 14.6 • Safari)",
+    device: "MacBook Pro 16\" (macOS Sonoma • Safari 17.5)",
     deviceType: "desktop",
     ipAddress: "103.114.98.12",
     location: "DIU Ashulia Research Complex",
-    authMethod: "YubiKey 5C FIPS Hardware Token",
-    lastActive: "Active now",
+    authMethod: "Touch ID / Passkey (WebAuthn)",
+    lastActive: "Active now (Current session)",
     status: "Active Session",
   },
   {
     id: "SESS-2026-880",
-    device: "iPhone 15 Pro (iOS 17.5 • Ethica Mobile Authenticator)",
+    device: "iPhone 15 Pro (iOS 17.5 • Safari Mobile)",
     deviceType: "mobile",
     ipAddress: "103.114.98.45",
-    location: "DIU Ashulia Campus Wi-Fi (802.1X)",
-    authMethod: "FaceID + Cryptographic Biometric Enclave",
+    location: "DIU Ashulia Campus Wi-Fi",
+    authMethod: "Face ID / Mobile SSO",
     lastActive: "42 mins ago",
     status: "Active Session",
   },
   {
     id: "SESS-2026-879",
-    device: "HSM Hardware Appliance (Linux Enterprise • mTLS)",
-    deviceType: "server",
-    ipAddress: "192.168.10.2",
-    location: "Institutional Datacenter HSM Chamber",
-    authMethod: "Mutual TLS Certificate Auth",
+    device: "Dell Precision 5820 (Windows 11 • Edge)",
+    deviceType: "desktop",
+    ipAddress: "103.114.98.19",
+    location: "Office of Research Governance (Room 602)",
+    authMethod: "Institutional Single Sign-On (SSO)",
     lastActive: "Sep 04, 2026 06:15 PM",
     status: "Active Session",
   },
   {
     id: "SESS-2026-878",
-    device: "Workstation Dell Precision (Windows 11 Enterprise)",
-    deviceType: "desktop",
-    ipAddress: "103.114.98.19",
-    location: "Office of Research Governance (Room 602)",
-    authMethod: "SmartCard PKI Card Reader",
+    device: "iPad Pro 12.9\" (iPadOS 17.5 • Safari)",
+    deviceType: "mobile",
+    ipAddress: "103.114.98.33",
+    location: "Daffodil Smart City Library Hub",
+    authMethod: "Two-Factor Authentication (2FA)",
     lastActive: "Sep 03, 2026 05:00 PM",
-    status: "Terminated",
+    status: "Signed Out",
   },
   {
     id: "SESS-2026-877",
-    device: "Secure Vault Terminal (FreeBSD • Console Access)",
-    deviceType: "server",
-    ipAddress: "192.168.10.8",
-    location: "Cold Storage Key Vault",
-    authMethod: "Dual-Custodian Multi-Key Ceremony",
+    device: "ThinkPad X1 Carbon (Ubuntu 24.04 LTS • Firefox)",
+    deviceType: "desktop",
+    ipAddress: "103.114.98.88",
+    location: "Remote VPN • Dhaka, Bangladesh",
+    authMethod: "Password + Security Key",
     lastActive: "Aug 28, 2026 02:30 PM",
-    status: "Key Rotated",
+    status: "Signed Out",
   },
 ]
 
 export default function AdminProfilePage() {
-  const [copiedKey, setCopiedKey] = React.useState(false)
   const [isEditingContact, setIsEditingContact] = React.useState(false)
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false)
+  const [showNewPassword, setShowNewPassword] = React.useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const [sessionLogs, setSessionLogs] = React.useState<AdminSessionLog[]>(initialSessionLogs)
+
+  const [passwordForm, setPasswordForm] = React.useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  })
+  const [passwordErrors, setPasswordErrors] = React.useState<Record<string, string>>({})
 
   const [contactForm, setContactForm] = React.useState({
     phone: "+880 2 9138234-5 (Ext: 104)",
@@ -115,21 +136,9 @@ export default function AdminProfilePage() {
   const [alertSettings, setAlertSettings] = React.useState({
     quorumDeadlines: true,
     newApplicationsDigest: true,
-    hsmAuditReports: true,
+    securityAlerts: true,
     emergencySuspensions: true,
   })
-
-  const publicFingerprint =
-    "9F83 4B2A 7E19 D502 81C4 330F A72E 1189 BC44 901E"
-
-  const handleCopyFingerprint = () => {
-    navigator.clipboard.writeText(publicFingerprint)
-    setCopiedKey(true)
-    toast.info("Fingerprint Copied", {
-      description: "Public key cryptographic fingerprint copied to clipboard.",
-    })
-    setTimeout(() => setCopiedKey(false), 2000)
-  }
 
   const handleSaveContact = (e: React.FormEvent) => {
     e.preventDefault()
@@ -154,12 +163,43 @@ export default function AdminProfilePage() {
     setSessionLogs((prev) =>
       prev.map((s) =>
         s.id === sessionId
-          ? { ...s, status: "Terminated", lastActive: "Just now (Revoked)" }
+          ? { ...s, status: "Signed Out", lastActive: "Just now (Signed out)" }
           : s
       )
     )
-    toast.success("Session Security Invalidation Completed", {
-      description: `Hardware token session ${sessionId} (${device}) was revoked. Cryptographic keys invalidated.`,
+    toast.success("Device Session Signed Out", {
+      description: `Session ${sessionId} on ${device} has been signed out successfully.`,
+    })
+  }
+
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault()
+    setPasswordErrors({})
+
+    const validation = changePasswordSchema.safeParse(passwordForm)
+    if (!validation.success) {
+      const fieldErrors = validation.error.flatten().fieldErrors
+      const formatted: Record<string, string> = {}
+      for (const [key, msgs] of Object.entries(fieldErrors)) {
+        if (msgs?.[0]) formatted[key] = msgs[0]
+      }
+      setPasswordErrors(formatted)
+      const firstError = Object.values(fieldErrors)[0]?.[0]
+      toast.error("Password Validation Error", {
+        description: firstError || "Please ensure password meets all complexity requirements.",
+      })
+      return
+    }
+
+    setIsPasswordModalOpen(false)
+    setPasswordForm({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    })
+    setPasswordErrors({})
+    toast.success("Password Updated Successfully", {
+      description: "Your administrative account password has been safely updated.",
     })
   }
 
@@ -188,7 +228,7 @@ export default function AdminProfilePage() {
       {
         id: "device",
         accessorKey: "device",
-        header: "Authenticated Client / Device",
+        header: "Authenticated Device / Browser",
         sortable: true,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
@@ -226,7 +266,7 @@ export default function AdminProfilePage() {
       {
         id: "authMethod",
         accessorKey: "authMethod",
-        header: "Cryptographic Credential",
+        header: "Authentication Method",
         cell: ({ row }) => (
           <span className="text-sm text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
             <KeyRound className="size-3 text-emerald-600" />
@@ -237,7 +277,7 @@ export default function AdminProfilePage() {
       {
         id: "lastActive",
         accessorKey: "lastActive",
-        header: "Activity Time",
+        header: "Last Active",
         sortable: true,
         headerClassName: "w-40",
         cell: ({ row }) => (
@@ -259,8 +299,6 @@ export default function AdminProfilePage() {
             className={`text-sm font-bold ${
               row.status === "Active Session"
                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                : row.status === "Key Rotated"
-                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
                 : "bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700"
             }`}
           >
@@ -283,19 +321,19 @@ export default function AdminProfilePage() {
                     variant="outline"
                     size="xs"
                     className="h-7 px-2.5 text-sm font-bold rounded-md border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
-                    title="Revoke Cryptographic Session"
+                    title="Sign Out Session"
                   >
-                    Revoke
+                    Sign Out
                   </Button>
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-body-sm font-bold text-primary dark:text-white">
-                      Revoke Cryptographic Session
+                      Sign Out Device Session
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-body-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Are you sure you want to terminate session <strong className="text-foreground">{row.id}</strong> on <strong className="text-foreground">{row.device}</strong>?
-                      The hardware token and mTLS authorization certificate will be immediately invalidated across the DIU network.
+                      Are you sure you want to sign out session <strong className="text-foreground">{row.id}</strong> on <strong className="text-foreground">{row.device}</strong>?
+                      This device will be immediately disconnected from your administrator account.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -304,14 +342,14 @@ export default function AdminProfilePage() {
                       onClick={() => handleRevokeSession(row.id, row.device)}
                       className="bg-rose-600 hover:bg-rose-700 text-white text-body-sm font-bold"
                     >
-                      Revoke Token
+                      Sign Out Device
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             ) : (
               <span className="text-sm font-mono text-slate-400 dark:text-slate-500">
-                Invalidated
+                Signed Out
               </span>
             )}
           </div>
@@ -330,8 +368,7 @@ export default function AdminProfilePage() {
         accessorKey: "status",
         options: [
           { label: "Active Sessions", value: "Active Session" },
-          { label: "Terminated", value: "Terminated" },
-          { label: "Key Rotated", value: "Key Rotated" },
+          { label: "Signed Out", value: "Signed Out" },
         ],
       },
     ],
@@ -340,7 +377,7 @@ export default function AdminProfilePage() {
 
   return (
     <DashboardContainer>
-      {/* ── Main Two-Column Profile & Credential Cards ──────────────────────── */}
+      {/* ── Main Two-Column Profile & Account Cards ──────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Academic & Institutional Identity (2 Cols on lg) */}
         <div className="lg:col-span-2 space-y-6">
@@ -360,7 +397,7 @@ export default function AdminProfilePage() {
                       variant="outline"
                       className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-micro font-bold"
                     >
-                      Active Custodian
+                      Active Administrator
                     </Badge>
                   </div>
                   <p className="text-body-sm font-semibold text-slate-600 dark:text-slate-300">
@@ -569,72 +606,85 @@ export default function AdminProfilePage() {
           </DashboardCard>
         </div>
 
-        {/* Right Column: Cryptographic HSM Authority & Security (1 Col on lg) */}
+        {/* Right Column: Standard Account Security & Notifications (1 Col on lg) */}
         <div className="space-y-6">
-          {/* Cryptographic Key & Root Authority Card */}
+          {/* Account Security & Sign-in Card */}
           <DashboardCard className="space-y-5">
             <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <KeyRound className="size-4 text-secondary" />
+                <ShieldCheck className="size-4 text-secondary" />
                 <h3 className="text-body-sm font-bold uppercase tracking-wider text-primary dark:text-white">
-                  Cryptographic Authority
+                  Security & Authentication
                 </h3>
               </div>
               <Badge className="bg-[#198754] text-white text-micro font-bold">
-                HSM Master Valid
+                Account Secured
               </Badge>
             </div>
 
-            <div className="space-y-3 text-body-sm">
-              <div>
-                <span className="text-slate-400 block font-medium text-micro">Digital Certificate Serial:</span>
-                <span className="font-mono text-body-sm font-bold text-foreground block mt-0.5">
-                  DIU-CA-2026-X509-ROOT-001
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block font-medium text-micro">ECDSA Key Fingerprint (SHA-256):</span>
-                <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 mt-1 space-y-2">
-                  <div className="font-mono text-body-sm font-bold text-foreground break-all leading-relaxed">
-                    {publicFingerprint}
+            <div className="space-y-4 text-body-sm">
+              {/* Password Setting */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-slate-400 block font-medium text-micro">Account Password</span>
+                    <span className="font-mono text-sm font-bold text-foreground block">
+                      ••••••••••••••••
+                    </span>
                   </div>
                   <Button
                     type="button"
                     variant="outline"
                     size="xs"
-                    onClick={handleCopyFingerprint}
-                    className="h-7 px-2 text-micro font-bold gap-1 rounded border-slate-300 dark:border-slate-700 w-full"
+                    onClick={() => setIsPasswordModalOpen(true)}
+                    className="h-7 px-2.5 text-micro font-bold rounded gap-1 border-slate-300 dark:border-slate-700"
                   >
-                    {copiedKey ? (
-                      <>
-                        <Check className="size-3 text-emerald-600" />
-                        <span className="text-emerald-600">Copied to Clipboard</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="size-3 text-slate-500" />
-                        <span>Copy Public Fingerprint</span>
-                      </>
-                    )}
+                    <Lock className="size-3" />
+                    <span>Change Password</span>
                   </Button>
                 </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 font-medium text-micro">HSM Hardware Security:</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-body-sm">FIPS 140-2 L3</span>
-                </div>
-                <p className="text-body-sm text-slate-700 dark:text-slate-300">
-                  Keys stored in tamper-evident HSM partition. Dual-custody recovery protocol enabled.
+                <p className="text-xs text-muted-foreground">
+                  Last updated 45 days ago. Minimum 8 characters with numbers & uppercase letters.
                 </p>
               </div>
 
-              <div className="flex items-center justify-between text-body-sm text-muted-foreground pt-1">
-                <span>Validity Window:</span>
+              {/* Two-Factor Authentication */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <KeyRound className="size-3.5 text-emerald-600" />
+                    <span className="text-foreground font-bold text-body-sm">Two-Factor Authentication (2FA)</span>
+                  </div>
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-micro font-bold">
+                    Enabled
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Authenticator App (TOTP) and Hardware Passkeys (WebAuthn) configured for login verification.
+                </p>
+              </div>
+
+              {/* Single Sign-On (SSO) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Globe className="size-3.5 text-[#002752] dark:text-sky-400" />
+                    <span className="text-foreground font-bold text-body-sm">Institutional SSO</span>
+                  </div>
+                  <Badge variant="outline" className="bg-[#002752]/10 text-primary dark:text-sky-300 border-[#002752]/20 text-micro font-bold">
+                    Connected
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Linked to DIU Google Workspace (<code className="font-mono text-[0.7rem]">admin.secretariat@diu.edu.bd</code>).
+                </p>
+              </div>
+
+              {/* Session Timeout Policy */}
+              <div className="flex items-center justify-between text-body-sm text-muted-foreground pt-1 px-1">
+                <span>Inactivity Session Timeout:</span>
                 <span className="font-mono font-bold text-foreground">
-                  Jan 01, 2026 – Dec 31, 2028
+                  60 minutes
                 </span>
               </div>
             </div>
@@ -659,9 +709,9 @@ export default function AdminProfilePage() {
                   desc: "Summary of new applicant dossiers submitted to docket",
                 },
                 {
-                  key: "hsmAuditReports" as const,
-                  label: "Cryptographic Certificate Audits",
-                  desc: "Notification on daily SHA-256 Merkle root verification",
+                  key: "securityAlerts" as const,
+                  label: "Security & Sign-in Alerts",
+                  desc: "Immediate email notifications for unrecognized devices or logins",
                 },
                 {
                   key: "emergencySuspensions" as const,
@@ -701,12 +751,12 @@ export default function AdminProfilePage() {
         </div>
       </div>
 
-      {/* ── Security & Cryptographic Session Docket (Unified DataTable - Rule 6) ── */}
+      {/* ── Active Devices & Login Sessions Docket (Unified DataTable - Rule 6) ── */}
       <div className="w-full space-y-3">
         <DataTable<AdminSessionLog>
           data={sessionLogs}
           columns={sessionColumns}
-          title="Cryptographic Access & Active Sessions Docket"
+          title="Active Devices & Login Sessions"
           searchPlaceholder="Search by client device, location, or IP address..."
           searchKeys={["device", "location", "ipAddress", "authMethod"]}
           filters={sessionFilters}
@@ -718,6 +768,199 @@ export default function AdminProfilePage() {
           }}
         />
       </div>
+
+      {/* ── Change Password Slide-over Sheet ──────────────────────────────── */}
+      <Sheet open={isPasswordModalOpen} onOpenChange={setIsPasswordModalOpen}>
+        <SheetContent side="right" size="default" className="p-6">
+          <SheetHeader className="p-0 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-lg bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center">
+                <Lock className="size-4" />
+              </div>
+              <div>
+                <SheetTitle className="text-lg font-bold text-primary dark:text-white">
+                  Change Account Password
+                </SheetTitle>
+                <SheetDescription className="text-xs text-muted-foreground mt-0.5">
+                  Update your credentials for the Institutional Administrator Console.
+                </SheetDescription>
+              </div>
+            </div>
+          </SheetHeader>
+
+          <form onSubmit={handleChangePassword} className="space-y-4 py-4" noValidate>
+            {/* Current Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Current Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={passwordForm.currentPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, currentPassword: e.target.value }))
+                    if (passwordErrors.currentPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.currentPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Enter current password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.currentPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.currentPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-slate-400 hover:text-slate-600"
+                >
+                  {showCurrentPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.currentPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.currentPassword}
+                </p>
+              )}
+            </div>
+
+            {/* New Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showNewPassword ? "text" : "password"}
+                  value={passwordForm.newPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))
+                    if (passwordErrors.newPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.newPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Enter new strong password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.newPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.newPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-slate-400 hover:text-slate-600"
+                >
+                  {showNewPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.newPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.newPassword}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm New Password */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Confirm New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) => {
+                    setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))
+                    if (passwordErrors.confirmPassword) {
+                      setPasswordErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.confirmPassword
+                        return next
+                      })
+                    }
+                  }}
+                  placeholder="Re-type new password"
+                  className={`h-9 text-sm pr-10 font-mono ${
+                    passwordErrors.confirmPassword
+                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
+                      : ""
+                  }`}
+                  aria-invalid={Boolean(passwordErrors.confirmPassword)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-1 top-1 h-7 w-7 text-slate-400 hover:text-slate-600"
+                >
+                  {showConfirmPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                </Button>
+              </div>
+              {passwordErrors.confirmPassword && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  {passwordErrors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            {/* Password Policy Checklist */}
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1.5 text-xs text-muted-foreground">
+              <span className="font-bold text-foreground block">Password Requirements:</span>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${passwordForm.newPassword.length >= 8 ? "text-emerald-600" : "text-slate-400"}`} />
+                <span>At least 8 characters long</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${/[A-Z]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-slate-400"}`} />
+                <span>At least one uppercase letter (A-Z)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className={`size-3.5 ${/[0-9]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-slate-400"}`} />
+                <span>At least one numerical digit (0-9)</span>
+              </div>
+            </div>
+
+            <SheetFooter className="p-0 pt-4 flex flex-row items-center justify-end gap-2 border-t border-slate-200 dark:border-slate-800">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setIsPasswordModalOpen(false)
+                  setPasswordErrors({})
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                className="bg-[#002752] hover:bg-[#001c3d] text-white font-bold"
+              >
+                Update Password
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
     </DashboardContainer>
   )
 }

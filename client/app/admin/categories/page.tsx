@@ -6,7 +6,6 @@ import {
   Layers,
   Plus,
   Edit2,
-  Trash2,
   Clock,
   Banknote,
   CheckCircle2,
@@ -14,7 +13,6 @@ import {
   Sparkles,
   Zap,
   Building2,
-  ShieldAlert,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -40,17 +38,8 @@ import {
   SheetDescription,
   SheetFooter,
 } from "@/components/ui/sheet"
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
 import { toast } from "@/components/ui/sonner"
+import { cn } from "@/lib/utils"
 import {
   createResearchCategorySchema,
   updateResearchCategorySchema,
@@ -66,7 +55,6 @@ import {
   subscribeCategories,
   addCategory,
   updateCategory,
-  deleteCategory,
   toggleCategoryStatus,
 } from "@/lib/categories-store"
 import { categoriesApi } from "@/lib/api/categories.api"
@@ -80,7 +68,6 @@ export default function AdminCategoriesPage() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const [categoryToEdit, setCategoryToEdit] = React.useState<ResearchCategory | null>(null)
-  const [categoryToDelete, setCategoryToDelete] = React.useState<ResearchCategory | null>(null)
 
   // ── Create Form State ──────────────────────────────────────────────────────
   const [createForm, setCreateForm] = React.useState<CreateResearchCategoryInput>({
@@ -229,23 +216,6 @@ export default function AdminCategoriesPage() {
     }
   }
 
-  // ── Delete Category Handler ────────────────────────────────────────────────
-  const handleDeleteConfirm = () => {
-    if (!categoryToDelete) return
-    const id = categoryToDelete.id
-    const name = categoryToDelete.name
-
-    deleteCategory(id)
-    categoriesApi.delete(id).catch((err) => {
-      console.warn("Server delete failed, retained optimistic store:", err)
-    })
-
-    toast.success("Category Removed", {
-      description: `${name} (${id}) has been permanently deleted from institutional registers.`,
-    })
-    setCategoryToDelete(null)
-  }
-
   // ── Autofill Demo Category ─────────────────────────────────────────────────
   const handleAutofillDemo = () => {
     setCreateForm({
@@ -377,40 +347,36 @@ export default function AdminCategoriesPage() {
         accessorKey: "status",
         header: "Status",
         sortable: true,
-        headerClassName: "w-32",
+        headerClassName: "w-20",
         cell: ({ row }) => {
           const isActive = row.status === "Active"
           return (
-            <span
-              className={`inline-flex items-center gap-1 text-base font-bold px-2.5 py-0.5 rounded-md border whitespace-nowrap ${
-                isActive
-                  ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700"
-              }`}
-            >
-              <span
-                className={`size-1.5 rounded-full ${
-                  isActive ? "bg-emerald-500" : "bg-slate-400"
-                }`}
-              />
-              {row.status}
-            </span>
+            <Switch
+              size="sm"
+              checked={isActive}
+              onCheckedChange={() => handleToggleStatus(row.id, row.status, row.name)}
+              aria-label={`Toggle status for ${row.name}`}
+              className={isActive
+                ? "data-checked:bg-emerald-600 data-checked:border-emerald-700 shadow-xs"
+                : "data-unchecked:bg-slate-400 shadow-xs"
+              }
+            />
           )
         },
       },
       {
         id: "actions",
         header: "Actions",
-        headerClassName: "w-56 text-right",
+        headerClassName: "w-28 text-right",
         align: "right",
         cell: ({ row }) => (
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-1">
             {/* View Dossier Detail Page Link */}
             <Link href={`/admin/categories/${encodeURIComponent(row.id)}`}>
               <Button
                 type="button"
                 variant="default"
-                className="h-8 px-2.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1 cursor-pointer"
+                className="h-7 px-2.5 text-micro font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1 cursor-pointer"
                 title="Inspect Category Dossier"
                 aria-label={`View dossier for ${row.name}`}
               >
@@ -426,35 +392,10 @@ export default function AdminCategoriesPage() {
               onClick={() => openEditModal(row)}
               title="Edit Category & Fee"
               aria-label={`Edit ${row.name}`}
-              className="h-8 px-2.5 text-base font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1 cursor-pointer"
+              className="h-7 px-2.5 text-micro font-bold rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1 cursor-pointer"
             >
               <Edit2 className="size-3.5" />
               <span>Edit</span>
-            </Button>
-
-            {/* Toggle Status Switch */}
-            <Switch
-              size="lg"
-              checked={row.status === "Active"}
-              onCheckedChange={() => handleToggleStatus(row.id, row.status, row.name)}
-              aria-label={`Toggle status for ${row.name}`}
-              className={row.status === "Active"
-                ? "data-checked:bg-emerald-600 shadow-xs"
-                : "data-unchecked:bg-slate-400 shadow-xs"
-              }
-            />
-
-            {/* Delete Trigger */}
-            <Button
-              type="button"
-              variant="outline"
-              size="icon-sm"
-              onClick={() => setCategoryToDelete(row)}
-              title="Delete Category"
-              aria-label={`Delete ${row.name}`}
-              className="border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 hover:bg-rose-100 hover:text-rose-700 shadow-xs cursor-pointer"
-            >
-              <Trash2 className="size-3.5" />
             </Button>
           </div>
         ),
@@ -1080,38 +1021,6 @@ export default function AdminCategoriesPage() {
         </SheetContent>
       </Sheet>
 
-      {/* ── Modal: Delete Confirmation (AlertDialog) ──────────────────────── */}
-      <AlertDialog
-        open={Boolean(categoryToDelete)}
-        onOpenChange={(open) => {
-          if (!open) setCategoryToDelete(null)
-        }}
-      >
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg font-black text-rose-600 dark:text-rose-400 flex items-center gap-2">
-              <ShieldAlert className="size-5" />
-              <span>Confirm Category Removal</span>
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-              Are you sure you want to permanently delete the research category{" "}
-              <strong className="text-foreground">
-                {categoryToDelete?.name} ({categoryToDelete?.code})
-              </strong>
-              ? This action removes its BDT fee structure from the institutional schedule. Existing submitted protocols will retain their historical fee snapshots.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 pt-2">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-base"
-            >
-              Confirm Deletion
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }
