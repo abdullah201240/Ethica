@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
   FileText,
@@ -42,11 +43,22 @@ const userNavItems: NavItem[] = [
   },
 ]
 
-export default function UserDashboardLayout({
+export default function UserLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+  const isAuthPage = pathname === "/login" || pathname?.startsWith("/login")
+
+  if (isAuthPage) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        {children}
+      </ThemeProvider>
+    )
+  }
+
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <DashboardShell

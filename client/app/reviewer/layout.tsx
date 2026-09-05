@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
 import {
   Scale,
   CheckCheck,
@@ -35,11 +36,22 @@ const reviewerNavItems: NavItem[] = [
   },
 ]
 
-export default function ReviewerDashboardLayout({
+export default function ReviewerLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+  const isAuthPage = pathname === "/reviewer/login" || pathname?.startsWith("/reviewer/login")
+
+  if (isAuthPage) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        {children}
+      </ThemeProvider>
+    )
+  }
+
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <DashboardShell
