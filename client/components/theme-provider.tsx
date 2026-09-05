@@ -17,7 +17,6 @@ export function ThemeProvider({
   // - IRB Deliberation Chamber Reviewer Portal (/reviewer/dashboard, etc.)
   const isPureLightPage = Boolean(
     pathname === "/" ||
-    pathname === "/apply" ||
     pathname === "/reviewer/apply" ||
     pathname === "/login" ||
     pathname === "/admin/login" ||
