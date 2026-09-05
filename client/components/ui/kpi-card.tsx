@@ -92,7 +92,7 @@ export function KpiGridSkeleton({
       ? "grid-cols-1 sm:grid-cols-2"
       : columns === 3
       ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-      : "grid-cols-2 lg:grid-cols-4"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
 
   return (
     <div
@@ -129,18 +129,18 @@ export function KpiCard({
     <div
       data-slot="kpi-card"
       className={cn(
-        "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1.5 shadow-xs transition-shadow hover:shadow-sm select-text",
+        "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8 space-y-3 shadow-xs transition-shadow hover:shadow-sm select-text",
         className
       )}
       {...props}
     >
-      <div className="flex items-center justify-between gap-2 text-muted-foreground text-micro uppercase tracking-wider">
-        <span className="truncate select-text">{label}</span>
+      <div className="flex items-center justify-between gap-2 text-muted-foreground uppercase tracking-widest">
+        <span className="truncate select-text text-sm sm:text-base font-bold">{label}</span>
         <div className="flex items-center gap-1.5 shrink-0">
           {badge}
           {Icon && (
             <Icon
-              className={cn("size-4.5 sm:size-5 shrink-0", colorStyle.iconColor, iconClassName)}
+              className={cn("size-6 sm:size-7 shrink-0", colorStyle.iconColor, iconClassName)}
             />
           )}
         </div>
@@ -156,7 +156,7 @@ export function KpiCard({
       </div>
 
       {(description || trend) && (
-        <div className="flex items-center justify-between gap-2 pt-0.5 text-body-sm text-muted-foreground select-text">
+        <div className="flex items-center justify-between gap-2 pt-0.5 text-body text-muted-foreground select-text">
           {description && <span className="truncate">{description}</span>}
           {trend && (
             <span
@@ -192,7 +192,7 @@ export function KpiGrid({
       ? "grid-cols-1 sm:grid-cols-2"
       : columns === 3
       ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-      : "grid-cols-2 lg:grid-cols-4"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
 
   return (
     <div

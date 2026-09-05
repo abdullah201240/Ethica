@@ -225,14 +225,17 @@
 
   /* KPI / stat counter values */
   .text-kpi-value {
-    font-size: var(--text-4xl);
+    font-size: 3rem;
     font-weight: 900;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   @media (min-width: 640px) {
-    .text-kpi-value { font-size: var(--text-5xl); }
+    .text-kpi-value { font-size: 4rem; }
+  }
+  @media (min-width: 1024px) {
+    .text-kpi-value { font-size: 5rem; }
   }
 
   /* Table cell content */
@@ -253,7 +256,7 @@
 
   /* Sidebar navigation item text */
   .text-nav-item {
-    font-size: var(--text-sm);
+    font-size: var(--text-lg);
     font-weight: 600;
     line-height: 1.4;
   }

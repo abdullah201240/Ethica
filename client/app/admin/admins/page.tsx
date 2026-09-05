@@ -460,28 +460,24 @@ export default function AdminListPage() {
           value={totalAdmins}
           color="navy"
           icon={ShieldCheck}
-          description="Registered institutional officers"
         />
         <KpiCard
           label="Active Governance Leads"
           value={activeAdmins}
           color="green"
           icon={UserCheck}
-          description="Authorized signing & triage leads"
         />
         <KpiCard
           label="Suspended / Inactive"
           value={inactiveAdmins}
           color="amber"
           icon={UserX}
-          description="Privileges currently paused"
         />
         <KpiCard
           label="Super & Governance Leads"
           value={superGovernanceAdmins}
           color="gold"
           icon={KeyRound}
-          description="Root security & policy authority"
         />
       </KpiGrid>
 
@@ -491,7 +487,6 @@ export default function AdminListPage() {
           data={members}
           columns={columns}
           title="Ethica System Administrator Directory"
-          description={`Listed institutional administrators, access privilege levels, and active status controls across ${totalAdmins} officers.`}
           searchPlaceholder="Search system admins by name, email, role, department, or ID..."
           searchKeys={["name", "email", "role", "department", "id"]}
           filters={filters}

@@ -349,28 +349,24 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <KpiCard
           label="Standard Review Fee"
           value={`৳ ${category.priceBdt.toLocaleString()}`}
-          description="Bangladeshi Taka (BDT ৳)"
           icon={Banknote}
           color="navy"
         />
         <KpiCard
           label="Expedited Surcharge"
           value={category.expeditedAllowed ? `৳ ${category.expeditedFeeBdt.toLocaleString()}` : "N/A"}
-          description={category.expeditedAllowed ? "72h fast-track add-on" : "Expedited not applicable"}
           icon={Zap}
           color="gold"
         />
         <KpiCard
           label="Total Expedited Fee"
           value={category.expeditedAllowed ? `৳ ${(category.priceBdt + category.expeditedFeeBdt).toLocaleString()}` : "N/A"}
-          description="Combined priority fee"
           icon={FileCheck2}
           color="green"
         />
         <KpiCard
           label="Target Velocity"
           value={`~${category.turnaroundDays} Days`}
-          description="Standard deliberation timeline"
           icon={Clock}
           color="sky"
         />

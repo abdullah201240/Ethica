@@ -249,28 +249,24 @@ export default function UserDashboardPage() {
         <KpiCard
           label="Total Submissions"
           value={16}
-          description="Across 4 research programs"
           icon={FileText}
           color="navy"
         />
         <KpiCard
           label="In Active Review"
           value={3}
-          description="Avg review velocity: 4.8 days"
           icon={Clock}
           color="amber"
         />
         <KpiCard
           label="Clearance Granted"
           value={12}
-          description="Cryptographically sealed certificates"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Revisions Due"
           value={1}
-          description="Deadline in 8 calendar days"
           icon={AlertCircle}
           color="rose"
         />
@@ -282,7 +278,6 @@ export default function UserDashboardPage() {
           data={protocols}
           columns={columns}
           title="Institutional Research Ethics Docket"
-          description="Comprehensive human subject research protocols registered under Daffodil International University IRB oversight"
           searchPlaceholder="Search by protocol title, ID, board, or department..."
           searchKeys={["title", "id", "department", "board"]}
           filters={filters}

@@ -191,7 +191,7 @@ export function DashboardShell({
       <aside
         className={`fixed lg:sticky top-0 left-0 z-50 h-screen shrink-0 flex flex-col bg-white dark:bg-[#0C1E34] border-r border-border/75 transition-all duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"
-        } ${collapsed ? "w-16" : "w-64"}`}
+        } ${collapsed ? "w-16" : "w-72"}`}
       >
         {/* ── Brand header ───────────────────────────────────────── */}
         <div className={`px-3 ${collapsed ? "pt-4 pb-2" : "pt-4 pb-3"}`}>
@@ -225,10 +225,10 @@ export function DashboardShell({
                   <ShieldCheck className="size-5" />
                 </div>
                 <div className="min-w-0 leading-none">
-                  <span className="block text-base sm:text-lg font-black tracking-tight text-primary dark:text-white">
+                  <span className="block text-lg sm:text-xl font-black tracking-tight text-primary dark:text-white">
                     ETHICA
                   </span>
-                  <span className="block text-micro text-muted-foreground uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
+                  <span className="block text-body-sm text-muted-foreground uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
                     {roleBadge ? `${roleBadge} • ` : ""}{roleTitle}
                   </span>
                 </div>
@@ -257,7 +257,7 @@ export function DashboardShell({
             <div key={group} className={gi > 0 && !collapsed ? "pt-3" : ""}>
               {!collapsed && group !== "_main" && (
                 <div className="px-2.5 pb-1.5 pt-1">
-                  <span className="text-micro font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
+                  <span className="text-body-sm font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
                     {group}
                   </span>
                 </div>
@@ -321,20 +321,20 @@ export function DashboardShell({
             } />
             <AlertDialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-md">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-base sm:text-lg font-bold text-foreground">
+                <AlertDialogTitle className="text-lg sm:text-xl font-bold text-foreground">
                   Confirm Workspace Sign Out
                 </AlertDialogTitle>
-                <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <AlertDialogDescription className="text-body-sm sm:text-body text-foreground/70 leading-relaxed">
                   Are you sure you wish to sign out of your institutional account ({user.name})? Your secure session will be closed and you will be returned to the accreditation login portal.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="gap-2 flex-col sm:flex-row">
-                <AlertDialogCancel className="text-xs sm:text-sm font-semibold">
+                <AlertDialogCancel className="text-body-sm sm:text-body font-semibold">
                   Stay Signed In
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => router.push(loginRoute)}
-                  className="bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-bold"
+                  className="bg-rose-600 hover:bg-rose-700 text-white text-body-sm sm:text-body font-bold"
                 >
                   Sign Out
                 </AlertDialogAction>
@@ -350,7 +350,7 @@ export function DashboardShell({
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
 
         {/* ── TOP HEADER BAR ────────────────────────────────────── */}
-        <header className="sticky top-0 z-30 w-full h-14 flex items-center px-4 sm:px-6 md:px-8 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
+        <header className="sticky top-0 z-30 w-full h-16 flex items-center px-5 sm:px-8 md:px-10 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
 
           {/* Left: Mobile toggle + collapsed-desktop expand + breadcrumb */}
           <div className="flex items-center gap-2 shrink-0">
@@ -367,7 +367,7 @@ export function DashboardShell({
 
             {/* Page breadcrumb – desktop only */}
             <div className="hidden lg:flex items-center gap-1.5 pl-0.5">
-              <span className="text-body-sm sm:text-body font-bold text-foreground">
+              <span className="text-body sm:text-lg font-bold text-foreground">
                 {currentPageLabel}
               </span>
             </div>
@@ -401,7 +401,7 @@ export function DashboardShell({
                 aria-label="Profile"
               >
                 <div
-                  className={`flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-xs font-bold shadow-sm overflow-hidden`}
+                  className={`flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-body-sm font-bold shadow-sm overflow-hidden`}
                 >
                   {user.avatarImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -415,10 +415,10 @@ export function DashboardShell({
                   )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
-                  <span className="block text-body-sm font-bold text-foreground truncate max-w-36">
+                  <span className="block text-body font-bold text-foreground truncate max-w-36">
                     {user.name}
                   </span>
-                  <span className="block text-micro text-muted-foreground truncate max-w-36 mt-0.5">
+                  <span className="block text-body-sm text-muted-foreground truncate max-w-36 mt-0.5">
                     {user.title}
                   </span>
                 </div>
@@ -431,7 +431,7 @@ export function DashboardShell({
                 aria-label="Profile menu"
               >
                 <div
-                  className={`flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-xs font-bold shadow-sm overflow-hidden`}
+                  className={`flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-body-sm font-bold shadow-sm overflow-hidden`}
                 >
                   {user.avatarImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -445,10 +445,10 @@ export function DashboardShell({
                   )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
-                  <span className="block text-body-sm font-bold text-foreground truncate max-w-36">
+                  <span className="block text-body font-bold text-foreground truncate max-w-36">
                     {user.name}
                   </span>
-                  <span className="block text-micro text-muted-foreground truncate max-w-36 mt-0.5">
+                  <span className="block text-body-sm text-muted-foreground truncate max-w-36 mt-0.5">
                     {user.title}
                   </span>
                 </div>
@@ -464,7 +464,7 @@ export function DashboardShell({
         </main>
 
         {/* ── FOOTER ─────────────────────────────────────────────── */}
-        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-6 md:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-micro text-muted-foreground">
+        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-5 sm:px-8 md:px-10 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-body-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-foreground/70">

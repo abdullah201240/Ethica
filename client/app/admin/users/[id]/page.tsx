@@ -415,7 +415,6 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Protocols / Workload"
           value={user.protocolsCount}
-          description={
             user.pillar === "Investigator"
               ? "Submitted research protocols"
               : user.pillar === "Reviewer"
@@ -428,7 +427,6 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Platform Pillar"
           value={user.pillar}
-          description="Ecosystem security role"
           icon={
             user.pillar === "Investigator"
               ? GraduationCap
@@ -441,14 +439,12 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Account Standing"
           value={user.status}
-          description="Access credential standing"
           icon={UserCheck}
           color={isActive ? "green" : "amber"}
         />
         <KpiCard
           label="Identity Tier"
           value={user.verificationStatus === "Verified Institutional ID" ? "Verified" : "SSO"}
-          description="Authentication confidence"
           icon={Award}
           color="gold"
         />

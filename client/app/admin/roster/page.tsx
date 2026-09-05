@@ -413,28 +413,24 @@ function AdminRosterContent() {
         <KpiCard
           label="Total Accredited Roster"
           value={reviewerTotal}
-          description="Enrolled in institutional committee"
           icon={Users}
           color="navy"
         />
         <KpiCard
           label="Active Voting Quorum"
           value={reviewerActive}
-          description="Authorized with voting credentials"
           icon={UserCheck}
           color="green"
         />
         <KpiCard
           label="Inactive / Suspended"
           value={reviewerInactive}
-          description="Standing paused by Secretariat"
           icon={UserX}
           color="amber"
         />
         <KpiCard
           label="Mean Deliberation Workload"
           value={`${meanReviewerWorkload}`}
-          description="Active protocol assignments"
           icon={Scale}
           color="gold"
         />
@@ -446,7 +442,6 @@ function AdminRosterContent() {
           data={reviewers}
           columns={reviewerColumns}
           title="Institutional Reviewer Roster & Quorum Standing"
-          description="Official register of accredited ethics committee members authorized with quorum deliberation standing and voting seals"
           searchPlaceholder="Search reviewers by name, institution, email, or specialization..."
           searchKeys={[
             "name",

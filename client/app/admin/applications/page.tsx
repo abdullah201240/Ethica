@@ -367,28 +367,24 @@ export default function AdminReviewerApplicationsPage() {
         <KpiCard
           label="Total Ingested"
           value={totalApps}
-          description="Institutional candidate pool"
           icon={Users}
           color="navy"
         />
         <KpiCard
           label="Pending Deliberation"
           value={pendingCount}
-          description="Awaiting Secretariat credential check"
           icon={Clock}
           color="amber"
         />
         <KpiCard
           label="Accredited Reviewers"
           value={approvedCount}
-          description="Active voting quorum members"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Declined / Ineligible"
           value={rejectedCount}
-          description="Below research requirements"
           icon={XCircle}
           color="rose"
         />
@@ -400,7 +396,6 @@ export default function AdminReviewerApplicationsPage() {
           data={applications}
           columns={columns}
           title="Reviewer Accreditation Docket"
-          description="Real-time intake queue synchronizing public applicant dossiers with IRB committee membership"
           searchPlaceholder="Search by name, email, institution, or degree..."
           searchKeys={["fullName", "email", "institution", "department", "degree"]}
           filters={filters}

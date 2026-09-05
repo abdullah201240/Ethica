@@ -1254,7 +1254,6 @@ export default function InvestigatorProfilePage() {
           searchKeys={["title", "id", "board"]}
           searchPlaceholder="Search investigator protocols by ID, title, or board..."
           title="Investigator Protocol Portfolio"
-          description="Official record of ethical submissions and granted institutional clearance certificates registered under Dr. Elena Rostova."
           initialPageSize={5}
         />
       </div>

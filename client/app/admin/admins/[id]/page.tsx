@@ -330,28 +330,24 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Oversight Protocols"
           value={admin.protocols}
-          description="Active oversight cases"
           icon={FileText}
           color="navy"
         />
         <KpiCard
           label="Privilege Tier"
           value={admin.accessLevel}
-          description="Role-based access authority"
           icon={KeyRound}
           color="gold"
         />
         <KpiCard
           label="Account Standing"
           value={admin.status}
-          description="Live governance standing"
           icon={UserCheck}
           color={isActive ? "green" : "amber"}
         />
         <KpiCard
           label="Assigned Permissions"
           value={admin.permissions?.length || 0}
-          description="Granted security capabilities"
           icon={Award}
           color="sky"
         />

@@ -502,28 +502,24 @@ export default function AdminCategoriesPage() {
         <KpiCard
           label="Total Research Categories"
           value={totalCategories}
-          description="Accredited scientific streams"
           icon={Layers}
           color="navy"
         />
         <KpiCard
           label="Active Categories"
           value={activeCategories}
-          description="Available for researcher intake"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Average Standard Fee"
           value={`৳ ${averagePriceBdt.toLocaleString()}`}
-          description="Bangladeshi Taka (BDT ৳)"
           icon={Banknote}
           color="amber"
         />
         <KpiCard
           label="Expedited Tracks"
           value={expeditedCount}
-          description="72-hour priority triage eligible"
           icon={Zap}
           color="sky"
         />
@@ -535,7 +531,6 @@ export default function AdminCategoriesPage() {
           data={categories}
           columns={columns}
           title="Institutional Research Categories & Fee Schedule"
-          description="Manage academic protocol classification domains, ethical governance boards, and official processing fees in Bangladeshi Taka (BDT ৳)"
           searchPlaceholder="Search by category name, code, board, or description..."
           searchKeys={["name", "code", "board", "description"]}
           filters={filters}

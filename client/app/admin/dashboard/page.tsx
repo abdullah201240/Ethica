@@ -340,28 +340,24 @@ export default function AdminDashboardPage() {
         <KpiCard
           label="Total Institution Protocols"
           value={248}
-          description="Across 14 academic faculties"
           icon={Building2}
           color="navy"
         />
         <KpiCard
           label="Clearance Compliance"
           value="100%"
-          description="Zero unresolved ethical non-conformities"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Cryptographic Seals"
           value={184}
-          description="SHA-256 certificate hashes verified"
           icon={Lock}
           color="amber"
         />
         <KpiCard
           label="Mean Review Velocity"
           value="5.2 Days"
-          description="72% acceleration vs manual paper IRB"
           icon={ArrowUpRight}
           color="sky"
         />
@@ -432,7 +428,6 @@ export default function AdminDashboardPage() {
           data={members}
           columns={columns}
           title="Institutional Ethics Directory & Governance Administration"
-          description={`Role-Based Access Control (RBAC) governance across ${members.length} registered institutional officers (${members.filter((m) => m.status === "Active").length} Active, ${members.filter((m) => m.status === "Inactive").length} Inactive)`}
           searchPlaceholder="Search administrators by name, email, role, or department..."
           searchKeys={["name", "email", "role", "department"]}
           filters={filters}

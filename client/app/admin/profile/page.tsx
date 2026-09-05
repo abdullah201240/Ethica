@@ -707,7 +707,6 @@ export default function AdminProfilePage() {
           data={sessionLogs}
           columns={sessionColumns}
           title="Cryptographic Access & Active Sessions Docket"
-          description="Hardware-authenticated sessions authorized with HSM clearance to seal institutional ethical records"
           searchPlaceholder="Search by client device, location, or IP address..."
           searchKeys={["device", "location", "ipAddress", "authMethod"]}
           filters={sessionFilters}

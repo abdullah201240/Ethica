@@ -348,28 +348,24 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Active Protocol Deliberations"
           value={reviewer.assignedProtocols || 0}
-          description="Assigned cases in progress"
           icon={FileCheck2}
           color="navy"
         />
         <KpiCard
           label="Clearance Authority"
           value={reviewer.clearanceLevel === "Full Voting Quorum" ? "Quorum" : "Ad-Hoc"}
-          description="Official deliberation tier"
           icon={Scale}
           color="green"
         />
         <KpiCard
           label="Standing Status"
           value={reviewer.status}
-          description="Accredited by Secretariat"
           icon={Award}
           color={isActive ? "green" : "amber"}
         />
         <KpiCard
           label="Specialization Domains"
           value={reviewer.specializations.length}
-          description="Certified ethics categories"
           icon={ShieldCheck}
           color="gold"
         />

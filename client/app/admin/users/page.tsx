@@ -407,28 +407,24 @@ export default function AdminUsersDirectoryPage() {
         <KpiCard
           label="Total Platform Users"
           value={totalUsers}
-          description="Registered researchers, reviewers & admins"
           icon={Users}
           color="navy"
         />
         <KpiCard
           label="Active Accounts"
           value={activeUsers}
-          description="Authorized with live access standing"
           icon={UserCheck}
           color="green"
         />
         <KpiCard
           label="Research Investigators"
           value={investigatorCount}
-          description="Principal & co-investigator accounts"
           icon={GraduationCap}
           color="sky"
         />
         <KpiCard
           label="Committee Reviewers"
           value={reviewerCount}
-          description="Accredited ethics committee members"
           icon={Scale}
           color="gold"
         />
@@ -440,7 +436,6 @@ export default function AdminUsersDirectoryPage() {
           data={users}
           columns={columns}
           title="Centralized Institutional User Directory"
-          description={`Comprehensive account registry and identity governance across ${totalUsers} accounts spanning all 3 platform pillars.`}
           searchPlaceholder="Search all users by name, email, department, institution, or role..."
           searchKeys={["name", "email", "department", "institution", "role", "id"]}
           filters={filters}
