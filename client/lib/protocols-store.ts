@@ -219,6 +219,13 @@ export const initialProtocols: Protocol[] = [
     submissionDate: "Sep 01, 2026",
     daysInReview: 4,
     hasCertificate: false,
+    piName: "Dr. Elena Rostova",
+    piEmail: "elena.rostova@diu.edu.bd",
+    assignedReviewerId: "REV-2026-077",
+    assignedReviewerName: "Dr. Sabrina Akhter",
+    assignedReviewerEmail: "sabrina.akhter@dmc.gov.bd",
+    assignmentStatus: "Accepted",
+    assignmentDate: "Sep 02, 2026",
     feeAmountBdt: 20000,
     feeTier: "clinical",
     isExpedited: false,
@@ -239,20 +246,28 @@ export const initialProtocols: Protocol[] = [
     dataToolsDocumentName: "GAD7_Adolescent_Psychometric_Scale.pdf",
     investigatorCvName: "Dr_Elena_Rostova_Biosketch.pdf",
     reviewStep: 4,
-    committeeRemarks: "Under committee review by Pediatric Ethics Subcommittee. Initial parental consent safeguards verified.",
+    committeeRemarks: "Dr. Sabrina Akhter accepted review assignment. Deliberation in progress.",
   },
   {
     id: "ETH-2026-085",
     title: "Occupational Ergonomics and Musculoskeletal Disorders Among Remote Tech Workers",
     department: "Occupational Health & Ergonomics",
     board: "Social & Behavioral Board",
-    status: "Expedited Triage",
-    statusColor: "blue",
+    status: "Under Committee Review",
+    statusColor: "amber",
     risk: "Minimal Risk",
     riskColor: "blue",
     submissionDate: "Aug 22, 2026",
     daysInReview: 5,
     hasCertificate: false,
+    piName: "Dr. Elena Rostova",
+    piEmail: "elena.rostova@diu.edu.bd",
+    assignedReviewerId: "REV-2026-074",
+    assignedReviewerName: "Dr. Mahmudul Hasan",
+    assignedReviewerEmail: "m.hasan@nimh.gov.bd",
+    assignmentStatus: "Declined",
+    assignmentDate: "Aug 29, 2026",
+    reviewerDeclineReason: "Excess clinical, surgical, or administrative institutional workload",
     feeAmountBdt: 7500,
     feeTier: "faculty",
     isExpedited: true,
@@ -272,9 +287,10 @@ export const initialProtocols: Protocol[] = [
     consentDocumentName: "Informed_Consent_Survey_Online.pdf",
     dataToolsDocumentName: "Nordic_Musculoskeletal_Questionnaire.pdf",
     investigatorCvName: "Dr_Elena_Rostova_Biosketch.pdf",
-    reviewStep: 3,
-    committeeRemarks: "Expedited triage track approved. Triage officer finalizing assessment report.",
+    reviewStep: 4,
+    committeeRemarks: "Dr. Mahmudul Hasan declined review request (Excess clinical workload). Secretariat reassignment required.",
   },
+
   {
     id: "ETH-2026-055",
     title: "Cross-Sectional Investigation into Maternal Nutritional Biomarkers in Rural Cohorts",
@@ -529,6 +545,9 @@ export function updateProtocol(id: string, updates: Partial<Protocol>): Protocol
   cachedProtocols = cachedProtocols.map((p) => {
     if (p.id.toLowerCase() === id.toLowerCase()) {
       updated = { ...p, ...updates }
+      if (updates.assignmentStatus === "Pending Acceptance" && updates.reviewerDeclineReason === undefined) {
+        delete updated.reviewerDeclineReason
+      }
       return updated
     }
     return p

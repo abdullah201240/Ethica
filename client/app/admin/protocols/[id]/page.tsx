@@ -151,6 +151,13 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
     const candidate = reviewers.find((r) => r.id === selectedReviewerId)
     if (!candidate) return
 
+    if (isDeclined && candidate.id === protocol.assignedReviewerId) {
+      toast.error("Alternative Reviewer Required", {
+        description: `${candidate.name} previously declined this protocol. Please select an alternative accredited reviewer.`,
+      })
+      return
+    }
+
     const updated = assignReviewerToProtocol(protocol.id, {
       id: candidate.id,
       name: candidate.name,
@@ -162,7 +169,7 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
     }
 
     setIsAssignModalOpen(false)
-    toast.success("Review Request Dispatched", {
+    toast.success(isDeclined ? "Protocol Reassigned Successfully" : "Review Request Dispatched", {
       description: `Review request for ${protocol.id} dispatched to ${candidate.name} (${candidate.institution}). Awaiting reviewer acceptance.`,
     })
   }
@@ -276,22 +283,87 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
 
   const stepNumber = protocol.reviewStep || (isCleared ? 5 : 4)
 
-  // ── Candidate Reviewers Filter & Matching ────────────────────────────────
-  const filteredReviewers = reviewers.filter((r) => {
-    if (!reviewerSearch.trim()) return true
-    const q = reviewerSearch.toLowerCase()
-    return (
-      r.name.toLowerCase().includes(q) ||
-      r.institution.toLowerCase().includes(q) ||
-      r.department.toLowerCase().includes(q) ||
-      r.specializations.some((s) => s.toLowerCase().includes(q))
-    )
-  })
-
   const isDeclined = protocol.assignmentStatus === "Declined"
   const isPendingAcceptance = protocol.assignmentStatus === "Pending Acceptance"
   const isAccepted = protocol.assignmentStatus === "Accepted"
   const isReviewCompleted = protocol.assignmentStatus === "Review Completed"
+
+  // ── Smart Reviewer Matching Algorithm ────────────────────────────────────
+  const scoredReviewers = React.useMemo(() => {
+    if (!protocol) return []
+
+    const pBoard = protocol.board.toLowerCase()
+    const searchCorpus = `${protocol.department} ${protocol.studyType || ""} ${protocol.title} ${protocol.abstract || ""}`.toLowerCase()
+
+    return reviewers.map((rev) => {
+      const isPrevDeclined = isDeclined && protocol.assignedReviewerId === rev.id
+      const rBoard = rev.board.toLowerCase()
+
+      const isBoardMatch =
+        (pBoard.includes("biomedical") && rBoard.includes("biomedical")) ||
+        (pBoard.includes("social") && rBoard.includes("social")) ||
+        (pBoard.includes("ai") && (rBoard.includes("ai") || rBoard.includes("tech")))
+
+      const matchedSpecs = rev.specializations.filter((spec) => {
+        const s = spec.toLowerCase()
+        return searchCorpus.includes(s) || s.split(" ").some((w) => w.length > 3 && searchCorpus.includes(w))
+      })
+      const isDeptMatch = searchCorpus.includes(rev.department.toLowerCase())
+      const hasDomainMatch = matchedSpecs.length > 0 || isDeptMatch
+
+      let score = 0
+      const matchBadges: string[] = []
+
+      if (isBoardMatch) {
+        score += 50
+        matchBadges.push("IRB Board Match")
+      }
+      if (hasDomainMatch) {
+        score += 30
+        matchBadges.push(matchedSpecs[0] || "Domain Match")
+      }
+      if (rev.assignedProtocols <= 2) {
+        score += 20
+        matchBadges.push("Optimal Capacity")
+      } else if (rev.assignedProtocols <= 4) {
+        score += 10
+        matchBadges.push("Moderate Workload")
+      }
+
+      if (isPrevDeclined) {
+        score = 0
+      }
+
+      return {
+        ...rev,
+        matchScore: score,
+        isBoardMatch,
+        hasDomainMatch,
+        matchBadges,
+        isPrevDeclined,
+      }
+    })
+  }, [protocol, reviewers, isDeclined])
+
+  // Filter & sort: highest match scores first, previously declined at bottom
+  const filteredReviewers = React.useMemo(() => {
+    const list = scoredReviewers.filter((r) => {
+      if (!reviewerSearch.trim()) return true
+      const q = reviewerSearch.toLowerCase()
+      return (
+        r.name.toLowerCase().includes(q) ||
+        r.institution.toLowerCase().includes(q) ||
+        r.department.toLowerCase().includes(q) ||
+        r.specializations.some((s) => s.toLowerCase().includes(q))
+      )
+    })
+
+    return list.sort((a, b) => {
+      if (a.isPrevDeclined) return 1
+      if (b.isPrevDeclined) return -1
+      return b.matchScore - a.matchScore
+    })
+  }, [scoredReviewers, reviewerSearch])
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
@@ -962,59 +1034,88 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
           <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 my-2 max-h-[45vh]">
             {filteredReviewers.map((rev) => {
               const isSelected = selectedReviewerId === rev.id
-              const isBoardMatch =
-                protocol.board.toLowerCase().includes("biomedical") &&
-                rev.board.toLowerCase().includes("biomedical") ||
-                protocol.board.toLowerCase().includes("social") &&
-                rev.board.toLowerCase().includes("social") ||
-                protocol.board.toLowerCase().includes("ai") &&
-                rev.board.toLowerCase().includes("ai")
 
               return (
                 <div
                   key={rev.id}
-                  onClick={() => setSelectedReviewerId(rev.id)}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer space-y-2 ${
+                  onClick={() => {
+                    if (rev.isPrevDeclined) {
+                      toast.warning("Previously Declined Reviewer", {
+                        description: `${rev.name} previously declined this case. An alternative committee member is strongly recommended.`,
+                      })
+                    }
+                    setSelectedReviewerId(rev.id)
+                  }}
+                  className={`p-3.5 rounded-xl border transition-all cursor-pointer space-y-2.5 ${
                     isSelected
                       ? "border-primary bg-primary/5 dark:bg-sky-950/40 ring-2 ring-primary/20"
+                      : rev.isPrevDeclined
+                      ? "border-rose-300 dark:border-rose-900/50 bg-rose-50/40 dark:bg-rose-950/20 opacity-80"
                       : "border-slate-200/85 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/50"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-bold text-base text-foreground">
                           {rev.name}
                         </span>
                         <span className="text-micro font-mono px-1.5 py-0.2 rounded bg-muted text-slate-700 dark:text-slate-300">
                           {rev.degree}
                         </span>
-                        {isBoardMatch && (
-                          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25 text-[0.68rem] px-1.5 py-0 font-bold">
-                            Board Match
+                        {rev.isPrevDeclined ? (
+                          <Badge className="bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25 text-[0.68rem] px-1.5 py-0 font-bold">
+                            Declined This Protocol
                           </Badge>
-                        )}
+                        ) : rev.matchScore >= 80 ? (
+                          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25 text-[0.68rem] px-1.5 py-0 font-bold inline-flex items-center gap-1">
+                            <Sparkles className="size-2.5 text-emerald-600 dark:text-emerald-400" />
+                            <span>{rev.matchScore}% Best Match</span>
+                          </Badge>
+                        ) : rev.matchScore >= 50 ? (
+                          <Badge className="bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/25 text-[0.68rem] px-1.5 py-0 font-bold">
+                            {rev.matchScore}% Match
+                          </Badge>
+                        ) : null}
                       </div>
-                      <div className="text-micro text-muted-foreground truncate">
+                      <div className="text-micro text-muted-foreground truncate max-w-sm">
                         {rev.position} • {rev.institution}
                       </div>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <span className="text-micro font-bold text-slate-700 dark:text-slate-300 block">
-                        {rev.assignedProtocols} Active Cases
-                      </span>
+                      <div className="flex items-center justify-end gap-1 text-micro font-bold text-slate-700 dark:text-slate-300">
+                        <span
+                          className={`size-1.5 rounded-full ${
+                            rev.assignedProtocols <= 2
+                              ? "bg-emerald-500"
+                              : rev.assignedProtocols <= 4
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                          }`}
+                        />
+                        <span>{rev.assignedProtocols} Active Cases</span>
+                      </div>
                       <span className="text-micro text-muted-foreground">
                         {rev.role}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {rev.specializations.slice(0, 3).map((spec) => (
+                  {/* Criteria Badges & Specializations */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                    {rev.matchBadges.map((badge) => (
+                      <span
+                        key={badge}
+                        className="text-[0.65rem] font-bold px-2 py-0.5 rounded bg-primary/8 dark:bg-primary/20 text-primary dark:text-sky-300"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                    {rev.specializations.slice(0, 2).map((spec) => (
                       <span
                         key={spec}
-                        className="text-[0.68rem] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        className="text-[0.65rem] font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
                       >
                         {spec}
                       </span>

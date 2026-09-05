@@ -27,6 +27,10 @@ export interface AccreditedReviewer {
   digitalSealHash: string
   bioStatement?: string
   statusReason?: string
+  mobile?: string
+  officeLocation?: string
+  consultationHours?: string
+  avatarUrl?: string
 }
 
 export const initialAccreditedReviewers: AccreditedReviewer[] = [
@@ -105,6 +109,9 @@ export const initialAccreditedReviewers: AccreditedReviewer[] = [
     institution: "Daffodil International University",
     email: "charles.montgomery@diu.edu.bd",
     phone: "+880 2 9138234 (Ext: 101)",
+    mobile: "+880 1711-234567",
+    officeLocation: "Ethics Secretariat Chamber, Level 7, Academic Building 4",
+    consultationHours: "Mon & Wed 10:00 AM - 1:00 PM (By Appointment)",
     orcid: "0000-0002-3841-8910",
     board: "Biomedical & Clinical IRB",
     role: "Chairperson",
@@ -116,6 +123,7 @@ export const initialAccreditedReviewers: AccreditedReviewer[] = [
     digitalSealHash: "6c14109403986a4e3a9c7b9e84b80614e59174e9efb783f98c8c6f1a8e1b302c",
     bioStatement:
       "Founding Chair of the Institutional Review Board. Senior ethics consultant on multinational multi-center pharmaceutical trials.",
+    avatarUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=400",
   },
   {
     id: "REV-DIU-002",
@@ -126,6 +134,9 @@ export const initialAccreditedReviewers: AccreditedReviewer[] = [
     institution: "Daffodil International University",
     email: "sarah.jenkins@diu.edu.bd",
     phone: "+880 2 9138234 (Ext: 102)",
+    mobile: "+880 1819-345678",
+    officeLocation: "Faculty Room 512, Clinical Sciences Wing",
+    consultationHours: "Tue & Thu 2:00 PM - 4:30 PM",
     orcid: "0000-0003-8821-4409",
     board: "Biomedical & Clinical IRB",
     role: "Vice Chair",
@@ -137,6 +148,7 @@ export const initialAccreditedReviewers: AccreditedReviewer[] = [
     digitalSealHash: "3f2504e0a7b5c871239c8a149afbf4c8996fb92427ae41e4649b934ca495991b",
     bioStatement:
       "Specialized in pediatric drug trials assent guidelines, vulnerable human subjects protection, and refugee community field health research.",
+    avatarUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400",
   },
   {
     id: "REV-DIU-003",
@@ -333,4 +345,49 @@ export function getReviewerById(id: string): AccreditedReviewer | undefined {
   const current = getStoredReviewers()
   return current.find((r) => r.id === id || r.applicationId === id)
 }
+
+const ACTIVE_REVIEWER_STORAGE_KEY = "ethica_active_reviewer_email"
+
+export function getActiveReviewerEmail(): string {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem(ACTIVE_REVIEWER_STORAGE_KEY)
+    if (stored) return stored
+  }
+  return "charles.montgomery@diu.edu.bd"
+}
+
+export function setActiveReviewerEmail(email: string): void {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(ACTIVE_REVIEWER_STORAGE_KEY, email)
+    window.dispatchEvent(new CustomEvent("ethica:active-reviewer-changed", { detail: { email } }))
+  }
+}
+
+export function getActiveReviewer(): AccreditedReviewer {
+  const email = getActiveReviewerEmail()
+  const reviewers = getStoredReviewers()
+  return (
+    reviewers.find((r) => r.email.toLowerCase() === email.toLowerCase()) ||
+    reviewers.find((r) => r.id === "REV-DIU-001") ||
+    reviewers[0]
+  )
+}
+
+export function updateReviewerProfile(
+  id: string,
+  updates: Partial<AccreditedReviewer>
+): AccreditedReviewer | null {
+  const current = getStoredReviewers()
+  const index = current.findIndex((r) => r.id === id || r.applicationId === id)
+  if (index === -1) return null
+
+  const updatedReviewer: AccreditedReviewer = {
+    ...current[index],
+    ...updates,
+  }
+  current[index] = updatedReviewer
+  saveStoredReviewers(current)
+  return updatedReviewer
+}
+
 
