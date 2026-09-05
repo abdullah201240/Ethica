@@ -21,13 +21,6 @@ import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { toast } from "@/components/ui/sonner"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -46,7 +39,6 @@ import {
 import {
   getStoredReviewers,
   getActiveReviewerEmail,
-  setActiveReviewerEmail as setGlobalActiveReviewerEmail,
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
 
@@ -64,11 +56,6 @@ export default function ReviewerDeliberationsPage() {
   const [meritScore, setMeritScore] = React.useState(5)
   const [safeguardsScore, setSafeguardsScore] = React.useState(5)
   const [consentScore, setConsentScore] = React.useState(5)
-
-  const handlePersonaChange = (email: string) => {
-    setActiveReviewerEmailState(email)
-    setGlobalActiveReviewerEmail(email)
-  }
 
   React.useEffect(() => {
     syncProtocolsFromServer().then((data) => {
@@ -168,56 +155,6 @@ export default function ReviewerDeliberationsPage() {
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
-      {/* Reviewer Header & Persona Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-base text-foreground">
-              {currentReviewer.name}
-            </span>
-            <Badge className="bg-primary/10 text-primary dark:text-sky-300 text-micro font-bold border border-primary/20">
-              IRB Committee Reviewer
-            </Badge>
-          </div>
-          <p className="text-micro text-muted-foreground">
-            {currentReviewer.department} • {currentReviewer.institution}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="text-micro text-muted-foreground font-medium hidden md:inline">
-            Reviewer Persona:
-          </span>
-          <Select
-            value={activeReviewerEmail}
-            onValueChange={(val) => {
-              if (val) handlePersonaChange(val)
-            }}
-          >
-            <SelectTrigger className="h-9 px-3 rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-bold text-foreground min-w-[280px]">
-              <SelectValue placeholder="Select Reviewer Persona" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="charles.montgomery@diu.edu.bd">
-                Prof. Charles Montgomery (Chair, Biomedical)
-              </SelectItem>
-              <SelectItem value="sarah.jenkins@diu.edu.bd">
-                Dr. Sarah Jenkins (Vice Chair, Pediatrics)
-              </SelectItem>
-              <SelectItem value="farzana.choudhury@icddrb.org">
-                Dr. Farzana Choudhury (icddr,b, Epidemiology)
-              </SelectItem>
-              <SelectItem value="m.hasan@nimh.gov.bd">
-                Dr. Mahmudul Hasan (NIMH, Social & Behavioral)
-              </SelectItem>
-              <SelectItem value="tariqul.islam@buet.ac.bd">
-                Prof. Tariqul Islam (BUET, AI & Tech)
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       {/* KPI Deliberation Metrics */}
       <KpiGrid columns={4}>
         <KpiCard

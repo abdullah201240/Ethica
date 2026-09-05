@@ -53,13 +53,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   getStoredProtocols,
   subscribeProtocols,
   syncProtocolsFromServer,
@@ -71,7 +64,6 @@ import {
 import {
   getStoredReviewers,
   getActiveReviewerEmail,
-  setActiveReviewerEmail as setGlobalActiveReviewerEmail,
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
 
@@ -88,11 +80,6 @@ export default function ReviewerDashboardPage() {
   
   // Current active reviewer identity synced with global store
   const [activeReviewerEmail, setActiveReviewerEmailState] = React.useState<string>(getActiveReviewerEmail)
-
-  const handlePersonaChange = (email: string) => {
-    setActiveReviewerEmailState(email)
-    setGlobalActiveReviewerEmail(email)
-  }
 
   // Modals state
   const [acceptingProtocol, setAcceptingProtocol] = React.useState<Protocol | null>(null)

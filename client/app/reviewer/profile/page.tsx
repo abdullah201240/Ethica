@@ -76,9 +76,6 @@ import {
 } from "@/lib/schemas"
 import {
   getActiveReviewer,
-  getActiveReviewerEmail,
-  setActiveReviewerEmail,
-  getStoredReviewers,
   subscribeReviewers,
   updateReviewerProfile,
   type AccreditedReviewer,
@@ -187,7 +184,6 @@ const INITIAL_SESSION_LOGS: ReviewerSessionLog[] = [
 
 export default function ReviewerProfilePage() {
   // ── State ──────────────────────────────────────────────────────────────────
-  const [reviewers, setReviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
   const [currentReviewer, setCurrentReviewer] = React.useState<AccreditedReviewer>(getActiveReviewer)
   const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
   const [sessionLogs, setSessionLogs] = React.useState<ReviewerSessionLog[]>(INITIAL_SESSION_LOGS)
@@ -236,8 +232,6 @@ export default function ReviewerProfilePage() {
   // ── Sync Store ─────────────────────────────────────────────────────────────
   React.useEffect(() => {
     const handleRosterSync = () => {
-      const all = getStoredReviewers()
-      setReviewers(all)
       setCurrentReviewer(getActiveReviewer())
     }
 
@@ -282,18 +276,6 @@ export default function ReviewerProfilePage() {
     })
     setFormErrors({})
     setIsEditSheetOpen(true)
-  }
-
-  // ── Handle Persona Change ──────────────────────────────────────────────────
-  const handleSwitchReviewer = (email: string) => {
-    setActiveReviewerEmail(email)
-    const target = reviewers.find((r) => r.email.toLowerCase() === email.toLowerCase())
-    if (target) {
-      setCurrentReviewer(target)
-      toast.info("Active Reviewer Switched", {
-        description: `Now viewing institutional credentials for ${target.name}.`,
-      })
-    }
   }
 
   // ── Copy Handlers ──────────────────────────────────────────────────────────
@@ -713,50 +695,6 @@ export default function ReviewerProfilePage() {
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
-      {/* ── Testing Persona Switcher Bar ───────────────────────────────────── */}
-      <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] px-4 py-3 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="size-2 rounded-full bg-secondary animate-pulse" />
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Active Reviewer Identity:
-          </span>
-          <span className="text-sm font-bold text-foreground">
-            {currentReviewer.name}
-          </span>
-          <Badge
-            variant="secondary"
-            className="text-[0.68rem] px-1.5 py-0 bg-primary/10 text-primary dark:text-sky-300 font-bold"
-          >
-            {currentReviewer.role}
-          </Badge>
-        </div>
-
-        {/* Persona Switch Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
-          <span className="text-micro font-bold text-muted-foreground mr-1 hidden md:inline">
-            Switch Persona:
-          </span>
-          {reviewers.slice(0, 4).map((rev) => {
-            const isSelected = rev.email.toLowerCase() === currentReviewer.email.toLowerCase()
-            return (
-              <Button
-                key={rev.id}
-                type="button"
-                variant={isSelected ? "default" : "outline"}
-                onClick={() => handleSwitchReviewer(rev.email)}
-                className={`h-7 px-2.5 text-xs font-semibold rounded-md shadow-xs transition-colors cursor-pointer ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                {rev.name.split(" ")[1] || rev.name}
-              </Button>
-            )
-          })}
-        </div>
-      </div>
-
       {/* ── Main Reviewer Header & Profile Summary Card ────────────────────── */}
       <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs">
         {/* Subtle Institutional Brand Header Banner */}

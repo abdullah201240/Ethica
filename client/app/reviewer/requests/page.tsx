@@ -56,7 +56,6 @@ import {
 import {
   getStoredReviewers,
   getActiveReviewerEmail,
-  setActiveReviewerEmail as setGlobalActiveReviewerEmail,
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
 
@@ -78,11 +77,6 @@ export default function ReviewerRequestsPage() {
   const [declineReason, setDeclineReason] = React.useState(DECLINE_REASONS[0])
   const [customReason, setCustomReason] = React.useState("")
   const [inspectingProtocol, setInspectingProtocol] = React.useState<Protocol | null>(null)
-
-  const handlePersonaChange = (email: string) => {
-    setActiveReviewerEmailState(email)
-    setGlobalActiveReviewerEmail(email)
-  }
 
   React.useEffect(() => {
     syncProtocolsFromServer().then((data) => {
@@ -155,56 +149,6 @@ export default function ReviewerRequestsPage() {
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
-      {/* Reviewer Header & Persona Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-base text-foreground">
-              {currentReviewer.name}
-            </span>
-            <Badge className="bg-primary/10 text-primary dark:text-sky-300 text-micro font-bold border border-primary/20">
-              IRB Committee Reviewer
-            </Badge>
-          </div>
-          <p className="text-micro text-muted-foreground">
-            {currentReviewer.department} • {currentReviewer.institution}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="text-micro text-muted-foreground font-medium hidden md:inline">
-            Reviewer Persona:
-          </span>
-          <Select
-            value={activeReviewerEmail}
-            onValueChange={(val) => {
-              if (val) handlePersonaChange(val)
-            }}
-          >
-            <SelectTrigger className="h-9 px-3 rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-bold text-foreground min-w-[280px]">
-              <SelectValue placeholder="Select Reviewer Persona" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="charles.montgomery@diu.edu.bd">
-                Prof. Charles Montgomery (Chair, Biomedical)
-              </SelectItem>
-              <SelectItem value="sarah.jenkins@diu.edu.bd">
-                Dr. Sarah Jenkins (Vice Chair, Pediatrics)
-              </SelectItem>
-              <SelectItem value="farzana.choudhury@icddrb.org">
-                Dr. Farzana Choudhury (icddr,b, Epidemiology)
-              </SelectItem>
-              <SelectItem value="m.hasan@nimh.gov.bd">
-                Dr. Mahmudul Hasan (NIMH, Social & Behavioral)
-              </SelectItem>
-              <SelectItem value="tariqul.islam@buet.ac.bd">
-                Prof. Tariqul Islam (BUET, AI & Tech)
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
       {/* KPI Review Metrics */}
       <KpiGrid columns={4}>
         <KpiCard
