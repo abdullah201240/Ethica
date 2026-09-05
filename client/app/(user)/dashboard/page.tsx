@@ -294,7 +294,7 @@ export default function UserDashboardPage() {
           }}
           toolbarActions={
             <Link
-              href="/dashboard/apply"
+              href="/apply"
               className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-bold bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
             >
               <Plus className="size-3.5" />

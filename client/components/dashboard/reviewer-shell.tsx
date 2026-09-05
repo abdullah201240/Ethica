@@ -17,9 +17,13 @@ const reviewerNavItems: NavItem[] = [
 
 export function ReviewerShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isAuthPage = pathname === "/reviewer/login" || pathname?.startsWith("/reviewer/login")
+  const isPublicPage =
+    pathname === "/reviewer/login" ||
+    pathname?.startsWith("/reviewer/login") ||
+    pathname === "/reviewer/apply" ||
+    pathname?.startsWith("/reviewer/apply")
 
-  if (isAuthPage) {
+  if (isPublicPage) {
     return children
   }
 

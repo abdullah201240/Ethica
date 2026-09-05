@@ -33,13 +33,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -563,16 +563,16 @@ export default function AdminCategoriesPage() {
         />
       </div>
 
-      {/* ── Modal: Create New Research Category ─────────────────────────────── */}
-      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <form onSubmit={handleCreateSubmit}>
-            <DialogHeader>
+      {/* ── Sheet: Create New Research Category ─────────────────────────────── */}
+      <Sheet open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
+          <form onSubmit={handleCreateSubmit} className="flex flex-col h-full" noValidate>
+            <SheetHeader className="p-0 pb-3">
               <div className="flex items-center justify-between gap-2">
-                <DialogTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
+                <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
                   <Layers className="size-5 text-[#198754]" />
                   <span>Add New Research Category</span>
-                </DialogTitle>
+                </SheetTitle>
                 <Button
                   type="button"
                   variant="outline"
@@ -584,10 +584,10 @@ export default function AdminCategoriesPage() {
                   <span>Autofill Sample</span>
                 </Button>
               </div>
-              <DialogDescription className="text-xs text-muted-foreground">
+              <SheetDescription className="text-xs text-muted-foreground">
                 Define a scientific research categorization stream, assign its governing IRB board, and set institutional fee schedules in Bangladeshi Taka (BDT ৳).
-              </DialogDescription>
-            </DialogHeader>
+              </SheetDescription>
+            </SheetHeader>
 
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -817,7 +817,7 @@ export default function AdminCategoriesPage() {
               </div>
             </div>
 
-            <DialogFooter className="gap-2">
+            <SheetFooter className="p-0 pt-4 gap-2 flex-row justify-end border-t border-slate-100 dark:border-slate-800/80">
               <Button
                 type="button"
                 variant="outline"
@@ -831,25 +831,25 @@ export default function AdminCategoriesPage() {
               >
                 Create Category
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
-      {/* ── Modal: Edit Research Category & BDT Price ──────────────────────── */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      {/* ── Sheet: Edit Research Category & BDT Price ──────────────────────── */}
+      <Sheet open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
           {categoryToEdit && (
-            <form onSubmit={handleEditSubmit}>
-              <DialogHeader>
-                <DialogTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
+            <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
+              <SheetHeader className="p-0 pb-3">
+                <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
                   <Edit2 className="size-5 text-[#198754]" />
                   <span>Edit Category: {categoryToEdit.code}</span>
-                </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground">
+                </SheetTitle>
+                <SheetDescription className="text-xs text-muted-foreground">
                   Update scientific scope, IRB board assignment, or adjust pricing in Bangladeshi Taka (BDT ৳).
-                </DialogDescription>
-              </DialogHeader>
+                </SheetDescription>
+              </SheetHeader>
 
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1066,7 +1066,7 @@ export default function AdminCategoriesPage() {
                 </div>
               </div>
 
-              <DialogFooter className="gap-2">
+              <SheetFooter className="p-0 pt-4 gap-2 flex-row justify-end border-t border-slate-100 dark:border-slate-800/80">
                 <Button
                   type="button"
                   variant="outline"
@@ -1080,11 +1080,11 @@ export default function AdminCategoriesPage() {
                 >
                   Save Changes
                 </Button>
-              </DialogFooter>
+              </SheetFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       {/* ── Modal: Delete Confirmation (AlertDialog) ──────────────────────── */}
       <AlertDialog

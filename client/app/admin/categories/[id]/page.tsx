@@ -37,13 +37,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -528,19 +528,19 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* ── Modal: Edit Research Category & BDT Price ──────────────────────── */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <form onSubmit={handleEditSubmit}>
-            <DialogHeader>
-              <DialogTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
+      {/* ── Sheet: Edit Research Category & BDT Price ──────────────────────── */}
+      <Sheet open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
+          <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
+            <SheetHeader className="p-0 pb-3">
+              <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
                 <Edit2 className="size-5 text-[#198754]" />
                 <span>Edit Category: {category.code}</span>
-              </DialogTitle>
-              <DialogDescription className="text-xs text-muted-foreground">
+              </SheetTitle>
+              <SheetDescription className="text-xs text-muted-foreground">
                 Update scientific scope, governing board, or adjust pricing in Bangladeshi Taka (BDT ৳).
-              </DialogDescription>
-            </DialogHeader>
+              </SheetDescription>
+            </SheetHeader>
 
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -731,17 +731,17 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <DialogFooter className="gap-2">
+            <SheetFooter className="p-0 pt-4 gap-2 flex-row justify-end border-t border-slate-100 dark:border-slate-800/80">
               <Button type="button" variant="outline" onClick={() => setEditDialogOpen(false)}>
                 Cancel
               </Button>
               <Button type="submit" className="bg-[#002752] hover:bg-[#001c3d] text-white">
                 Save Changes
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       {/* ── Modal: Delete Confirmation (AlertDialog) ──────────────────────── */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

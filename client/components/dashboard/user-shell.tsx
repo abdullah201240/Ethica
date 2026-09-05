@@ -17,12 +17,12 @@ const userNavItems: NavItem[] = [
   },
   {
     label: "Apply for Permission",
-    href: "/dashboard/apply",
+    href: "/apply",
     icon: FilePlus,
   },
   {
     label: "Investigator Profile",
-    href: "/dashboard/profile",
+    href: "/profile",
     icon: User,
   },
 ]
@@ -98,7 +98,7 @@ export function UserShell({ children }: { children: React.ReactNode }) {
       user={currentUser}
       navItems={userNavItems}
       loginRoute="/login"
-      profileHref="/dashboard/profile"
+      profileHref="/profile"
     >
       {children}
     </DashboardShell>

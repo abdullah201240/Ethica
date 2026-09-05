@@ -18,6 +18,7 @@ export function ThemeProvider({
   const isPureLightPage = Boolean(
     pathname === "/" ||
     pathname === "/apply" ||
+    pathname === "/reviewer/apply" ||
     pathname === "/login" ||
     pathname === "/admin/login" ||
     pathname === "/reviewer/login" ||

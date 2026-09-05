@@ -420,7 +420,7 @@ export default function AdminReviewerApplicationsPage() {
                 <span>Accredited Reviewer Roster</span>
               </Link>
               <Link
-                href="/apply"
+                href="/reviewer/apply"
                 target="_blank"
                 className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0"
               >
