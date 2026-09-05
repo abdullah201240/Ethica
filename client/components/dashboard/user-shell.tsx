@@ -6,14 +6,20 @@ import {
   LayoutDashboard,
   User,
   FilePlus,
+  ClipboardList,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const userNavItems: NavItem[] = [
   {
-    label: "Protocol Overview",
+    label: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    label: "My Applications",
+    href: "/applications",
+    icon: ClipboardList,
   },
   {
     label: "Apply for Permission",

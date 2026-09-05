@@ -144,6 +144,81 @@ export const investigatorProfileSchema = z.object({
 
 export type InvestigatorProfileInput = z.infer<typeof investigatorProfileSchema>
 
+// ── Reviewer Profile Edit Schema ───────────────────────────────────────────
+export const reviewerProfileSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Full name must be at least 2 characters")
+    .max(100, "Full name is too long")
+    .trim(),
+  degree: z
+    .string()
+    .min(2, "Academic credentials / degree is required")
+    .max(100, "Degree text is too long")
+    .trim(),
+  position: z
+    .string()
+    .min(2, "Academic position / rank is required")
+    .max(100, "Position text is too long")
+    .trim(),
+  department: z
+    .string()
+    .min(2, "Department name is required")
+    .max(100, "Department name is too long")
+    .trim(),
+  institution: z
+    .string()
+    .min(2, "Institution name is required")
+    .max(150, "Institution name is too long")
+    .trim(),
+  email: z
+    .string()
+    .min(1, "Official institutional email is required")
+    .email("Please enter a valid institutional email address")
+    .trim(),
+  phone: z
+    .string()
+    .min(5, "Official office phone must be at least 5 characters")
+    .max(50, "Phone number is too long")
+    .trim(),
+  mobile: z
+    .string()
+    .min(6, "Quorum emergency mobile must be at least 6 characters")
+    .max(50, "Mobile number is too long")
+    .trim(),
+  officeLocation: z
+    .string()
+    .min(3, "Chamber / office location is required")
+    .max(150, "Office location is too long")
+    .trim(),
+  consultationHours: z
+    .string()
+    .min(3, "Deliberation consultation hours are required")
+    .max(120, "Consultation hours text is too long")
+    .trim(),
+  orcid: z
+    .string()
+    .trim()
+    .refine(
+      (val) => !val || /^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$/.test(val),
+      "Invalid ORCID format (e.g. 0000-0002-3841-8910)"
+    )
+    .optional(),
+  bioStatement: z
+    .string()
+    .min(10, "Bioethics statement must be at least 10 characters")
+    .max(1000, "Bioethics statement cannot exceed 1000 characters")
+    .trim(),
+  specializations: z
+    .string()
+    .min(3, "Please list at least one specialization or ethics expertise domain")
+    .max(300, "Specializations text is too long")
+    .trim(),
+  avatarUrl: z.string().optional(),
+})
+
+export type ReviewerProfileInput = z.infer<typeof reviewerProfileSchema>
+
 // ── Change Password Schema ────────────────────────────────────────────────
 export const changePasswordSchema = z
   .object({

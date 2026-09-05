@@ -380,11 +380,11 @@ export function DashboardShell({
               type="button"
               variant="ghost"
               size="icon"
-              className="relative flex size-8 text-muted-foreground"
+              className="relative flex size-9 sm:size-10 rounded-lg text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
               aria-label="Notifications"
             >
-              <Bell className="size-4" />
-              <span className="absolute top-2 right-2 size-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0C1E34]" />
+              <Bell className="size-5 sm:size-[22px]" />
+              <span className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0C1E34]" />
             </Button>
 
             {/* Theme toggle */}
@@ -464,7 +464,7 @@ export function DashboardShell({
         </main>
 
         {/* ── FOOTER ─────────────────────────────────────────────── */}
-        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-5 sm:px-8 md:px-10 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-body-sm text-muted-foreground">
+        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-8 md:px-10 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-body-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-foreground/70">

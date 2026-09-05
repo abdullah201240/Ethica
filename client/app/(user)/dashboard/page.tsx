@@ -27,9 +27,12 @@ import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getStoredProtocols, type Protocol } from "@/lib/protocols-store"
+import { CertificateModal } from "@/components/certificate/certificate-modal"
 
 export default function UserDashboardPage() {
   const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
+  const [selectedCertificateProtocol, setSelectedCertificateProtocol] = React.useState<Protocol | null>(null)
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = React.useState(false)
 
   React.useEffect(() => {
     const syncProtocols = () => {
@@ -164,55 +167,47 @@ export default function UserDashboardPage() {
         id: "actions",
         header: "Actions",
         align: "right",
-        headerClassName: "w-48 text-right",
+        headerClassName: "w-36 text-right",
         cell: ({ row }) => (
-          <div className="inline-flex items-center gap-2 justify-end">
+          <div className="inline-flex items-center gap-1.5 justify-end">
             {row.hasCertificate ? (
-              <Link
-                href="/#certificate"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Button
+                type="button"
+                variant="default"
+                size="xs"
+                onClick={() => {
+                  setSelectedCertificateProtocol(row)
+                  setIsCertificateModalOpen(true)
+                }}
+                className="h-7 px-2.5 text-micro font-bold bg-[#198754] hover:bg-[#157347] text-white rounded-md gap-1 shadow-xs transition-colors cursor-pointer"
+                title="View & Download Official Digital Clearance Certificate"
               >
-                <Button
-                  type="button"
-                  variant="default"
-                  className="h-9 px-3.5 text-base font-bold bg-secondary hover:bg-secondary/90 text-white rounded-lg gap-1.5 shadow-xs transition-colors cursor-pointer"
-                  title="Download Digital Clearance Certificate in New Tab"
-                >
-                  <Download className="size-4" />
-                  <span>Certificate</span>
-                </Button>
-              </Link>
+                <Download className="size-3.5" />
+                <span>Certificate</span>
+              </Button>
             ) : (
-              <Link
-                href="/#preview"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/apply">
                 <Button
                   type="button"
                   variant="default"
-                  className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 transition-colors cursor-pointer"
-                  title="Inspect Protocol in New Tab"
+                  size="xs"
+                  className="h-7 px-2.5 text-micro font-bold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1 transition-colors cursor-pointer"
+                  title="Inspect Protocol Dossier"
                 >
-                  <Eye className="size-4" />
+                  <Eye className="size-3.5" />
                   <span>Inspect</span>
                 </Button>
               </Link>
             )}
-            <Link
-              href="/#preview"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href="/apply">
               <Button
                 type="button"
                 variant="outline"
-                size="icon-sm"
-                className="h-9 w-9 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground transition-colors cursor-pointer"
-                title="Open Protocol Inspector in New Tab"
+                size="icon-xs"
+                className="h-7 w-7 rounded-md border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground transition-colors cursor-pointer"
+                title="Open Protocol Inspector"
               >
-                <ExternalLink className="size-4" />
+                <ExternalLink className="size-3" />
               </Button>
             </Link>
           </div>
@@ -318,32 +313,32 @@ export default function UserDashboardPage() {
         />
       </div>
 
-      {/* Institutional Support & Integrity Banner */}
-      <div className="p-4 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-[#198754]/30 bg-[#198754]/5 dark:bg-[#198754]/10 flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Institutional Support & Guidance Banner */}
+      <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-emerald-500/25 dark:border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="size-10 rounded-xl bg-secondary text-white flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="size-6" />
+          <div className="size-10 rounded-xl bg-[#198754] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <ShieldCheck className="size-5" />
           </div>
           <div>
-            <h4 className="text-card-title text-primary dark:text-white">
+            <h4 className="font-bold text-sm sm:text-base text-primary dark:text-white">
               Institutional Ethics Helpline & Guidance Secretariat
             </h4>
-            <p className="text-body text-foreground/70">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Need assistance determining human participant risk categorization or crafting informed consent documentation?
             </p>
           </div>
         </div>
 
         <Link
-          href="/#faq"
-          className="inline-flex items-center h-9 px-4 text-body-sm font-bold rounded-xl border border-secondary/40 text-secondary hover:bg-secondary/10 shrink-0 transition-colors"
+          href="/apply"
+          className="inline-flex items-center h-8 px-3.5 text-xs font-bold rounded-lg border border-[#198754]/40 text-[#198754] hover:bg-[#198754]/10 shrink-0 transition-colors"
         >
-          Read Institutional Ethics Guidelines
+          Institutional Ethics Guidelines
         </Link>
       </div>
 
       {/* ── Section: Clearance Certificates Showcase ──────────────────────── */}
-      <div id="certificates" className="space-y-4 px-3 sm:px-0">
+      <div id="certificates" className="space-y-4 w-full">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
@@ -382,13 +377,21 @@ export default function UserDashboardPage() {
               <span className="text-body-sm font-semibold text-secondary flex items-center gap-1">
                 <Check className="size-3.5" /> Institutional Seal Confirmed
               </span>
-              <Link
-                href="/#certificate"
-                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline"
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const p = protocols.find((item) => item.id === "ETH-2026-074") || null
+                  setSelectedCertificateProtocol(p)
+                  setIsCertificateModalOpen(true)
+                }}
+                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline p-0 h-auto cursor-pointer"
+                title="View Ethical Clearance Certificate"
               >
-                <span>View Full Seal</span>
+                <span>View Full Certificate</span>
                 <ExternalLink className="size-3" />
-              </Link>
+              </Button>
             </div>
           </Card>
 
@@ -414,20 +417,28 @@ export default function UserDashboardPage() {
               <span className="text-body-sm font-semibold text-secondary flex items-center gap-1">
                 <Check className="size-3.5" /> Institutional Seal Confirmed
               </span>
-              <Link
-                href="/#certificate"
-                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline"
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const p = protocols.find((item) => item.id === "ETH-2026-061") || null
+                  setSelectedCertificateProtocol(p)
+                  setIsCertificateModalOpen(true)
+                }}
+                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline p-0 h-auto cursor-pointer"
+                title="View Ethical Clearance Certificate"
               >
-                <span>View Full Seal</span>
+                <span>View Full Certificate</span>
                 <ExternalLink className="size-3" />
-              </Link>
+              </Button>
             </div>
           </Card>
         </div>
       </div>
 
       {/* ── Section: Fast-Track Eligibility Checker ────────────────────────── */}
-      <div id="eligibility" className="space-y-4 px-3 sm:px-0">
+      <div id="eligibility" className="space-y-4 w-full">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
@@ -481,7 +492,7 @@ export default function UserDashboardPage() {
       </div>
 
       {/* ── Section: Institutional Guidelines & Regulatory Policies ───────── */}
-      <div id="guidelines" className="space-y-4">
+      <div id="guidelines" className="space-y-4 w-full">
         <div>
           <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
             <BookOpen className="size-5 text-primary dark:text-sky-300" />
@@ -545,6 +556,13 @@ export default function UserDashboardPage() {
           </Card>
         </div>
       </div>
+
+      {/* ── Official Ethical Clearance Certificate Modal ─────────────────────── */}
+      <CertificateModal
+        open={isCertificateModalOpen}
+        onOpenChange={setIsCertificateModalOpen}
+        protocol={selectedCertificateProtocol}
+      />
     </DashboardContainer>
   )
 }

@@ -14,10 +14,22 @@ import {
   FileSearch,
   Users,
   XCircle,
+  Building2,
+  FileText,
+  ShieldCheck,
+  Zap,
+  Check,
+  Download,
+  AlertTriangle,
+  RotateCcw,
+  UserCheck,
+  Send,
+  UserX,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { toast } from "@/components/ui/sonner"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
@@ -32,429 +44,753 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import {
+  getStoredProtocols,
+  subscribeProtocols,
+  syncProtocolsFromServer,
+  respondToReviewAssignment,
+  submitReviewerEvaluation,
+  type Protocol,
+  type ProtocolReviewerEvaluation,
+} from "@/lib/protocols-store"
+import {
+  getStoredReviewers,
+  type AccreditedReviewer,
+} from "@/lib/reviewer-roster"
 
-const deliberationProtocols = [
-  {
-    id: "ETH-2026-092",
-    title: "Randomized Controlled Trial of Pediatric Cognitive Behavioral Teletherapy",
-    pi: "Dr. Ayesha Rahman",
-    board: "Biomedical & Clinical IRB",
-    risk: "Greater Than Minimal",
-    status: "Urgent Quorum Vote",
-    statusColor: "rose",
-    quorumVotes: "3 of 5 Voted",
-    votesPercent: 60,
-    deadline: "Tomorrow, 4:00 PM",
-  },
-  {
-    id: "ETH-2026-089",
-    title: "Longitudinal AI-Assisted Clinical Biomarker Analysis in Type 2 Diabetes",
-    pi: "Dr. Elena Rostova",
-    board: "Biomedical & Clinical IRB",
-    risk: "Minimal Risk",
-    status: "Deliberation Open",
-    statusColor: "amber",
-    quorumVotes: "4 of 5 Voted",
-    votesPercent: 80,
-    deadline: "In 3 Days",
-  },
-  {
-    id: "ETH-2026-085",
-    title: "Survey of Stress Biomarkers Among Medical Residents During Night Shifts",
-    pi: "Prof. Tariqul Islam",
-    board: "Social & Behavioral Board",
-    status: "Expedited Triage",
-    statusColor: "blue",
-    quorumVotes: "Single Reviewer Assigned",
-    votesPercent: 100,
-    deadline: "In 5 Days",
-  },
-  {
-    id: "ETH-2026-081",
-    title: "Cross-Institutional Genomic Data Exchange for Rare Childhood Disorders",
-    pi: "Dr. Susan Lin",
-    board: "Biomedical & Clinical IRB",
-    risk: "Greater Than Minimal",
-    status: "Consensus Reached",
-    statusColor: "emerald",
-    quorumVotes: "5 of 5 Approved",
-    votesPercent: 100,
-    deadline: "Clearance Pending",
-  },
+const DECLINE_REASONS = [
+  "Conflict of interest with principal investigator or affiliated research site",
+  "Specialization or methodology outside my clinical/academic domain",
+  "Excess clinical, surgical, or administrative institutional workload",
+  "Institutional leave or sabbatical commitments",
 ]
 
 export default function ReviewerDashboardPage() {
-  const [votedMap, setVotedMap] = React.useState<Record<string, string>>({})
+  const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
+  const [reviewers, setReviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
+  
+  // Current active reviewer identity (defaults to Prof. Charles Montgomery, IRB Chair)
+  const [activeReviewerEmail, setActiveReviewerEmail] = React.useState("charles.montgomery@diu.edu.bd")
 
-  const handleVote = (protocolId: string, decision: string) => {
-    setVotedMap((prev) => ({ ...prev, [protocolId]: decision }))
-    toast.success("Institutional Quorum Ballot Sealed", {
-      description: `Official Quorum Vote "${decision}" successfully registered and sealed for protocol ${protocolId}. The vote is cryptographically logged into the DIU IRB committee register.`,
+  // Modals state
+  const [acceptingProtocol, setAcceptingProtocol] = React.useState<Protocol | null>(null)
+  const [decliningProtocol, setDecliningProtocol] = React.useState<Protocol | null>(null)
+  const [declineReason, setDeclineReason] = React.useState(DECLINE_REASONS[0])
+
+  // Evaluation modal state
+  const [evaluatingProtocol, setEvaluatingProtocol] = React.useState<Protocol | null>(null)
+  const [evaluationRecommendation, setEvaluationRecommendation] = React.useState<"Clearance Approved" | "Revisions Required" | "Ethics Rejection">("Clearance Approved")
+  const [deliberationRemarks, setDeliberationRemarks] = React.useState("")
+  const [meritScore, setMeritScore] = React.useState(5)
+  const [safeguardsScore, setSafeguardsScore] = React.useState(5)
+  const [consentScore, setConsentScore] = React.useState(5)
+
+  React.useEffect(() => {
+    syncProtocolsFromServer().then((data) => {
+      if (data && Array.isArray(data)) setProtocols(data)
     })
+
+    const handleSync = () => {
+      setProtocols(getStoredProtocols())
+    }
+
+    const unsubscribe = subscribeProtocols(handleSync)
+    return () => unsubscribe()
+  }, [])
+
+  const currentReviewer = reviewers.find((r) => r.email === activeReviewerEmail) || {
+    id: "REV-DIU-001",
+    name: "Prof. Charles Montgomery",
+    email: "charles.montgomery@diu.edu.bd",
+    institution: "Daffodil International University",
+    department: "Biomedical Research Ethics Board",
+  }
+
+  // Filter protocols for this reviewer, or show all assigned/test protocols
+  const incomingRequests = protocols.filter(
+    (p) => p.assignmentStatus === "Pending Acceptance"
+  )
+
+  const activeEvaluations = protocols.filter(
+    (p) => p.assignmentStatus === "Accepted"
+  )
+
+  const completedEvaluations = protocols.filter(
+    (p) => p.assignmentStatus === "Review Completed" || p.status === "Clearance Granted"
+  )
+
+  const handleConfirmAccept = () => {
+    if (!acceptingProtocol) return
+    const updated = respondToReviewAssignment(acceptingProtocol.id, "Accepted")
+    if (updated) {
+      setProtocols(getStoredProtocols())
+    }
+    toast.success("Review Assignment Accepted", {
+      description: `You have accepted review of ${acceptingProtocol.id}. Protocol is now active in your deliberation queue.`,
+    })
+    setAcceptingProtocol(null)
+  }
+
+  const handleConfirmDecline = () => {
+    if (!decliningProtocol) return
+    const updated = respondToReviewAssignment(decliningProtocol.id, "Declined", declineReason)
+    if (updated) {
+      setProtocols(getStoredProtocols())
+    }
+    toast.error("Review Assignment Declined", {
+      description: `Declined review for ${decliningProtocol.id}. Returned to Secretariat docket for reassignment.`,
+    })
+    setDecliningProtocol(null)
+  }
+
+  const handleSubmitEvaluation = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    if (!evaluatingProtocol) return
+
+    if (!deliberationRemarks.trim() || deliberationRemarks.trim().length < 10) {
+      toast.error("Deliberation Remarks Required", {
+        description: "Please provide detailed justification and ethical notes (minimum 10 characters).",
+      })
+      return
+    }
+
+    const now = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    })
+
+    const evalPayload: ProtocolReviewerEvaluation = {
+      recommendation: evaluationRecommendation,
+      scientificMeritRating: meritScore,
+      safeguardsRating: safeguardsScore,
+      consentRating: consentScore,
+      deliberationRemarks: deliberationRemarks.trim(),
+      evaluatedAt: now,
+      reviewerName: currentReviewer.name,
+      reviewerId: currentReviewer.id,
+    }
+
+    submitReviewerEvaluation(evaluatingProtocol.id, evalPayload)
+    setProtocols(getStoredProtocols())
+
+    toast.success("Formal Determination Registered", {
+      description: `Decision "${evaluationRecommendation}" sealed for ${evaluatingProtocol.id}. Logged into institutional review register.`,
+    })
+
+    setEvaluatingProtocol(null)
+    setDeliberationRemarks("")
   }
 
   return (
-    <DashboardContainer>
-      {/* Centralized Review Metrics Counters */}
+    <DashboardContainer className="space-y-6 select-text">
+      {/* Reviewer Header with Identity Switcher for Demo */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-base text-foreground">
+              {currentReviewer.name}
+            </span>
+            <Badge className="bg-primary/10 text-primary dark:text-sky-300 text-micro font-bold border border-primary/20">
+              IRB Voting Member
+            </Badge>
+          </div>
+          <p className="text-micro text-muted-foreground">
+            {currentReviewer.department} • {currentReviewer.institution}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <span className="text-micro text-muted-foreground font-medium hidden md:inline">
+            Reviewer Persona:
+          </span>
+          <select
+            value={activeReviewerEmail}
+            onChange={(e) => setActiveReviewerEmail(e.target.value)}
+            className="h-9 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-base font-bold text-foreground focus:outline-none cursor-pointer"
+          >
+            <option value="charles.montgomery@diu.edu.bd">Prof. Charles Montgomery (Chair, Biomedical)</option>
+            <option value="sarah.jenkins@diu.edu.bd">Dr. Sarah Jenkins (Vice Chair, Pediatrics)</option>
+            <option value="farzana.choudhury@icddrb.org">Dr. Farzana Choudhury (icddr,b, Epidemiology)</option>
+            <option value="m.hasan@nimh.gov.bd">Dr. Mahmudul Hasan (NIMH, Social & Behavioral)</option>
+            <option value="tariqul.islam@buet.ac.bd">Prof. Tariqul Islam (BUET, AI & Tech)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* KPI Review Metrics */}
       <KpiGrid columns={4}>
         <KpiCard
-          label="Pending Deliberation"
-          value={5}
-          description="2 protocols need quorum tie-break"
+          label="Incoming Review Requests"
+          value={incomingRequests.length}
+          description="Awaiting your acceptance / decline"
           icon={Clock}
-          color="rose"
+          color={incomingRequests.length > 0 ? "amber" : "navy"}
         />
         <KpiCard
-          label="Quorum Participation"
-          value="96.4%"
-          description="Institutional target: >90%"
+          label="Active In-Progress Evaluations"
+          value={activeEvaluations.length}
+          description="Accepted protocols in deliberation"
           icon={Vote}
-          color="green"
-        />
-        <KpiCard
-          label="Expedited Approvals"
-          value={28}
-          description="Avg turnaround: 3.2 days"
-          icon={CheckCircle2}
           color="navy"
         />
         <KpiCard
-          label="Consensus Reached"
-          value={41}
-          description="Zero appeals lodged this term"
+          label="Determinations Sealed"
+          value={completedEvaluations.length}
+          description="Formal reviews recorded in register"
+          icon={CheckCircle2}
+          color="green"
+        />
+        <KpiCard
+          label="Quorum Compliance"
+          value="100%"
+          description="Institutional turnaround on schedule"
           icon={Scale}
           color="gold"
         />
       </KpiGrid>
 
-      {/* Deliberation Queue Section (Consensus & Triage) */}
-      <div id="consensus" className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden">
-        
-        <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div id="triage">
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* SECTION 1: INCOMING REVIEW REQUESTS (PENDING ACCEPTANCE)            */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
             <h2 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <FileSearch className="size-5 text-primary dark:text-sky-300" />
-              <span>Active Deliberation & Voting Queue</span>
+              <Clock className="size-5 text-amber-500" />
+              <span>Incoming Protocol Review Requests ({incomingRequests.length})</span>
             </h2>
-            <p className="text-micro text-muted-foreground font-medium">
-              Review full protocol methodology, examine informed consent forms, and record official committee vote
+            <p className="text-body-sm text-muted-foreground font-medium mt-1">
+              Secretariat has dispatched these research protocols for your evaluation. Accept to begin peer review or decline if unavailable or in conflict of interest.
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Quorum Ledger Synchronized</span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 text-micro font-bold border border-amber-500/20 self-start sm:self-auto">
+            <span>Requires Your Decision</span>
           </span>
         </div>
 
-        {/* Protocols Voting List */}
-        <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
-          {deliberationProtocols.map((protocol) => {
-            const hasVoted = votedMap[protocol.id]
-
-            return (
+        {incomingRequests.length === 0 ? (
+          <div className="p-8 text-center space-y-2 text-muted-foreground">
+            <CheckCircle2 className="size-8 text-emerald-500 mx-auto" />
+            <p className="text-base font-bold text-foreground">No Pending Review Requests</p>
+            <p className="text-body-sm max-w-sm mx-auto">
+              You have responded to all review assignments. New assignments dispatched by the Secretariat will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
+            {incomingRequests.map((protocol) => (
               <div
                 key={protocol.id}
-                className="p-4 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                className="p-5 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-start justify-between gap-5"
               >
-                <div className="space-y-2 flex-1 min-w-0">
+                <div className="space-y-2.5 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-micro font-bold px-2 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
+                    <span className="font-mono text-base font-bold px-2 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
                       {protocol.id}
                     </span>
-
-                    <span
-                      className={`text-micro font-bold px-2.5 py-0.5 rounded-full border ${
-                        protocol.statusColor === "rose"
-                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30"
-                          : protocol.statusColor === "amber"
-                            ? "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/30"
-                            : protocol.statusColor === "blue"
-                              ? "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/30"
-                              : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
-                      }`}
-                    >
-                      {protocol.status}
-                    </span>
-
-                    {protocol.risk && (
-                      <span className="text-micro font-medium px-2 py-0.5 rounded bg-muted text-foreground/70">
-                        {protocol.risk}
-                      </span>
+                    <Badge variant="outline" className="text-base font-semibold">
+                      {protocol.board}
+                    </Badge>
+                    {protocol.isExpedited && (
+                      <Badge className="bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20 text-micro font-bold gap-1">
+                        <Zap className="size-2.5" />
+                        <span>Fast-Track</span>
+                      </Badge>
                     )}
-
-                    <span className="text-micro font-mono text-muted-foreground">
-                      Deadline: {protocol.deadline}
+                    <span className="text-micro text-amber-700 dark:text-amber-400 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 flex items-center gap-1">
+                      <Clock className="size-3" />
+                      <span>Pending Your Acceptance</span>
                     </span>
                   </div>
 
-                  <h3 className="text-table-cell sm:text-card-title font-bold text-foreground leading-snug">
+                  <h3 className="text-lg font-bold text-foreground leading-snug">
                     {protocol.title}
                   </h3>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-micro text-muted-foreground">
-                    <span>Lead Investigator: <strong className="text-foreground/85">{protocol.pi}</strong></span>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-muted-foreground">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      PI: {protocol.piName || "Dr. Elena Rostova"}
+                    </span>
                     <span>•</span>
-                    <span>Board: {protocol.board}</span>
+                    <span>{protocol.department}</span>
                     <span>•</span>
-                    <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                      Quorum Status: {protocol.quorumVotes}
+                    <span>Risk: <strong>{protocol.risk}</strong></span>
+                    <span>•</span>
+                    <span>Dispatched: {protocol.assignmentDate || "Recently"}</span>
+                  </div>
+
+                  {protocol.abstract && (
+                    <p className="text-body-sm text-muted-foreground line-clamp-2 italic pt-1">
+                      &ldquo;{protocol.abstract}&rdquo;
+                    </p>
+                  )}
+
+                  {/* Documents Pills */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1 text-micro">
+                    <span className="font-bold text-slate-700 dark:text-slate-300">Attachments:</span>
+                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-300">
+                      {protocol.proposalDocumentName || "Proposal_v2.pdf"}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-300">
+                      {protocol.consentDocumentName || "Consent_Form.pdf"}
                     </span>
                   </div>
                 </div>
 
-                {/* Reviewer Action Buttons with Institutional Confirmation AlertDialog */}
-                <div className="flex items-center gap-2 shrink-0 pt-2 lg:pt-0">
-                  {hasVoted ? (
-                    <div
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-micro font-bold ${
-                        hasVoted === "Approved"
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25"
-                          : hasVoted === "Rejected"
-                          ? "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25"
-                          : "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25"
-                      }`}
-                    >
-                      {hasVoted === "Approved" ? (
-                        <CheckCircle2 className="size-3.5" />
-                      ) : hasVoted === "Rejected" ? (
-                        <XCircle className="size-3.5" />
-                      ) : (
-                        <Clock className="size-3.5" />
-                      )}
-                      <span>Vote Recorded: {hasVoted}</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1.5">
-                      <AlertDialog>
-                        <AlertDialogTrigger render={
-                          <Button
-                            type="button"
-                            size="sm"
-                            className="h-8 px-3 text-micro font-bold rounded-lg bg-secondary hover:bg-[#146c43] text-white cursor-pointer"
-                          >
-                            Approve
-                          </Button>
-                        } />
-                        <AlertDialogContent className="sm:max-w-md">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-card-title text-primary dark:text-white">
-                              Confirm Protocol Approval Vote
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-body-sm text-foreground/70 leading-relaxed">
-                              You are casting an official &ldquo;Approved&rdquo; vote on docket item{" "}
-                              <strong className="text-foreground">{protocol.id}</strong> (&ldquo;{protocol.title}&rdquo;).
-                              This affirms that participant consent safeguards, data confidentiality, and risk mitigation comply with DIU IRB Standards.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="text-micro font-semibold">Review Further</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleVote(protocol.id, "Approved")}
-                              className="bg-secondary hover:bg-[#146c43] text-white text-micro font-bold"
-                            >
-                              Seal Approval Vote
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                {/* Accept / Decline Action Controls */}
+                <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0 pt-2 lg:pt-0">
+                  <Button
+                    type="button"
+                    onClick={() => setAcceptingProtocol(protocol)}
+                    className="h-10 px-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-base gap-1.5 shadow-xs cursor-pointer"
+                  >
+                    <UserCheck className="size-4" />
+                    <span>Accept Assignment</span>
+                  </Button>
 
-                      <AlertDialog>
-                        <AlertDialogTrigger render={
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 text-micro font-bold rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border-amber-400/30 cursor-pointer"
-                          >
-                            Request Revision
-                          </Button>
-                        } />
-                        <AlertDialogContent className="sm:max-w-md">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-card-title text-primary dark:text-white">
-                              Issue Protocol Modification Notice
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-body-sm text-foreground/70 leading-relaxed">
-                              You are requesting revisions for docket item{" "}
-                              <strong className="text-foreground">{protocol.id}</strong>.
-                              The Principal Investigator (<strong className="text-foreground">{protocol.pi}</strong>) will be required to submit revised methodologies and participant consent documentation before final quorum certification.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="text-micro font-semibold">Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleVote(protocol.id, "Revision")}
-                              className="bg-amber-600 hover:bg-amber-700 text-white text-micro font-bold"
-                            >
-                              Submit Revision Order
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDecliningProtocol(protocol)}
+                    className="h-10 px-4 border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 font-bold text-base gap-1.5 cursor-pointer"
+                  >
+                    <UserX className="size-4" />
+                    <span>Decline</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-                      <AlertDialog>
-                        <AlertDialogTrigger render={
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-2.5 text-micro font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
-                          >
-                            Reject
-                          </Button>
-                        } />
-                        <AlertDialogContent className="sm:max-w-md">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-card-title text-primary dark:text-white">
-                              Confirm Protocol Disapproval / Rejection
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="text-body-sm text-foreground/70 leading-relaxed">
-                              You are casting an official &ldquo;Rejected&rdquo; vote on docket item{" "}
-                              <strong className="text-foreground">{protocol.id}</strong> (&ldquo;{protocol.title}&rdquo;).
-                              This records a critical ethical non-compliance determination that halts protocol progression.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="text-micro font-semibold">Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleVote(protocol.id, "Rejected")}
-                              className="bg-rose-600 hover:bg-rose-700 text-white text-micro font-bold"
-                            >
-                              Seal Rejection Vote
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* SECTION 2: ACTIVE PROTOCOL DELIBERATIONS & EVALUATIONS (ACCEPTED)   */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <FileSearch className="size-5 text-primary dark:text-sky-300" />
+              <span>Active Deliberations & Protocol Evaluations ({activeEvaluations.length})</span>
+            </h2>
+            <p className="text-body-sm text-muted-foreground font-medium mt-1">
+              Accepted research protocols undergoing formal ethical review. Submit your determination and remarks for committee consensus.
+            </p>
+          </div>
+
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20 self-start sm:self-auto">
+            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Deliberation Active</span>
+          </span>
+        </div>
+
+        {activeEvaluations.length === 0 ? (
+          <div className="p-8 text-center space-y-2 text-muted-foreground">
+            <Vote className="size-8 text-slate-400 mx-auto" />
+            <p className="text-base font-bold text-foreground">No Active Evaluations in Progress</p>
+            <p className="text-body-sm max-w-sm mx-auto">
+              Accept incoming review requests above to commence formal ethical evaluation and scoring.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
+            {activeEvaluations.map((protocol) => (
+              <div
+                key={protocol.id}
+                className="p-5 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-start justify-between gap-5"
+              >
+                <div className="space-y-2.5 flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-base font-bold px-2 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
+                      {protocol.id}
+                    </span>
+                    <Badge variant="outline" className="text-base font-semibold">
+                      {protocol.board}
+                    </Badge>
+                    <span className="text-micro text-sky-700 dark:text-sky-400 font-bold bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-500/20">
+                      Review In Progress
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-foreground leading-snug">
+                    {protocol.title}
+                  </h3>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-muted-foreground">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      PI: {protocol.piName || "Dr. Elena Rostova"}
+                    </span>
+                    <span>•</span>
+                    <span>Department: {protocol.department}</span>
+                    <span>•</span>
+                    <span>Sample Size: {protocol.targetSampleSize?.toLocaleString() || "500"}</span>
+                  </div>
+
+                  {protocol.abstract && (
+                    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 text-body-sm text-foreground/90">
+                      {protocol.abstract}
                     </div>
                   )}
 
-                  <Link
-                    href="/#preview"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="size-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
-                    title="Open Full Protocol Inspector in New Tab"
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        toast.info("Downloading Protocol Document", {
+                          description: `Authenticated download: ${protocol.proposalDocumentName || "Proposal.pdf"}`,
+                        })
+                      }}
+                      className="h-8 text-micro font-bold gap-1 cursor-pointer"
+                    >
+                      <Download className="size-3" />
+                      <span>Download Proposal PDF</span>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        toast.info("Downloading Consent Form", {
+                          description: `Authenticated download: ${protocol.consentDocumentName || "Informed_Consent.pdf"}`,
+                        })
+                      }}
+                      className="h-8 text-micro font-bold gap-1 cursor-pointer"
+                    >
+                      <Download className="size-3" />
+                      <span>Informed Consent PDF</span>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="shrink-0 pt-2 lg:pt-0">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setEvaluatingProtocol(protocol)
+                      setEvaluationRecommendation("Clearance Approved")
+                      setDeliberationRemarks("")
+                    }}
+                    className="h-10 px-5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base gap-2 shadow-xs cursor-pointer"
                   >
-                    <ExternalLink className="size-3.5" />
-                  </Link>
+                    <Vote className="size-4" />
+                    <span>Submit Formal Evaluation</span>
+                  </Button>
                 </div>
               </div>
-            )
-          })}
-        </div>
-
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Next Scheduled IRB Meeting Card (Calendar / Quorum) */}
-      <div className="p-4 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] flex flex-col md:flex-row items-center justify-between gap-4" id="calendar">
-        <div className="flex items-center gap-3.5" id="convene">
-          <div className="size-10 rounded-xl bg-primary text-accent flex items-center justify-center shrink-0">
-            <Calendar className="size-5" />
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* SECTION 3: COMPLETED DETERMINATIONS ARCHIVE                         */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {completedEvaluations.length > 0 && (
+        <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs">
+          <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+            <h2 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <CheckCircle2 className="size-5 text-secondary" />
+              <span>Resolved & Sealed Deliberation Register ({completedEvaluations.length})</span>
+            </h2>
+            <span className="text-micro font-mono text-muted-foreground">
+              FIPS 140-3 Sealed
+            </span>
           </div>
-          <div>
-            <h4 className="text-card-title text-primary dark:text-white">
-              Next Scheduled IRB Plenary Session
-            </h4>
-            <p className="text-body-sm text-foreground/70">
-              Thursday, 10:00 AM • Senate Hall Conference Room B & Secure Institutional Teleconference
-            </p>
+
+          <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
+            {completedEvaluations.slice(0, 5).map((protocol) => (
+              <div key={protocol.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-base font-bold text-primary dark:text-sky-300">
+                      {protocol.id}
+                    </span>
+                    <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro border-emerald-500/20 font-bold">
+                      {protocol.reviewerEvaluation?.recommendation || protocol.status}
+                    </Badge>
+                  </div>
+                  <h4 className="font-bold text-base text-foreground line-clamp-1">
+                    {protocol.title}
+                  </h4>
+                  {protocol.committeeRemarks && (
+                    <p className="text-micro text-muted-foreground italic">
+                      &ldquo;{protocol.committeeRemarks}&rdquo;
+                    </p>
+                  )}
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="text-micro font-mono text-emerald-700 dark:text-emerald-400 font-bold block">
+                    {protocol.hasCertificate ? "SHA-256 Sealed" : "Deliberation Closed"}
+                  </span>
+                  <span className="text-micro text-slate-400">
+                    {protocol.submissionDate}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      )}
 
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Button
-            variant="outline"
-            className="h-9 px-3.5 text-micro font-bold rounded-xl border-border"
-          >
-            <MessageSquare className="size-3.5 mr-1.5" />
-            Agenda Dossier
-          </Button>
-          <Button
-            className="h-9 px-3.5 text-micro font-bold rounded-xl bg-primary text-white hover:bg-[#001c3d]"
-          >
-            <Sparkles className="size-3.5 text-accent mr-1.5" />
-            Launch Virtual Chamber
-          </Button>
-        </div>
-      </div>
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* MODAL: ACCEPT REVIEW ASSIGNMENT CONFIRMATION                        */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      <AlertDialog
+        open={!!acceptingProtocol}
+        onOpenChange={(open) => {
+          if (!open) setAcceptingProtocol(null)
+        }}
+      >
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <UserCheck className="size-5 text-secondary" />
+              <span>Accept Research Protocol Review Assignment</span>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2 text-body-sm text-muted-foreground pt-2">
+              <p>
+                You are accepting formal peer review and IRB committee deliberation for:
+              </p>
+              <div className="p-3 rounded-lg bg-muted border border-border font-mono text-table-cell">
+                <span className="font-bold text-foreground">{acceptingProtocol?.id}</span>: {acceptingProtocol?.title}
+              </div>
+              <p>
+                By accepting, you certify zero conflict of interest and agree to evaluate the scientific methodology and human subject safeguards under Declaration of Helsinki principles.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmAccept}
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold"
+            >
+              Confirm Acceptance
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-      {/* ── Section: Committee Roster & Member Standings ─────────────────── */}
-      <div id="roster" className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <Users className="size-5 text-primary dark:text-sky-300" />
-              <span>Institutional Review Board Committee Roster</span>
-            </h3>
-            <p className="text-micro text-muted-foreground">
-              Active voting members accredited under DIU Biomedical & Clinical Ethics Secretariat
-            </p>
-          </div>
-          <Badge className="bg-primary/10 text-primary dark:text-sky-300 border-primary/20 font-mono text-micro font-bold">
-            Quorum: 5 of 5 Present
-          </Badge>
-        </div>
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* MODAL: DECLINE REVIEW ASSIGNMENT (WITH REASON)                      */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      <AlertDialog
+        open={!!decliningProtocol}
+        onOpenChange={(open) => {
+          if (!open) setDecliningProtocol(null)
+        }}
+      >
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-rose-700 dark:text-rose-400">
+              <UserX className="size-5 text-rose-600" />
+              <span>Decline Review Assignment</span>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 text-body-sm text-muted-foreground pt-2">
+              <p>
+                Decline review for <strong className="text-foreground">{decliningProtocol?.id}</strong>. The protocol will be returned to the Institutional Ethics Secretariat for reassignment to another accredited reviewer.
+              </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-micro font-mono text-emerald-600 border-emerald-500/30">
-                Chairperson
-              </Badge>
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <h4 className="font-bold text-body-sm text-foreground">Prof. Charles Montgomery</h4>
-            <p className="text-micro text-muted-foreground">Biomedical Ethics & Clinical Trials</p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-micro text-muted-foreground font-mono">
-              Attendance: 100% (24 Sessions)
-            </div>
-          </Card>
+              <div className="space-y-1.5 text-left">
+                <label className="text-micro font-bold text-foreground">
+                  Reason for Declining:
+                </label>
+                <select
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                  className="w-full h-10 px-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-base text-foreground focus:outline-none"
+                >
+                  {DECLINE_REASONS.map((r, i) => (
+                    <option key={i} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep Assignment</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDecline}
+              className="bg-rose-600 hover:bg-rose-700 text-white font-bold"
+            >
+              Decline & Return to Secretariat
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-micro font-mono text-primary border-primary/30">
-                Vice Chair
-              </Badge>
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <h4 className="font-bold text-body-sm text-foreground">Dr. Sarah Jenkins</h4>
-            <p className="text-micro text-muted-foreground">Pediatrics & Vulnerable Populations</p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-micro text-muted-foreground font-mono">
-              Attendance: 96% (23 Sessions)
-            </div>
-          </Card>
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* MODAL: SUBMIT FORMAL PROTOCOL EVALUATION                            */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      <Dialog
+        open={!!evaluatingProtocol}
+        onOpenChange={(open) => {
+          if (!open) setEvaluatingProtocol(null)
+        }}
+      >
+        <DialogContent className="sm:max-w-lg max-h-[85vh] flex flex-col p-6">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="flex items-center gap-2 text-xl font-black text-primary dark:text-white">
+              <Vote className="size-5 text-secondary" />
+              <span>Submit Committee Ethical Determination</span>
+            </DialogTitle>
+            <DialogDescription className="text-body-sm text-muted-foreground">
+              Official peer evaluation for <strong className="text-foreground">{evaluatingProtocol?.id}</strong> (&ldquo;{evaluatingProtocol?.title}&rdquo;).
+            </DialogDescription>
+          </DialogHeader>
 
-          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-micro font-mono text-muted-foreground border-border">
-                Lay Member
-              </Badge>
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+          <form onSubmit={handleSubmitEvaluation} className="space-y-4 my-2 overflow-y-auto pr-1 max-h-[50vh]">
+            {/* Formal Determination Recommendation */}
+            <div className="space-y-1.5">
+              <label className="text-micro font-bold uppercase tracking-wider text-foreground">
+                Ethical Determination Recommendation
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  {
+                    value: "Clearance Approved",
+                    label: "Approved",
+                    color: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300",
+                  },
+                  {
+                    value: "Revisions Required",
+                    label: "Revisions Due",
+                    color: "border-amber-500 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300",
+                  },
+                  {
+                    value: "Ethics Rejection",
+                    label: "Reject / Capped",
+                    color: "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300",
+                  },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setEvaluationRecommendation(opt.value as any)}
+                    className={`p-2.5 rounded-lg border text-center font-bold text-base transition-all cursor-pointer ${
+                      evaluationRecommendation === opt.value
+                        ? `${opt.color} ring-2 ring-primary/20`
+                        : "border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-muted-foreground"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <h4 className="font-bold text-body-sm text-foreground">Advocate Rafiqul Haque</h4>
-            <p className="text-micro text-muted-foreground">Legal Counsel & Human Rights</p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-micro text-muted-foreground font-mono">
-              Attendance: 92% (22 Sessions)
-            </div>
-          </Card>
 
-          <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-micro font-mono text-purple-600 border-purple-300">
-                Bioethicist
-              </Badge>
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <h4 className="font-bold text-body-sm text-foreground">Dr. Tahmina Akter</h4>
-            <p className="text-micro text-muted-foreground">Data Privacy & Genetic Research</p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-micro text-muted-foreground font-mono">
-              Attendance: 96% (23 Sessions)
-            </div>
-          </Card>
-        </div>
-      </div>
+            {/* Criteria Evaluation Ratings (1 to 5) */}
+            <div className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-micro font-bold text-foreground">Scientific Merit & Design:</span>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setMeritScore(num)}
+                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                        meritScore >= num
+                          ? "bg-primary text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
+              <div className="flex items-center justify-between">
+                <span className="text-micro font-bold text-foreground">Human Subject Protections:</span>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setSafeguardsScore(num)}
+                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                        safeguardsScore >= num
+                          ? "bg-primary text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-micro font-bold text-foreground">Informed Consent Compliance:</span>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setConsentScore(num)}
+                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                        consentScore >= num
+                          ? "bg-primary text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Deliberation Remarks Textarea */}
+            <div className="space-y-1.5">
+              <label className="text-micro font-bold uppercase tracking-wider text-foreground">
+                Official Deliberation Notes & Feedback:
+              </label>
+              <Textarea
+                value={deliberationRemarks}
+                onChange={(e) => setDeliberationRemarks(e.target.value)}
+                placeholder="Detail methodology assessment, participant risk mitigations, or necessary protocol amendments..."
+                className="h-28 text-base"
+                required
+              />
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0 pt-3 border-t border-slate-200/80 dark:border-slate-800">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEvaluatingProtocol(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-1.5"
+              >
+                <Send className="size-4" />
+                <span>Submit & Seal Determination</span>
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </DashboardContainer>
   )
 }

@@ -3,15 +3,15 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import {
-  CheckCheck,
+  LayoutDashboard,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const reviewerNavItems: NavItem[] = [
   {
-    label: "Deliberation Overview",
+    label: "Dashboard",
     href: "/reviewer/dashboard",
-    icon: CheckCheck,
+    icon: LayoutDashboard,
   },
 ]
 

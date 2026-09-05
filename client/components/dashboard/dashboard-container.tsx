@@ -16,10 +16,10 @@ import { cn } from "@/lib/utils"
  * ══════════════════════════════════════════════════════════════════════════════
  */
 export const DASHBOARD_LAYOUT_PADDING =
-  "px-0 py-3 sm:px-3 sm:py-3 md:px-4 md:py-4 lg:px-5 lg:py-5"
+  "px-4 sm:px-8 md:px-10 py-5 sm:py-6"
 
 export const DASHBOARD_CARD_BASE =
-  "rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] px-4 py-5 sm:p-6 shadow-xs select-text"
+  "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-6 shadow-xs select-text"
 
 export interface DashboardContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode

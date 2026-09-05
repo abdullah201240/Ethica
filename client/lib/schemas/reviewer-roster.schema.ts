@@ -44,6 +44,10 @@ export const reviewerRosterSchema = z.object({
   digitalSealHash: z.string(),
   bioStatement: z.string().optional(),
   statusReason: z.string().optional(),
+  mobile: z.string().optional(),
+  officeLocation: z.string().optional(),
+  consultationHours: z.string().optional(),
+  avatarUrl: z.string().optional(),
 })
 
 export type StoredAccreditedReviewer = z.infer<typeof reviewerRosterSchema>

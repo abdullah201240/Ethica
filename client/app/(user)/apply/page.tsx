@@ -343,6 +343,9 @@ export default function ApplyForResearchPermissionPage() {
       title: step1.title,
       department: step1.department,
       board: step1.board,
+      piName: "Dr. Elena Rostova",
+      piEmail: "elena.rostova@diu.edu.bd",
+      piInstitution: "Daffodil International University",
       status: isExpedited ? "Expedited Triage" : "Under Committee Review",
       statusColor: isExpedited ? "blue" : "amber",
       risk: step2.riskTier,
@@ -353,9 +356,28 @@ export default function ApplyForResearchPermissionPage() {
           ? "purple"
           : "blue",
       feeAmountBdt: totalFeeBdt,
+      feeTier,
+      isExpedited,
       paymentMethod,
+      senderNumber,
       transactionId,
       abstract: step2.abstract,
+      studyType: step1.studyType,
+      durationMonths: step1.durationMonths,
+      studyLocation: step1.studyLocation,
+      coInvestigators: step1.coInvestigators,
+      targetSampleSize: step2.targetSampleSize,
+      vulnerablePopulations: step2.vulnerablePopulations,
+      consentType: step2.consentType,
+      dataConfidentiality: step2.dataConfidentiality,
+      proposalDocumentName: step3.protocolProposalName,
+      consentDocumentName: step3.consentFormName,
+      dataToolsDocumentName: step3.dataToolsName,
+      investigatorCvName: step3.investigatorCvName,
+      reviewStep: isExpedited ? 3 : 4,
+      committeeRemarks: isExpedited
+        ? "Expedited triage queued. Fast-track evaluation assigned to Committee Secretariat."
+        : "Formal committee review initialized. Deliberation scheduled for upcoming IRB session.",
     })
 
     setGeneratedProtocolId(protocolId)
@@ -486,10 +508,18 @@ export default function ApplyForResearchPermissionPage() {
 
             <Button
               type="button"
-              onClick={() => router.push("/dashboard")}
-              className="h-10 px-6 text-body-sm font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md w-full sm:w-auto"
+              onClick={() => router.push(`/applications/${generatedProtocolId}`)}
+              className="h-10 px-5 text-body-sm font-bold bg-[#198754] hover:bg-[#157347] text-white rounded-md w-full sm:w-auto cursor-pointer"
             >
-              View Protocol Docket
+              Inspect Application Dossier
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => router.push("/applications")}
+              className="h-10 px-5 text-body-sm font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md w-full sm:w-auto cursor-pointer"
+            >
+              Go to My Applications
             </Button>
           </div>
         </div>

@@ -6,6 +6,7 @@ import {
   Sliders,
   Users,
   ClipboardCheck,
+  ScrollText,
   User,
   ShieldCheck,
   Contact,
@@ -18,6 +19,11 @@ const adminNavItems: NavItem[] = [
     label: "Dashboard",
     href: "/admin/dashboard",
     icon: Sliders,
+  },
+  {
+    label: "Protocol Applications",
+    href: "/admin/protocols",
+    icon: ScrollText,
   },
   {
     label: "Research Categories",

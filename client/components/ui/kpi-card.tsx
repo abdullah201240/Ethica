@@ -97,7 +97,7 @@ export function KpiGridSkeleton({
   return (
     <div
       data-slot="kpi-grid-skeleton"
-      className={cn("grid gap-3 sm:gap-4 w-full px-3 sm:px-0", colClass, className)}
+      className={cn("grid gap-3 sm:gap-4 w-full", colClass, className)}
     >
       {Array.from({ length: count }).map((_, i) => (
         <KpiCardSkeleton key={i} />
@@ -197,7 +197,7 @@ export function KpiGrid({
   return (
     <div
       data-slot="kpi-grid"
-      className={cn("grid gap-3 sm:gap-4 w-full px-3 sm:px-0", colClass, className)}
+      className={cn("grid gap-3 sm:gap-4 w-full", colClass, className)}
       {...props}
     >
       {children}

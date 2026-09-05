@@ -57,9 +57,7 @@ export async function POST(request: NextRequest) {
 
       const validated = validation.data
       const created = serverDb.protocols.create({
-        title: validated.title,
-        department: validated.department,
-        board: validated.board,
+        ...validated,
         status: validated.isExpeditedTriage ? "Expedited Triage" : "Under Committee Review",
         statusColor: validated.isExpeditedTriage ? "blue" : "amber",
         risk: validated.riskTier,
@@ -69,10 +67,11 @@ export async function POST(request: NextRequest) {
             : validated.riskTier === "Greater Than Minimal"
             ? "purple"
             : "blue",
-        feeAmountBdt: validated.feeAmountBdt,
-        paymentMethod: validated.paymentMethod,
-        transactionId: validated.transactionId,
-        abstract: validated.abstract,
+        isExpedited: validated.isExpeditedTriage,
+        proposalDocumentName: validated.protocolProposalName,
+        consentDocumentName: validated.consentFormName,
+        dataToolsDocumentName: validated.dataToolsName,
+        investigatorCvName: validated.investigatorCvName,
       })
 
       return NextResponse.json(

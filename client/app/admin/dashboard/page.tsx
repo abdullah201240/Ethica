@@ -348,12 +348,14 @@ export default function AdminDashboardPage() {
     <DashboardContainer>
       {/* Centralized Institutional Metrics Grid */}
       <KpiGrid columns={4}>
-        <KpiCard
-          label="Total Institution Protocols"
-          value={248}
-          icon={Building2}
-          color="navy"
-        />
+        <Link href="/admin/protocols" className="block focus:outline-none">
+          <KpiCard
+            label="Total Institution Protocols"
+            value={248}
+            icon={Building2}
+            color="navy"
+          />
+        </Link>
         <KpiCard
           label="Clearance Compliance"
           value="100%"
@@ -406,9 +408,12 @@ export default function AdminDashboardPage() {
                   <span className="font-mono text-micro font-bold px-1.5 py-0.5 rounded bg-muted text-foreground/85">
                     {log.txId}
                   </span>
-                  <span className="font-mono text-micro font-bold px-1.5 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
+                  <Link
+                    href={`/admin/protocols/${log.protocol}`}
+                    className="font-mono text-micro font-bold px-1.5 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300 hover:underline"
+                  >
                     {log.protocol}
-                  </span>
+                  </Link>
                   <span className="text-micro font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                     <CheckCircle2 className="size-3" />
                     {log.status}
