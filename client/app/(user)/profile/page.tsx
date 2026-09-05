@@ -461,7 +461,7 @@ export default function InvestigatorProfilePage() {
         sortable: true,
         headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300">
+          <span className="font-mono text-base font-bold text-primary dark:text-sky-300">
             {row.id}
           </span>
         ),
@@ -476,7 +476,7 @@ export default function InvestigatorProfilePage() {
             <span className="font-bold text-base text-slate-900 dark:text-slate-100 line-clamp-1">
               {row.title}
             </span>
-            <div className="flex items-center gap-2 text-base text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-2 text-base text-muted-foreground">
               <span>{row.board}</span>
               <span>•</span>
               <span className="font-mono">{row.riskLevel}</span>
@@ -599,8 +599,8 @@ export default function InvestigatorProfilePage() {
                     {/* ── Profile Picture Upload Slide-over Sheet (Two Options) ──────── */}
                     <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
                       <SheetHeader className="p-0 pb-3">
-                        <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
-                          <ImageIcon className="size-5 text-[#198754]" />
+                        <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
+                          <ImageIcon className="size-5 text-secondary" />
                           Update Profile Picture
                         </SheetTitle>
                         <SheetDescription className="text-base text-muted-foreground">
@@ -618,14 +618,14 @@ export default function InvestigatorProfilePage() {
                         <TabsList className="grid grid-cols-2 w-full h-10 p-1 bg-muted rounded-lg">
                           <TabsTrigger
                             value="file"
-                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
+                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-primary dark:data-[active=true]:text-white"
                           >
                             <Upload className="size-3.5" />
                             Option 1: Upload from Device
                           </TabsTrigger>
                           <TabsTrigger
                             value="url"
-                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
+                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-primary dark:data-[active=true]:text-white"
                           >
                             <LinkIcon className="size-3.5" />
                             Option 2: Web Image URL
@@ -644,7 +644,7 @@ export default function InvestigatorProfilePage() {
                                 : "border-border/80 bg-muted/30 hover:bg-muted/50"
                             }`}
                           >
-                            <div className="size-12 rounded-full bg-[#198754]/10 text-[#198754] flex items-center justify-center">
+                            <div className="size-12 rounded-full bg-[#198754]/10 text-secondary flex items-center justify-center">
                               <Upload className="size-6" />
                             </div>
                             <div className="space-y-1">
@@ -863,7 +863,7 @@ export default function InvestigatorProfilePage() {
                 {/* Name, Credentials, and Badges */}
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+                    <h1 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                       {profile.name}
                     </h1>
                     <Badge
@@ -1156,7 +1156,7 @@ export default function InvestigatorProfilePage() {
         <div className="space-y-6">
           {/* Institutional Ethics Accreditations */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-base font-bold text-[#002752] dark:text-white flex items-center gap-2">
+            <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
               <Award className="size-4 text-[#E0C23C]" />
               Ethics Certifications & Training
             </h3>
@@ -1202,8 +1202,8 @@ export default function InvestigatorProfilePage() {
 
           {/* Cryptographic Signature & PKI Seal */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-base font-bold text-[#002752] dark:text-white flex items-center gap-2">
-              <ShieldCheck className="size-4 text-[#198754]" />
+            <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
+              <ShieldCheck className="size-4 text-secondary" />
               FIPS 140-3 Cryptographic Seal
             </h3>
 
@@ -1216,7 +1216,7 @@ export default function InvestigatorProfilePage() {
                 <span className="text-muted-foreground block text-base uppercase font-sans font-bold">
                   Public SHA-256 Fingerprint:
                 </span>
-                <span className="text-[#002752] dark:text-sky-300 font-bold block break-all">
+                <span className="text-primary dark:text-sky-300 font-bold block break-all">
                   {pkiFingerprint}
                 </span>
               </div>

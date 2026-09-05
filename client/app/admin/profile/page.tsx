@@ -180,7 +180,7 @@ export default function AdminProfilePage() {
         sortable: true,
         headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300">
+          <span className="font-mono text-base font-bold text-primary dark:text-sky-300">
             {row.id}
           </span>
         ),
@@ -197,7 +197,7 @@ export default function AdminProfilePage() {
             ) : row.deviceType === "mobile" ? (
               <Smartphone className="size-4 text-slate-400 shrink-0" />
             ) : (
-              <Fingerprint className="size-4 text-[#002752] dark:text-sky-400 shrink-0" />
+              <Fingerprint className="size-4 text-primary dark:text-sky-400 shrink-0" />
             )}
             <div className="space-y-0.5 min-w-0">
               <span className="font-bold text-base text-slate-900 dark:text-slate-100 block truncate">
@@ -241,7 +241,7 @@ export default function AdminProfilePage() {
         sortable: true,
         headerClassName: "w-40",
         cell: ({ row }) => (
-          <div className="text-base text-slate-500 dark:text-slate-400 flex items-center gap-1">
+          <div className="text-base text-muted-foreground flex items-center gap-1">
             <Clock className="size-3" />
             <span>{row.lastActive}</span>
           </div>
@@ -290,11 +290,11 @@ export default function AdminProfilePage() {
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                       Revoke Cryptographic Session
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-base sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Are you sure you want to terminate session <strong className="text-slate-900 dark:text-white">{row.id}</strong> on <strong className="text-slate-900 dark:text-white">{row.device}</strong>?
+                      Are you sure you want to terminate session <strong className="text-foreground">{row.id}</strong> on <strong className="text-foreground">{row.device}</strong>?
                       The hardware token and mTLS authorization certificate will be immediately invalidated across the DIU network.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -353,7 +353,7 @@ export default function AdminProfilePage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white">
+                    <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white">
                       Dr. Marcus Vance
                     </h2>
                     <Badge
@@ -390,7 +390,7 @@ export default function AdminProfilePage() {
                 <strong className="text-slate-800 dark:text-slate-100 font-bold block text-base">
                   MD, PhD in Bioethics & Health Policy
                 </strong>
-                <span className="text-slate-500 dark:text-slate-400 block">
+                <span className="text-muted-foreground block">
                   Fellow of the International Bioethics Consortium
                 </span>
               </div>
@@ -400,7 +400,7 @@ export default function AdminProfilePage() {
                 <strong className="text-slate-800 dark:text-slate-100 font-bold block text-base">
                   Daffodil International University
                 </strong>
-                <span className="text-slate-500 dark:text-slate-400 block">
+                <span className="text-muted-foreground block">
                   Institutional Review Board (IRB00014298)
                 </span>
               </div>
@@ -490,7 +490,7 @@ export default function AdminProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
                   <span className="text-slate-400 block font-medium">Institutional Email & Phone:</span>
-                  <div className="text-slate-900 dark:text-white font-mono font-semibold">
+                  <div className="text-foreground font-mono font-semibold">
                     admin.secretariat@diu.edu.bd
                   </div>
                   <div className="text-slate-600 dark:text-slate-400 font-mono">
@@ -500,10 +500,10 @@ export default function AdminProfilePage() {
 
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
                   <span className="text-slate-400 block font-medium">Physical Office & Consultation Hours:</span>
-                  <div className="text-slate-800 dark:text-slate-200 font-medium">
+                  <div className="text-foreground font-medium">
                     {contactForm.office}
                   </div>
-                  <div className="text-slate-500 dark:text-slate-400 text-base">
+                  <div className="text-muted-foreground text-base">
                     {contactForm.officeHours}
                   </div>
                 </div>
@@ -515,14 +515,14 @@ export default function AdminProfilePage() {
           <DashboardCard className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#002752] dark:text-white">
+                <h3 className="text-base font-bold text-primary dark:text-white">
                   Regulatory Delegations & Committee Jurisdiction
                 </h3>
                 <p className="text-base text-slate-400 mt-0.5">
                   Standing delegated authorities under the DIU Research Ethics Charter
                 </p>
               </div>
-              <Badge variant="secondary" className="bg-[#002752]/10 text-[#002752] dark:text-sky-300 font-mono text-base">
+              <Badge variant="secondary" className="bg-[#002752]/10 text-primary dark:text-sky-300 font-mono text-base">
                 Full Delegation Active
               </Badge>
             </div>
@@ -555,7 +555,7 @@ export default function AdminProfilePage() {
                   className="p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 space-y-1"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-foreground">
                       {item.board}
                     </span>
                     <span className="size-2 rounded-full bg-[#198754]" />
@@ -575,8 +575,8 @@ export default function AdminProfilePage() {
           <DashboardCard className="space-y-5">
             <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <KeyRound className="size-4 text-[#198754]" />
-                <h3 className="text-base font-bold uppercase tracking-wider text-[#002752] dark:text-white">
+                <KeyRound className="size-4 text-secondary" />
+                <h3 className="text-base font-bold uppercase tracking-wider text-primary dark:text-white">
                   Cryptographic Authority
                 </h3>
               </div>
@@ -588,7 +588,7 @@ export default function AdminProfilePage() {
             <div className="space-y-3 text-base">
               <div>
                 <span className="text-slate-400 block font-medium">Digital Certificate Serial:</span>
-                <span className="font-mono text-base font-bold text-slate-900 dark:text-white block mt-0.5">
+                <span className="font-mono text-base font-bold text-foreground block mt-0.5">
                   DIU-CA-2026-X509-ROOT-001
                 </span>
               </div>
@@ -596,7 +596,7 @@ export default function AdminProfilePage() {
               <div>
                 <span className="text-slate-400 block font-medium">ECDSA Key Fingerprint (SHA-256):</span>
                 <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 mt-1 space-y-2">
-                  <div className="font-mono text-base font-bold text-slate-800 dark:text-slate-200 break-all leading-relaxed">
+                  <div className="font-mono text-base font-bold text-foreground break-all leading-relaxed">
                     {publicFingerprint}
                   </div>
                   <Button
@@ -631,9 +631,9 @@ export default function AdminProfilePage() {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between text-base text-slate-500 dark:text-slate-400 pt-1">
+              <div className="flex items-center justify-between text-base text-muted-foreground pt-1">
                 <span>Validity Window:</span>
-                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                <span className="font-mono font-bold text-foreground">
                   Jan 01, 2026 – Dec 31, 2028
                 </span>
               </div>
@@ -642,7 +642,7 @@ export default function AdminProfilePage() {
 
           {/* Governance & Notification Preferences */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-base font-bold uppercase tracking-wider text-[#002752] dark:text-white border-b border-slate-200/80 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold uppercase tracking-wider text-primary dark:text-white border-b border-slate-200/80 dark:border-slate-800 pb-3">
               Secretariat Notification Dispatch
             </h3>
 
@@ -674,7 +674,7 @@ export default function AdminProfilePage() {
                   className="flex items-start justify-between gap-3 p-2.5 rounded-lg border border-slate-200/60 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors"
                 >
                   <div className="space-y-0.5">
-                    <span className="font-bold text-slate-800 dark:text-slate-200 block">
+                    <span className="font-bold text-foreground block">
                       {setting.label}
                     </span>
                     <span className="text-base text-slate-400 block">

@@ -24,14 +24,14 @@ export function InteractivePreview() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             WORKSPACE
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               EXPLORE THE END-TO-END <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 PROTOCOL WORKSPACE
@@ -70,13 +70,13 @@ export function InteractivePreview() {
               </div>
 
               {/* URL Address Bar */}
-              <div className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-[0.7rem] sm:text-xs text-slate-500 dark:text-slate-400 font-mono shadow-2xs max-w-xs sm:max-w-md w-full mx-2">
-                <Lock className="size-3 text-[#198754] shrink-0" />
+              <div className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-micro sm:text-xs text-muted-foreground font-mono shadow-2xs max-w-xs sm:max-w-md w-full mx-2">
+                <Lock className="size-3 text-secondary shrink-0" />
                 <span className="truncate">https://ethica.diu.edu.bd/protocols/ETH-2026-MED-0419</span>
               </div>
 
               {/* Status Indicator */}
-              <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#198754]">
+              <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-secondary">
                 <ShieldCheck className="size-3.5" />
                 <span>Verified Protocol Hub</span>
               </div>

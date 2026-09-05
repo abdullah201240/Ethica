@@ -47,7 +47,7 @@ export function HeroSection() {
           <div className="lg:col-span-7 text-left space-y-6 sm:space-y-7">
             
             {/* Main Hero Headline - One Level Larger Prominent Typography */}
-            <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl lg:text-[4.45rem] xl:text-[5rem] 2xl:text-[5.45rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.04] uppercase animate-fade-in-up [animation-delay:100ms]">
+            <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl lg:text-[4.45rem] xl:text-[5rem] 2xl:text-[5.45rem] font-black tracking-tight text-primary dark:text-white leading-[1.04] uppercase animate-fade-in-up [animation-delay:100ms]">
               THE COMPLETE PLATFORM FOR <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">RESEARCH ETHICS</span> &amp; <br />
               CLEARANCE APPROVAL

@@ -23,7 +23,7 @@ const STEPS = [
       pill: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
       container:
         "bg-gradient-to-b from-emerald-50/80 via-emerald-100/30 to-white dark:from-emerald-950/30 dark:to-card border-emerald-200/60 dark:border-emerald-800/40",
-      iconColor: "text-[#198754] dark:text-emerald-400",
+      iconColor: "text-secondary dark:text-emerald-400",
       glow: "from-emerald-400/20 to-teal-300/10",
       accentDot: "bg-[#198754]",
     },
@@ -88,10 +88,10 @@ const STEPS = [
     highlights: ["Cryptographic seal", "Global QR verification"],
     icon: ShieldCheck,
     theme: {
-      pill: "bg-[#002752]/10 text-[#002752] dark:text-sky-300 border-[#002752]/20",
+      pill: "bg-[#002752]/10 text-primary dark:text-sky-300 border-[#002752]/20",
       container:
         "bg-gradient-to-b from-slate-100/80 via-blue-100/30 to-white dark:from-slate-900/40 dark:to-card border-slate-300/70 dark:border-slate-700/60",
-      iconColor: "text-[#002752] dark:text-sky-400",
+      iconColor: "text-primary dark:text-sky-400",
       glow: "from-blue-600/20 to-[#002752]/15",
       accentDot: "bg-[#002752]",
     },
@@ -118,14 +118,14 @@ export function WorkflowSteps() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             LIFECYCLE
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               THE 5-STAGE RESEARCH ETHICS <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 GOVERNANCE LIFECYCLE
@@ -163,7 +163,7 @@ export function WorkflowSteps() {
                   <div className="flex items-center justify-between pb-4">
                     <div className="flex items-center gap-2">
                       <span className={`size-2 rounded-full ${item.theme.accentDot}`} />
-                      <span className="font-mono text-xs font-black text-slate-500 dark:text-slate-400 tracking-wider">
+                      <span className="font-mono text-xs font-black text-muted-foreground tracking-wider">
                         STAGE {item.step}
                       </span>
                     </div>
@@ -195,10 +195,10 @@ export function WorkflowSteps() {
 
                   {/* Title & Description */}
                   <div className="pt-2 text-center sm:text-left space-y-1.5">
-                    <h3 className="text-base sm:text-lg font-black text-[#002752] dark:text-white tracking-tight">
+                    <h3 className="text-base sm:text-lg font-black text-primary dark:text-white tracking-tight">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                    <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                       {item.description}
                     </p>
                   </div>
@@ -211,7 +211,7 @@ export function WorkflowSteps() {
                       key={fIdx}
                       className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300"
                     >
-                      <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                      <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                       <span className="leading-tight font-medium">{feat}</span>
                     </div>
                   ))}

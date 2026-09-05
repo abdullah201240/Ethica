@@ -372,7 +372,7 @@ export default function ApplyForResearchPermissionPage() {
       <DashboardContainer className="py-4">
         <div className="rounded-none sm:rounded-2xl border-y sm:border border-border/75 bg-card p-6 sm:p-10 shadow-sm space-y-8 text-center max-w-3xl mx-auto">
           {/* Animated Success Seal */}
-          <div className="size-20 sm:size-24 rounded-full bg-[#198754]/10 text-[#198754] flex items-center justify-center mx-auto ring-8 ring-[#198754]/5">
+          <div className="size-20 sm:size-24 rounded-full bg-[#198754]/10 text-secondary flex items-center justify-center mx-auto ring-8 ring-[#198754]/5">
             <CheckCircle2 className="size-10 sm:size-12" />
           </div>
 
@@ -383,7 +383,7 @@ export default function ApplyForResearchPermissionPage() {
             >
               Application Submitted & Review Docket Queued
             </Badge>
-            <h1 className="text-2xl sm:text-4xl font-black text-[#002752] dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-black text-primary dark:text-white tracking-tight">
               Ethical Clearance Protocol Registered
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
@@ -397,16 +397,16 @@ export default function ApplyForResearchPermissionPage() {
           <div className="rounded-xl border border-border/75 bg-muted/30 p-5 text-left space-y-4 text-xs font-medium">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-3">
               <div>
-                <span className="text-[11px] text-muted-foreground block uppercase tracking-wider font-bold">
+                <span className="text-micro text-muted-foreground block uppercase tracking-wider font-bold">
                   Permanent Protocol Reference:
                 </span>
-                <span className="font-mono text-base font-black text-[#002752] dark:text-sky-300">
+                <span className="font-mono text-base font-black text-primary dark:text-sky-300">
                   {generatedProtocolId}
                 </span>
               </div>
               <Badge
                 variant="outline"
-                className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 text-[11px] font-bold"
+                className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 text-micro font-bold"
               >
                 {isExpedited ? "Expedited Triage Track" : "Under Committee Review"}
               </Badge>
@@ -414,27 +414,27 @@ export default function ApplyForResearchPermissionPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="text-muted-foreground block text-[11px]">Research Scope:</span>
+                <span className="text-muted-foreground block text-micro">Research Scope:</span>
                 <strong className="text-foreground block line-clamp-2">{step1.title}</strong>
               </div>
               <div>
-                <span className="text-muted-foreground block text-[11px]">Governing Board:</span>
+                <span className="text-muted-foreground block text-micro">Governing Board:</span>
                 <strong className="text-foreground block">{step1.board}</strong>
               </div>
               <div>
-                <span className="text-muted-foreground block text-[11px]">Ethics Risk Category:</span>
+                <span className="text-muted-foreground block text-micro">Ethics Risk Category:</span>
                 <strong className="text-foreground block">{step2.riskTier}</strong>
               </div>
               <div>
-                <span className="text-muted-foreground block text-[11px]">
+                <span className="text-muted-foreground block text-micro">
                   Institutional Fee Paid (Bangladeshi Taka):
                 </span>
-                <span className="font-bold text-[#198754] text-sm block">
+                <span className="font-bold text-secondary text-sm block">
                   ৳ {totalFeeBdt.toLocaleString()} BDT ({paymentMethod.toUpperCase()})
                 </span>
               </div>
               <div className="sm:col-span-2">
-                <span className="text-muted-foreground block text-[11px]">
+                <span className="text-muted-foreground block text-micro">
                   Gateway Transaction ID (TrxID):
                 </span>
                 <span className="font-mono font-bold text-foreground block">
@@ -478,7 +478,7 @@ export default function ApplyForResearchPermissionPage() {
                   description: `Official BDT fee payment receipt token for ${generatedProtocolId} exported as PDF.`,
                 })
               }}
-              className="h-10 px-5 text-xs font-bold rounded-md w-full sm:w-auto text-[#002752] dark:text-sky-300"
+              className="h-10 px-5 text-xs font-bold rounded-md w-full sm:w-auto text-primary dark:text-sky-300"
             >
               <Download className="size-3.5 mr-2" />
               Download BDT Fee Receipt
@@ -513,16 +513,16 @@ export default function ApplyForResearchPermissionPage() {
                 <div
                   className={`flex items-center gap-2 sm:gap-2.5 shrink-0 px-2.5 py-1.5 rounded-lg transition-colors ${
                     isActive
-                      ? "bg-[#002752]/10 dark:bg-white/10 text-[#002752] dark:text-white font-bold"
+                      ? "bg-[#002752]/10 dark:bg-white/10 text-primary dark:text-white font-bold"
                       : isDone
-                      ? "text-[#198754] font-semibold"
+                      ? "text-secondary font-semibold"
                       : "text-muted-foreground opacity-60"
                   }`}
                 >
                   <div
                     className={`size-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                       isActive
-                        ? "bg-[#002752] dark:bg-white text-white dark:text-[#002752] shadow-xs"
+                        ? "bg-[#002752] dark:bg-white text-white dark:text-primary shadow-xs"
                         : isDone
                         ? "bg-[#198754] text-white"
                         : "bg-muted text-muted-foreground"
@@ -535,7 +535,7 @@ export default function ApplyForResearchPermissionPage() {
                       <Icon className="size-3.5 shrink-0" />
                       {s.label}
                     </span>
-                    <span className="text-[10px] opacity-75">Step {s.step} of 5</span>
+                    <span className="text-micro opacity-75">Step {s.step} of 5</span>
                   </div>
                 </div>
 
@@ -559,7 +559,7 @@ export default function ApplyForResearchPermissionPage() {
       {/* ── Quick Demo Autofill Helper Banner ────────────────────────────── */}
       <div className="w-full p-3.5 sm:p-4 rounded-none sm:rounded-xl border-y sm:border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-900 dark:text-emerald-300 font-medium">
-          <Sparkles className="size-4 text-[#198754] shrink-0" />
+          <Sparkles className="size-4 text-secondary shrink-0" />
           <span>Testing ethics clearance intake? Populate verified protocol metadata & BDT payment credentials:</span>
         </div>
         <Button
@@ -579,7 +579,7 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 1 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                 Step 1: Protocol Scope & Ethics Governance Board
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -592,7 +592,7 @@ export default function ApplyForResearchPermissionPage() {
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center justify-between">
                   <span>Full Scientific Protocol Title *</span>
-                  <span className="text-[11px] text-muted-foreground">Min 5 characters</span>
+                  <span className="text-micro text-muted-foreground">Min 5 characters</span>
                 </label>
                 <Input
                   value={step1.title}
@@ -601,7 +601,7 @@ export default function ApplyForResearchPermissionPage() {
                   className={`h-10 text-xs ${stepErrors.title ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.title && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.title}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.title}</p>
                 )}
               </div>
 
@@ -617,7 +617,7 @@ export default function ApplyForResearchPermissionPage() {
                     className={`h-10 text-xs ${stepErrors.department ? "border-rose-500" : ""}`}
                   />
                   {stepErrors.department && (
-                    <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.department}</p>
+                    <p className="text-micro text-rose-600 font-semibold">{stepErrors.department}</p>
                   )}
                 </div>
 
@@ -670,9 +670,9 @@ export default function ApplyForResearchPermissionPage() {
                       >
                         <div className="flex items-center justify-between mb-1.5 w-full">
                           <strong className="text-xs font-bold text-foreground">{b}</strong>
-                          {isSelected && <CheckCircle2 className="size-4 text-[#198754]" />}
+                          {isSelected && <CheckCircle2 className="size-4 text-secondary" />}
                         </div>
-                        <p className="text-[11px] text-muted-foreground leading-snug">
+                        <p className="text-micro text-muted-foreground leading-snug">
                           {b === "Biomedical IRB"
                             ? "Clinical trials, biological samples, medical devices, invasive diagnostics."
                             : b === "Social & Behavioral Board"
@@ -740,7 +740,7 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 2 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                 Step 2: Scientific Methodology & Ethics Risk Assessment
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -753,7 +753,7 @@ export default function ApplyForResearchPermissionPage() {
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center justify-between">
                   <span>Executive Abstract & Clinical / Social Objectives *</span>
-                  <span className="text-[11px] text-muted-foreground">Min 30 characters</span>
+                  <span className="text-micro text-muted-foreground">Min 30 characters</span>
                 </label>
                 <Textarea
                   value={step2.abstract}
@@ -762,7 +762,7 @@ export default function ApplyForResearchPermissionPage() {
                   className={`min-h-28 text-xs ${stepErrors.abstract ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.abstract && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.abstract}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.abstract}</p>
                 )}
               </div>
 
@@ -770,7 +770,7 @@ export default function ApplyForResearchPermissionPage() {
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-foreground flex items-center justify-between">
                   <span>Target Participant Cohort Size *</span>
-                  <span className="text-[11px] text-muted-foreground">Statistical sample cohort</span>
+                  <span className="text-micro text-muted-foreground">Statistical sample cohort</span>
                 </label>
                 <Input
                   type="number"
@@ -789,7 +789,7 @@ export default function ApplyForResearchPermissionPage() {
                   className={`h-10 text-xs font-mono ${stepErrors.targetSampleSize ? "border-rose-500" : ""}`}
                 />
                 {stepErrors.targetSampleSize && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.targetSampleSize}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.targetSampleSize}</p>
                 )}
               </div>
 
@@ -799,7 +799,7 @@ export default function ApplyForResearchPermissionPage() {
                   <label className="text-xs font-bold text-foreground">
                     Informed Consent Architecture & Procedure *
                   </label>
-                  <span className="text-[11px] text-muted-foreground">
+                  <span className="text-micro text-muted-foreground">
                     Institutional ethics consent standard
                   </span>
                 </div>
@@ -830,14 +830,14 @@ export default function ApplyForResearchPermissionPage() {
                         <div className="flex items-center justify-between mb-1.5 w-full">
                           <strong className="text-xs font-bold text-foreground">{cp.type}</strong>
                           {isSelected ? (
-                            <CheckCircle2 className="size-4 text-[#198754] shrink-0 ml-2" />
+                            <CheckCircle2 className="size-4 text-secondary shrink-0 ml-2" />
                           ) : (
                             <Badge variant="outline" className="text-[9px] font-semibold">
                               {cp.badge}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-[11px] text-muted-foreground leading-snug">
+                        <p className="text-micro text-muted-foreground leading-snug">
                           {cp.description}
                         </p>
                       </Button>
@@ -845,7 +845,7 @@ export default function ApplyForResearchPermissionPage() {
                   })}
                 </div>
                 {stepErrors.consentType && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.consentType}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.consentType}</p>
                 )}
               </div>
 
@@ -884,9 +884,9 @@ export default function ApplyForResearchPermissionPage() {
                       >
                         <div className="flex items-center justify-between mb-1.5 w-full">
                           <strong className="text-xs font-bold text-foreground">{tier}</strong>
-                          {isSelected && <CheckCircle2 className="size-4 text-[#198754]" />}
+                          {isSelected && <CheckCircle2 className="size-4 text-secondary" />}
                         </div>
-                        <p className="text-[11px] text-muted-foreground leading-snug">
+                        <p className="text-micro text-muted-foreground leading-snug">
                           {tier === "Exempt - Fast Track"
                             ? "Anonymous educational surveys, non-invasive observations, public archival data."
                             : tier === "Minimal Risk"
@@ -898,7 +898,7 @@ export default function ApplyForResearchPermissionPage() {
                   })}
                 </div>
                 {stepErrors.riskTier && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.riskTier}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.riskTier}</p>
                 )}
               </div>
 
@@ -922,7 +922,7 @@ export default function ApplyForResearchPermissionPage() {
                   className={`min-h-20 text-xs ${stepErrors.dataConfidentiality ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.dataConfidentiality && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.dataConfidentiality}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.dataConfidentiality}</p>
                 )}
               </div>
             </div>
@@ -933,7 +933,7 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 3 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                 Step 3: Protocol Dossier & Document Attachments
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -952,18 +952,18 @@ export default function ApplyForResearchPermissionPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <FileText className="size-5 text-[#002752] dark:text-sky-400" />
+                    <FileText className="size-5 text-primary dark:text-sky-400" />
                     <strong className="text-xs font-bold text-foreground">
                       Research Protocol Proposal *
                     </strong>
                   </div>
                   {step3.protocolProposalName && (
-                    <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                    <Badge variant="outline" className="text-micro text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
                       Attached
                     </Badge>
                   )}
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Complete scientific proposal with background, aims, methodology, and references (.pdf or .docx).
                 </p>
 
@@ -986,7 +986,7 @@ export default function ApplyForResearchPermissionPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setStep3((p) => ({ ...p, protocolProposalName: "" }))}
-                      className="h-6 px-2 text-[10px] text-rose-600"
+                      className="h-6 px-2 text-micro text-rose-600"
                     >
                       Remove
                     </Button>
@@ -1004,7 +1004,7 @@ export default function ApplyForResearchPermissionPage() {
                   </Button>
                 )}
                 {stepErrors.protocolProposalName && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.protocolProposalName}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.protocolProposalName}</p>
                 )}
               </div>
 
@@ -1018,18 +1018,18 @@ export default function ApplyForResearchPermissionPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <FileCheck2 className="size-5 text-[#198754]" />
+                    <FileCheck2 className="size-5 text-secondary" />
                     <strong className="text-xs font-bold text-foreground">
                       Informed Consent Form (ICF) *
                     </strong>
                   </div>
                   {step3.consentFormName && (
-                    <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                    <Badge variant="outline" className="text-micro text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
                       Attached
                     </Badge>
                   )}
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Participant information sheet and signed consent template in Bengali and English (.pdf).
                 </p>
 
@@ -1052,7 +1052,7 @@ export default function ApplyForResearchPermissionPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setStep3((p) => ({ ...p, consentFormName: "" }))}
-                      className="h-6 px-2 text-[10px] text-rose-600"
+                      className="h-6 px-2 text-micro text-rose-600"
                     >
                       Remove
                     </Button>
@@ -1070,7 +1070,7 @@ export default function ApplyForResearchPermissionPage() {
                   </Button>
                 )}
                 {stepErrors.consentFormName && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.consentFormName}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.consentFormName}</p>
                 )}
               </div>
 
@@ -1080,11 +1080,11 @@ export default function ApplyForResearchPermissionPage() {
                   <span className="text-xs font-bold text-foreground">
                     Data Collection Tools / Survey Instruments
                   </span>
-                  <Badge variant="secondary" className="text-[10px]">
+                  <Badge variant="secondary" className="text-micro">
                     Optional
                   </Badge>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Questionnaires, interview guides, or clinical diagnostic measurement forms.
                 </p>
 
@@ -1106,7 +1106,7 @@ export default function ApplyForResearchPermissionPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setStep3((p) => ({ ...p, dataToolsName: "" }))}
-                      className="h-6 px-2 text-[10px] text-rose-600"
+                      className="h-6 px-2 text-micro text-rose-600"
                     >
                       Remove
                     </Button>
@@ -1131,11 +1131,11 @@ export default function ApplyForResearchPermissionPage() {
                   <span className="text-xs font-bold text-foreground">
                     Investigator CV & CITI / GCP Certification
                   </span>
-                  <Badge variant="secondary" className="text-[10px]">
+                  <Badge variant="secondary" className="text-micro">
                     Optional
                   </Badge>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Up-to-date academic curriculum vitae or Good Clinical Practice credential.
                 </p>
 
@@ -1157,7 +1157,7 @@ export default function ApplyForResearchPermissionPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setStep3((p) => ({ ...p, investigatorCvName: "" }))}
-                      className="h-6 px-2 text-[10px] text-rose-600"
+                      className="h-6 px-2 text-micro text-rose-600"
                     >
                       Remove
                     </Button>
@@ -1185,7 +1185,7 @@ export default function ApplyForResearchPermissionPage() {
             <div className="border-b border-border/70 pb-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                     Step 4: Institutional Review Processing Fee in BDT (Bangladeshi Taka ৳)
                   </h2>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -1227,11 +1227,11 @@ export default function ApplyForResearchPermissionPage() {
                     >
                       <div className="flex items-center justify-between mb-1 w-full">
                         <strong className="text-xs font-bold text-foreground">{tier.label}</strong>
-                        <span className="font-mono text-sm font-black text-[#198754]">
+                        <span className="font-mono text-sm font-black text-secondary">
                           ৳ {tier.amountBdt.toLocaleString()} BDT
                         </span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-micro text-muted-foreground">
                         {key === "student"
                           ? "Undergraduate & Master's dissertations with faculty co-investigator."
                           : key === "faculty"
@@ -1252,7 +1252,7 @@ export default function ApplyForResearchPermissionPage() {
                 <strong className="text-xs font-bold text-amber-800 dark:text-amber-300 block">
                   Optional Expedited Fast-Track Triage (+ ৳ {EXPEDITED_SURCHARGE_BDT.toLocaleString()} BDT)
                 </strong>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-micro text-muted-foreground">
                   Accelerated preliminary review with guaranteed committee docket placement within 72 hours.
                 </p>
               </div>
@@ -1275,14 +1275,14 @@ export default function ApplyForResearchPermissionPage() {
             {/* Total Fee Voucher Summary */}
             <div className="p-4 rounded-xl border border-border/80 bg-muted/40 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-bold block">
+                <span className="text-micro text-muted-foreground uppercase tracking-wider font-bold block">
                   Total Institutional Charge Payable:
                 </span>
-                <span className="text-2xl sm:text-3xl font-black text-[#002752] dark:text-white tabular-nums">
+                <span className="text-2xl sm:text-3xl font-black text-primary dark:text-white tabular-nums">
                   ৳ {totalFeeBdt.toLocaleString()} <span className="text-sm font-bold text-muted-foreground">BDT</span>
                 </span>
               </div>
-              <div className="text-right text-[11px] text-muted-foreground space-y-0.5">
+              <div className="text-right text-micro text-muted-foreground space-y-0.5">
                 <p>Base Protocol Review: ৳ {baseFeeBdt.toLocaleString()} BDT</p>
                 {isExpedited && <p className="text-amber-700 font-semibold">+ Fast-Track Surcharge: ৳ {EXPEDITED_SURCHARGE_BDT.toLocaleString()} BDT</p>}
                 <p className="text-emerald-700 dark:text-emerald-400 font-bold">VAT / Institutional Levy: Included</p>
@@ -1319,7 +1319,7 @@ export default function ApplyForResearchPermissionPage() {
                       }`}
                     >
                       <span className="font-bold text-xs text-foreground block">{pm.label}</span>
-                      <span className="text-[10px] text-muted-foreground block">{pm.type}</span>
+                      <span className="text-micro text-muted-foreground block">{pm.type}</span>
                     </Button>
                   )
                 })}
@@ -1331,7 +1331,7 @@ export default function ApplyForResearchPermissionPage() {
               <span className="font-bold text-foreground block">
                 Payment Instructions for {paymentMethod === "bkash" ? "bKash Merchant Pay" : paymentMethod === "nagad" ? "Nagad Merchant" : paymentMethod === "rocket" ? "Rocket DBBL" : paymentMethod === "bank_transfer" ? "Bank Challan" : "Card Payment"}:
               </span>
-              <div className="text-muted-foreground text-[11px] space-y-1">
+              <div className="text-muted-foreground text-micro space-y-1">
                 {paymentMethod === "bkash" && (
                   <>
                     <p>1. Open your <strong>bKash App</strong> or dial <strong>*247#</strong> and select <strong>Make Payment</strong>.</p>
@@ -1387,7 +1387,7 @@ export default function ApplyForResearchPermissionPage() {
                   className={`h-10 text-xs font-mono ${stepErrors.senderNumber ? "border-rose-500" : ""}`}
                 />
                 {stepErrors.senderNumber && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.senderNumber}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.senderNumber}</p>
                 )}
               </div>
 
@@ -1425,7 +1425,7 @@ export default function ApplyForResearchPermissionPage() {
                   </Button>
                 </div>
                 {stepErrors.transactionId && (
-                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.transactionId}</p>
+                  <p className="text-micro text-rose-600 font-semibold">{stepErrors.transactionId}</p>
                 )}
               </div>
             </div>
@@ -1441,12 +1441,12 @@ export default function ApplyForResearchPermissionPage() {
                     <strong className="text-xs font-bold text-emerald-800 dark:text-emerald-300 block">
                       Institutional Fee Payment Confirmed
                     </strong>
-                    <span className="text-[11px] text-muted-foreground font-mono">
+                    <span className="text-micro text-muted-foreground font-mono">
                       ৳ {totalFeeBdt.toLocaleString()} BDT registered under TrxID: {transactionId}
                     </span>
                   </div>
                 </div>
-                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
+                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-micro font-bold">
                   Receipt Token Issued
                 </Badge>
               </div>
@@ -1461,7 +1461,7 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 5 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
                 Step 5: Attestation & Digital Protocol Submission
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -1473,50 +1473,50 @@ export default function ApplyForResearchPermissionPage() {
             <div className="rounded-xl border border-border/75 bg-muted/20 p-5 space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2 space-y-1">
-                  <span className="text-muted-foreground block text-[11px]">Protocol Title:</span>
+                  <span className="text-muted-foreground block text-micro">Protocol Title:</span>
                   <strong className="text-foreground text-sm block">{step1.title}</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Department:</span>
+                  <span className="text-muted-foreground block text-micro">Department:</span>
                   <strong className="text-foreground block">{step1.department}</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Target IRB Board:</span>
+                  <span className="text-muted-foreground block text-micro">Target IRB Board:</span>
                   <strong className="text-foreground block">{step1.board}</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Study Classification:</span>
+                  <span className="text-muted-foreground block text-micro">Study Classification:</span>
                   <strong className="text-foreground block">{step1.studyType}</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Ethics Risk Tier:</span>
-                  <Badge variant="outline" className="text-[10px] font-bold mt-0.5">
+                  <span className="text-muted-foreground block text-micro">Ethics Risk Tier:</span>
+                  <Badge variant="outline" className="text-micro font-bold mt-0.5">
                     {step2.riskTier}
                   </Badge>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Participant Cohort:</span>
+                  <span className="text-muted-foreground block text-micro">Participant Cohort:</span>
                   <strong className="text-foreground block font-mono">{step2.targetSampleSize} subjects</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Informed Consent Procedure:</span>
+                  <span className="text-muted-foreground block text-micro">Informed Consent Procedure:</span>
                   <strong className="text-foreground block">{step2.consentType}</strong>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Duration & Location:</span>
+                  <span className="text-muted-foreground block text-micro">Duration & Location:</span>
                   <strong className="text-foreground block">{step1.durationMonths} months • {step1.studyLocation}</strong>
                 </div>
 
                 <div className="sm:col-span-2 border-t border-border/60 pt-3">
-                  <span className="text-muted-foreground block text-[11px]">Attached Documents:</span>
-                  <div className="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
+                  <span className="text-muted-foreground block text-micro">Attached Documents:</span>
+                  <div className="flex flex-wrap gap-2 pt-1 font-mono text-micro">
                     <span className="px-2 py-1 rounded bg-white dark:bg-[#0C1E34] border border-border/75">
                       Proposal: {step3.protocolProposalName}
                     </span>
@@ -1528,12 +1528,12 @@ export default function ApplyForResearchPermissionPage() {
 
                 <div className="sm:col-span-2 border-t border-border/60 pt-3 flex items-center justify-between">
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Verified BDT Fee Payment:</span>
-                    <span className="font-bold text-[#198754] text-sm">
+                    <span className="text-muted-foreground block text-micro">Verified BDT Fee Payment:</span>
+                    <span className="font-bold text-secondary text-sm">
                       ৳ {totalFeeBdt.toLocaleString()} BDT ({paymentMethod.toUpperCase()} • TrxID: {transactionId})
                     </span>
                   </div>
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-micro font-bold">
                     Payment Verified
                   </Badge>
                 </div>

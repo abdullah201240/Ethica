@@ -93,7 +93,7 @@ export default function AdminReviewerApplicationsPage() {
         headerClassName: "w-36",
         cell: ({ row }) => (
           <div className="space-y-1">
-            <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300 block">
+            <span className="font-mono text-base font-bold text-primary dark:text-sky-300 block">
               {row.id}
             </span>
             <div className="flex items-center gap-1 text-base text-slate-400 dark:text-slate-500">
@@ -111,14 +111,14 @@ export default function AdminReviewerApplicationsPage() {
         cell: ({ row }) => (
           <div className="space-y-1 max-w-sm">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-base text-slate-900 dark:text-white">
+              <span className="font-bold text-base text-foreground">
                 {row.fullName}
               </span>
               <span className="text-base font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                 {row.degree}
               </span>
             </div>
-            <div className="text-base text-slate-500 dark:text-slate-400 flex items-center gap-1.5 truncate">
+            <div className="text-base text-muted-foreground flex items-center gap-1.5 truncate">
               <Building2 className="size-3 shrink-0 text-slate-400" />
               <span className="truncate">{row.position} • {row.institution}</span>
             </div>
@@ -153,7 +153,7 @@ export default function AdminReviewerApplicationsPage() {
             {row.expertise.length > 2 && (
               <Badge
                 variant="outline"
-                className="text-base font-mono px-1.5 py-0.5 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700"
+                className="text-base font-mono px-1.5 py-0.5 text-muted-foreground border-slate-300 dark:border-slate-700"
               >
                 +{row.expertise.length - 2}
               </Badge>
@@ -169,7 +169,7 @@ export default function AdminReviewerApplicationsPage() {
         align: "center",
         headerClassName: "w-28",
         cell: ({ row }) => (
-          <span className="text-base font-bold text-slate-800 dark:text-slate-200 tabular-nums">
+          <span className="text-base font-bold text-foreground tabular-nums">
             {row.yearsExperience} yrs
           </span>
         ),
@@ -189,7 +189,7 @@ export default function AdminReviewerApplicationsPage() {
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-base font-bold border ${
                   isApproved
-                    ? "bg-[#198754]/10 text-[#198754] dark:text-emerald-400 border-[#198754]/30"
+                    ? "bg-[#198754]/10 text-secondary dark:text-emerald-400 border-[#198754]/30"
                     : isPending
                     ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30"
                     : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30"
@@ -221,7 +221,7 @@ export default function AdminReviewerApplicationsPage() {
               href={`/admin/applications/${row.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#002752] dark:text-sky-300 shadow-2xs transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-primary dark:text-sky-300 shadow-2xs transition-colors cursor-pointer"
               title="Inspect Full Applicant Dossier in New Tab"
             >
               <Eye className="size-3.5" />
@@ -254,12 +254,12 @@ export default function AdminReviewerApplicationsPage() {
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                       Approve Reviewer Accreditation
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-base sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                       You are approving reviewer accreditation for{" "}
-                      <strong className="text-slate-900 dark:text-white">{row.fullName}</strong> ({row.id}) from{" "}
+                      <strong className="text-foreground">{row.fullName}</strong> ({row.id}) from{" "}
                       {row.institution}. This will grant active voting privileges on the IRB deliberation docket.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -292,12 +292,12 @@ export default function AdminReviewerApplicationsPage() {
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                       Decline Reviewer Application
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-base sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                       Are you sure you want to decline accreditation for{" "}
-                      <strong className="text-slate-900 dark:text-white">{row.fullName}</strong> ({row.id})?
+                      <strong className="text-foreground">{row.fullName}</strong> ({row.id})?
                       This decision will be registered in the institutional intake ledger.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -414,9 +414,9 @@ export default function AdminReviewerApplicationsPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/roster"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-base transition-colors shrink-0"
               >
-                <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <Users className="size-3.5 mr-1.5 text-primary dark:text-sky-400" />
                 <span>Accredited Reviewer Roster</span>
               </Link>
               <Link

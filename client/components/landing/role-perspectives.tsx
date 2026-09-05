@@ -20,8 +20,8 @@ const ROLE_TABS = [
     label: "Researchers & PIs",
     icon: GraduationCap,
     category: "Principal Investigator Hub",
-    categoryColor: "text-[#198754]",
-    iconBg: "from-[#198754]/20 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 border-[#198754]/30 text-[#198754]",
+    categoryColor: "text-secondary",
+    iconBg: "from-[#198754]/20 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 border-[#198754]/30 text-secondary",
     title: "ACCELERATE YOUR RESEARCH JOURNEY WITH TOTAL TRANSPARENCY",
     description:
       "Eliminate lost paperwork, delayed emails, and mysterious review boards. Researchers gain real-time visibility into application status, clear reviewer feedback, and versioned document depots.",
@@ -102,14 +102,14 @@ export function RolePerspectives() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             PERSPECTIVES
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               TAILORED EXPERIENCES FOR <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 EVERY RESEARCH ACTOR
@@ -139,7 +139,7 @@ export function RolePerspectives() {
                     <TabsTrigger
                       key={tab.id}
                       value={tab.id}
-                      className="py-3 px-6 sm:px-8 text-sm sm:text-base font-bold rounded-full transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#002752] data-[state=active]:via-[#003875] data-[state=active]:to-[#002752] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-[#002752]/20 text-slate-600 dark:text-slate-300 hover:text-[#002752] dark:hover:text-white"
+                      className="py-3 px-6 sm:px-8 text-sm sm:text-base font-bold rounded-full transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#002752] data-[state=active]:via-[#003875] data-[state=active]:to-[#002752] data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-[#002752]/20 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white"
                     >
                       <Icon className="size-4.5 mr-2 shrink-0" />
                       <span>{tab.label}</span>
@@ -169,7 +169,7 @@ export function RolePerspectives() {
                           </span>
                         </div>
 
-                        <h3 className="font-sans text-2xl sm:text-3xl font-black text-[#002752] dark:text-white leading-[1.12] tracking-tight">
+                        <h3 className="font-sans text-2xl sm:text-3xl font-black text-primary dark:text-white leading-[1.12] tracking-tight">
                           {tab.title}
                         </h3>
 
@@ -180,7 +180,7 @@ export function RolePerspectives() {
                         {/* Bullet Highlights */}
                         <div className="space-y-3 pt-2">
                           {tab.highlights.map((point, pIdx) => (
-                            <div key={pIdx} className="flex items-start gap-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200">
+                            <div key={pIdx} className="flex items-start gap-3 text-xs sm:text-sm text-foreground/85">
                               <div className="size-5 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                                 <CheckCircle2 className="size-3.5" />
                               </div>
@@ -222,12 +222,12 @@ export function RolePerspectives() {
                               <span className="size-2.5 sm:size-3 rounded-full bg-[#27C93F] border border-[#1AAB29]/50 inline-block" />
                             </div>
 
-                            <div className="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-[0.68rem] sm:text-xs text-slate-500 dark:text-slate-400 font-mono shadow-2xs max-w-xs w-full mx-2 truncate">
-                              <Lock className="size-2.5 sm:size-3 text-[#198754] shrink-0" />
+                            <div className="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-[0.68rem] sm:text-xs text-muted-foreground font-mono shadow-2xs max-w-xs w-full mx-2 truncate">
+                              <Lock className="size-2.5 sm:size-3 text-secondary shrink-0" />
                               <span className="truncate">{tab.url}</span>
                             </div>
 
-                            <div className="text-[0.68rem] font-bold text-[#198754] hidden sm:block">
+                            <div className="text-[0.68rem] font-bold text-secondary hidden sm:block">
                               Active Workspace
                             </div>
                           </div>

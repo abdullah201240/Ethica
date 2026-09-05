@@ -99,7 +99,7 @@ function AdminRosterContent() {
           <div className="space-y-1 select-text">
             <Link
               href={`/admin/roster/${encodeURIComponent(row.id)}`}
-              className="font-mono text-base font-bold text-[#002752] dark:text-sky-300 block hover:underline"
+              className="font-mono text-base font-bold text-primary dark:text-sky-300 block hover:underline"
             >
               {row.id}
             </Link>
@@ -130,7 +130,7 @@ function AdminRosterContent() {
             <div className="flex items-center gap-3 select-text">
               <Link
                 href={`/admin/roster/${encodeURIComponent(row.id)}`}
-                className="size-10 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 hover:ring-2 hover:ring-[#002752]/20 transition-all"
+                className="size-10 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 hover:ring-2 hover:ring-[#002752]/20 transition-all"
                 title={`View ${row.name}'s Dossier`}
               >
                 {initials}
@@ -139,15 +139,15 @@ function AdminRosterContent() {
                 <div className="flex items-center gap-1.5">
                   <Link
                     href={`/admin/roster/${encodeURIComponent(row.id)}`}
-                    className="text-base font-bold text-slate-900 dark:text-white truncate hover:underline hover:text-[#002752] dark:hover:text-sky-300"
+                    className="text-base font-bold text-foreground truncate hover:underline hover:text-primary dark:hover:text-sky-300"
                   >
                     {row.name}
                   </Link>
-                  <span className="text-base font-normal text-slate-500 dark:text-slate-400">
+                  <span className="text-base font-normal text-muted-foreground">
                     ({row.degree})
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-base text-slate-500 dark:text-slate-400 truncate">
+                <div className="flex items-center gap-2 text-base text-muted-foreground truncate">
                   <Building2 className="size-3 text-slate-400 shrink-0" />
                   <span className="truncate">
                     {row.department} • {row.institution}
@@ -167,11 +167,11 @@ function AdminRosterContent() {
           <div className="space-y-1 select-text">
             <Badge
               variant="outline"
-              className="text-base font-semibold bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 whitespace-nowrap"
+              className="text-base font-semibold bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-foreground/85 whitespace-nowrap"
             >
               {row.board}
             </Badge>
-            <div className="text-base text-slate-500 dark:text-slate-400">
+            <div className="text-base text-muted-foreground">
               Role: <strong className="text-slate-700 dark:text-slate-300">{row.role}</strong>
             </div>
           </div>
@@ -211,7 +211,7 @@ function AdminRosterContent() {
         headerClassName: "w-24 text-center",
         cell: ({ row }) => (
           <div className="text-center select-text">
-            <span className="inline-flex items-center justify-center font-bold text-base text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md min-w-[28px]">
+            <span className="inline-flex items-center justify-center font-bold text-base text-foreground bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md min-w-[28px]">
               {row.assignedProtocols}
             </span>
             <span className="block text-base text-slate-400 mt-0.5">cases</span>
@@ -266,7 +266,7 @@ function AdminRosterContent() {
                   className="h-7 px-2 text-base font-semibold rounded-md border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                   title="View Complete Reviewer Dossier on Dedicated Page"
                 >
-                  <Eye className="size-3.5 mr-1 text-[#002752] dark:text-sky-400" />
+                  <Eye className="size-3.5 mr-1 text-primary dark:text-sky-400" />
                   <span>View Dossier</span>
                 </Button>
               </Link>
@@ -298,7 +298,7 @@ function AdminRosterContent() {
                 } />
                 <AlertDialogContent className="max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+                    <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-foreground">
                       {isActive ? (
                         <>
                           <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
@@ -315,7 +315,7 @@ function AdminRosterContent() {
                       {isActive ? (
                         <>
                           Are you sure you want to transition{" "}
-                          <strong className="text-slate-900 dark:text-white">
+                          <strong className="text-foreground">
                             {reviewer.name}
                           </strong>{" "}
                           ({reviewer.id}) to <strong>Inactive</strong>?
@@ -328,7 +328,7 @@ function AdminRosterContent() {
                       ) : (
                         <>
                           Are you sure you want to restore{" "}
-                          <strong className="text-slate-900 dark:text-white">
+                          <strong className="text-foreground">
                             {reviewer.name}
                           </strong>{" "}
                           ({reviewer.id}) to <strong>Active</strong>?
@@ -472,7 +472,7 @@ function AdminRosterContent() {
                   size="sm"
                   className="h-8 gap-1.5 text-base font-semibold rounded-lg border-slate-200/90 dark:border-slate-700"
                 >
-                  <Users className="size-3.5 text-[#002752] dark:text-sky-400" />
+                  <Users className="size-3.5 text-primary dark:text-sky-400" />
                   <span>All Users</span>
                 </Button>
               </Link>
@@ -483,7 +483,7 @@ function AdminRosterContent() {
                   size="sm"
                   className="h-8 gap-1.5 text-base font-semibold rounded-lg border-slate-200/90 dark:border-slate-700"
                 >
-                  <ShieldCheck className="size-3.5 text-[#002752] dark:text-sky-400" />
+                  <ShieldCheck className="size-3.5 text-primary dark:text-sky-400" />
                   <span>Admin List</span>
                 </Button>
               </Link>
@@ -494,7 +494,7 @@ function AdminRosterContent() {
                   size="sm"
                   className="h-8 gap-1.5 text-base font-semibold rounded-lg border-slate-200/90 dark:border-slate-700"
                 >
-                  <ClipboardCheck className="size-3.5 text-[#002752] dark:text-sky-400" />
+                  <ClipboardCheck className="size-3.5 text-primary dark:text-sky-400" />
                   <span>Applications Queue</span>
                 </Button>
               </Link>

@@ -114,10 +114,10 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
             <Layers className="size-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-foreground">
               Research Category Not Found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               No registered category matches identifier &quot;{categoryId}&quot;.
             </p>
           </div>
@@ -222,7 +222,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 px-4 sm:px-0">
         <Link
           href="/admin/categories"
-          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-3.5 mr-1.5" />
           <span>Back to Research Categories</span>
@@ -236,7 +236,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
             onClick={handleOpenEdit}
             className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-slate-200 dark:border-slate-800"
           >
-            <Edit2 className="size-3.5 text-[#002752] dark:text-sky-400" />
+            <Edit2 className="size-3.5 text-primary dark:text-sky-400" />
             <span>Edit Category & Fee</span>
           </Button>
 
@@ -263,7 +263,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#002752] dark:text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-primary dark:text-white tracking-tight">
                   {category.name}
                 </h1>
                 <Badge
@@ -278,7 +278,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
               </div>
 
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-                <div className="flex items-center gap-1.5 font-mono font-bold text-[#002752] dark:text-sky-300">
+                <div className="flex items-center gap-1.5 font-mono font-bold text-primary dark:text-sky-300">
                   <span>Code: {category.code}</span>
                   <Button
                     type="button"
@@ -303,20 +303,20 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-[#002752]/5 text-[#002752] dark:text-sky-300 border-[#002752]/20"
+                  className="text-micro font-semibold bg-[#002752]/5 text-primary dark:text-sky-300 border-[#002752]/20"
                 >
                   Risk: {category.riskDefault}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                  className="text-micro font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
                 >
                   Turnaround: ~{category.turnaroundDays} Days
                 </Badge>
                 {category.expeditedAllowed && (
                   <Badge
                     variant="outline"
-                    className="text-[11px] font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30"
+                    className="text-micro font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30"
                   >
                     72h Expedited Eligible
                   </Badge>
@@ -335,7 +335,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 aria-label="Toggle category status"
               />
               <span className={`text-xs font-bold ${
-                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground"
               }`}>
                 {isActive ? "Active (Intake Open)" : "Inactive / Suspended"}
               </span>
@@ -382,37 +382,37 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Scientific Scope Description */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <FolderKanban className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <FolderKanban className="size-4 text-primary dark:text-sky-400" />
               <span>Scientific Scope & Protocol Classification</span>
             </h3>
-            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-foreground/85 leading-relaxed font-normal">
               {category.description}
             </p>
           </Card>
 
           {/* Card: Institutional Fee Breakdown */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Banknote className="size-4 text-[#198754]" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Banknote className="size-4 text-secondary" />
               <span>Official Institutional Fee Schedule (BDT ৳)</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                <span className="text-slate-400 block font-semibold uppercase text-[10px]">
+                <span className="text-slate-400 block font-semibold uppercase text-micro">
                   Standard Institutional Clearance Fee
                 </span>
-                <span className="font-extrabold text-[#002752] dark:text-sky-300 text-xl block">
+                <span className="font-extrabold text-primary dark:text-sky-300 text-xl block">
                   ৳ {category.priceBdt.toLocaleString()} BDT
                 </span>
-                <span className="text-slate-500 text-[11px] block mt-1">
+                <span className="text-slate-500 text-micro block mt-1">
                   Required baseline payment per submitted protocol in this stream.
                 </span>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                <span className="text-slate-400 block font-semibold uppercase text-[10px]">
+                <span className="text-slate-400 block font-semibold uppercase text-micro">
                   Fast-Track Expedited Review Surcharge
                 </span>
                 <span className="font-extrabold text-amber-700 dark:text-amber-400 text-xl block">
@@ -420,7 +420,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                     ? `+ ৳ ${category.expeditedFeeBdt.toLocaleString()} BDT`
                     : "Not Supported"}
                 </span>
-                <span className="text-slate-500 text-[11px] block mt-1">
+                <span className="text-slate-500 text-micro block mt-1">
                   {category.expeditedAllowed
                     ? "Guarantees triage placement and screening within 72 hours."
                     : "This category strictly requires regular committee quorum deliberation."}
@@ -434,27 +434,27 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Operational Specifications */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Scale className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Scale className="size-4 text-primary dark:text-sky-400" />
               <span>Operational Criteria</span>
             </h3>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Governing Board</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{category.board}</span>
+                <span className="font-bold text-foreground">{category.board}</span>
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Default Risk Tier</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{category.riskDefault}</span>
+                <span className="font-bold text-foreground">{category.riskDefault}</span>
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Target Velocity</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{category.turnaroundDays} Calendar Days</span>
+                <span className="font-bold text-foreground">{category.turnaroundDays} Calendar Days</span>
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Currency Standard</span>
-                <span className="font-mono font-bold text-[#198754]">BDT (Bangladeshi ৳)</span>
+                <span className="font-mono font-bold text-secondary">BDT (Bangladeshi ৳)</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500">Registered On</span>
@@ -465,7 +465,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
           {/* Card: Quick Actions */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider">
               Management Actions
             </h3>
             <div className="space-y-2">
@@ -496,8 +496,8 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
           <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
             <SheetHeader className="p-0 pb-3">
-              <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
-                <Edit2 className="size-5 text-[#198754]" />
+              <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
+                <Edit2 className="size-5 text-secondary" />
                 <span>Edit Category: {category.code}</span>
               </SheetTitle>
               <SheetDescription className="text-xs text-muted-foreground">
@@ -598,7 +598,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                     />
                     <Label
                       htmlFor="detail-edit-expedited-toggle"
-                      className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                      className="text-xs font-bold text-foreground cursor-pointer"
                     >
                       Enable Fast-Track Expedited Review (72-Hour Triage)
                     </Label>
@@ -716,7 +716,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               Are you sure you want to permanently delete{" "}
-              <strong className="text-slate-900 dark:text-white">
+              <strong className="text-foreground">
                 {category.name} ({category.code})
               </strong>
               ? Its BDT fee schedule will be removed from future protocol clearance submissions.

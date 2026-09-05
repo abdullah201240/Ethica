@@ -83,10 +83,10 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
             <Users className="size-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-foreground">
               Reviewer Record Not Found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               No accredited reviewer found matching identifier &quot;{reviewerId}&quot;.
             </p>
           </div>
@@ -154,7 +154,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 px-4 sm:px-0">
         <Link
           href="/admin/roster"
-          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-3.5 mr-1.5" />
           <span>Back to Reviewer Roster</span>
@@ -168,7 +168,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
               size="sm"
               className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-slate-200 dark:border-slate-800"
             >
-              <ShieldCheck className="size-3.5 text-[#002752] dark:text-sky-400" />
+              <ShieldCheck className="size-3.5 text-primary dark:text-sky-400" />
               <span>Admin List</span>
             </Button>
           </Link>
@@ -189,15 +189,15 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
       <Card className="p-5 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
+            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
               {initials}
             </div>
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                   {reviewer.name}
                 </h1>
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-medium text-muted-foreground">
                   ({reviewer.degree})
                 </span>
                 <Badge
@@ -218,11 +218,11 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                     {reviewer.position} • {reviewer.department}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-1 text-muted-foreground">
                   <Calendar className="size-3.5 text-slate-400 shrink-0" />
                   <span>Accredited on {reviewer.accreditationDate}</span>
                 </div>
-                <div className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+                <div className="font-mono text-xs font-bold text-primary dark:text-sky-300">
                   {reviewer.id}
                 </div>
               </div>
@@ -230,19 +230,19 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200"
+                  className="text-micro font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-foreground/85"
                 >
                   {reviewer.board}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-[#002752]/5 text-[#002752] dark:text-sky-300 border-[#002752]/20"
+                  className="text-micro font-semibold bg-[#002752]/5 text-primary dark:text-sky-300 border-[#002752]/20"
                 >
                   Role: {reviewer.role}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                  className="text-micro font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
                 >
                   {reviewer.clearanceLevel}
                 </Badge>
@@ -279,7 +279,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
               } />
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+                  <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-foreground">
                     {isActive ? (
                       <>
                         <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
@@ -296,7 +296,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                     {isActive ? (
                       <>
                         Are you sure you want to transition{" "}
-                        <strong className="text-slate-900 dark:text-white">
+                        <strong className="text-foreground">
                           {reviewer.name}
                         </strong>{" "}
                         ({reviewer.id}) to <strong>Inactive</strong>?
@@ -309,7 +309,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                     ) : (
                       <>
                         Are you sure you want to restore{" "}
-                        <strong className="text-slate-900 dark:text-white">
+                        <strong className="text-foreground">
                           {reviewer.name}
                         </strong>{" "}
                         ({reviewer.id}) to <strong>Active</strong>?
@@ -381,8 +381,8 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Institutional & Contact Coordinates */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Building2 className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Building2 className="size-4 text-primary dark:text-sky-400" />
               <span>Academic & Institutional Coordinates</span>
             </h3>
 
@@ -392,7 +392,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {reviewer.institution}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   {reviewer.department}
                 </span>
               </div>
@@ -402,7 +402,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {reviewer.position}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   Highest Degree: {reviewer.degree}
                 </span>
               </div>
@@ -411,7 +411,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                 <span className="text-slate-400 block font-medium">Official Contact Email</span>
                 <a
                   href={`mailto:${reviewer.email}`}
-                  className="font-bold text-[#002752] dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
+                  className="font-bold text-primary dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
                 >
                   <Mail className="size-3.5 text-slate-400 shrink-0" />
                   <span>{reviewer.email}</span>
@@ -432,7 +432,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
               <div className="flex items-center gap-2 text-xs">
                 <span className="font-bold text-slate-700 dark:text-slate-300">ORCID Record:</span>
                 {reviewer.orcid ? (
-                  <span className="font-mono text-xs text-[#002752] dark:text-sky-300 font-bold">
+                  <span className="font-mono text-xs text-primary dark:text-sky-300 font-bold">
                     {reviewer.orcid}
                   </span>
                 ) : (
@@ -444,7 +444,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                   href={`https://orcid.org/${reviewer.orcid}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#002752] dark:text-sky-300 hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary dark:text-sky-300 hover:underline"
                 >
                   <span>Verify Registry</span>
                   <ExternalLink className="size-3" />
@@ -455,18 +455,18 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
 
           {/* Card: Specializations & Domain Expertise */}
           <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Award className="size-4 text-[#198754] dark:text-emerald-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Award className="size-4 text-secondary dark:text-emerald-400" />
               <span>Accredited Review Specializations & Disciplines</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Verified competency domains under which this reviewer may be empaneled for expedited or full-board deliberations:
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               {reviewer.specializations.map((spec) => (
                 <div
                   key={spec}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-foreground"
                 >
                   <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span>{spec}</span>
@@ -478,8 +478,8 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
           {/* Card: Bio Statement */}
           {reviewer.bioStatement && (
             <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-              <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <FileCheck2 className="size-4 text-[#002752] dark:text-sky-400" />
+              <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <FileCheck2 className="size-4 text-primary dark:text-sky-400" />
                 <span>Ethics Statement & Research Philosophy</span>
               </h3>
               <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200/70 dark:border-slate-800">
@@ -493,35 +493,35 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Research Specializations */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Scale className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Scale className="size-4 text-primary dark:text-sky-400" />
               <span>IRB Committee Standing</span>
             </h3>
 
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Assigned Board</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-right">
+                <span className="text-muted-foreground">Assigned Board</span>
+                <span className="font-bold text-foreground text-right">
                   {reviewer.board}
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Committee Role</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="text-muted-foreground">Committee Role</span>
+                <span className="font-bold text-foreground">
                   {reviewer.role}
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Quorum Clearance</span>
+                <span className="text-muted-foreground">Quorum Clearance</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {reviewer.clearanceLevel}
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Committee Term</span>
+                <span className="text-muted-foreground">Committee Term</span>
                 <span className="font-semibold text-slate-700 dark:text-slate-300">
                   2025 – 2027 Triennium
                 </span>
@@ -531,17 +531,17 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
 
           {/* Card: FIPS SHA-256 Digital Signature Seal */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>Cryptographic Seal & PKI</span>
             </h3>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground">
               FIPS 140-3 SHA-256 digital committee signature verifying official accreditation by the DIU Research Compliance Secretariat.
             </p>
 
             <div className="p-3 rounded-lg bg-slate-900 text-slate-200 dark:bg-slate-950 border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between text-[11px]">
+              <div className="flex items-center justify-between text-micro">
                 <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
                   <CheckCircle2 className="size-3.5" />
                   <span>SEAL VERIFIED</span>
@@ -551,7 +551,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyHash}
-                  className="h-6 px-2 text-[10px] text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
+                  className="h-6 px-2 text-micro text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
                 >
                   {copiedHash ? (
                     <Check className="size-3 mr-1 text-emerald-400" />
@@ -562,7 +562,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
                 </Button>
               </div>
 
-              <div className="font-mono text-[10px] break-all text-slate-300 bg-slate-950/80 p-2 rounded border border-slate-800 select-text">
+              <div className="font-mono text-micro break-all text-slate-300 bg-slate-950/80 p-2 rounded border border-slate-800 select-text">
                 {reviewer.digitalSealHash}
               </div>
             </div>

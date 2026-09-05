@@ -18,12 +18,12 @@ const colorStyles: Record<
   }
 > = {
   navy: {
-    value: "text-[#002752] dark:text-white",
+    value: "text-primary dark:text-white",
     iconColor: "text-slate-400 dark:text-slate-500",
   },
   green: {
-    value: "text-[#198754] dark:text-emerald-400",
-    iconColor: "text-[#198754] dark:text-emerald-400",
+    value: "text-secondary dark:text-emerald-400",
+    iconColor: "text-secondary dark:text-emerald-400",
   },
   amber: {
     value: "text-amber-600 dark:text-amber-400",
@@ -38,8 +38,8 @@ const colorStyles: Record<
     iconColor: "text-sky-500 dark:text-sky-400",
   },
   gold: {
-    value: "text-[#B8961B] dark:text-[#E0C23C]",
-    iconColor: "text-[#E0C23C] dark:text-[#E0C23C]",
+    value: "text-accent-foreground dark:text-accent",
+    iconColor: "text-accent dark:text-accent",
   },
 }
 
@@ -134,7 +134,7 @@ export function KpiCard({
       )}
       {...props}
     >
-      <div className="flex items-center justify-between gap-2 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold uppercase tracking-wider">
+      <div className="flex items-center justify-between gap-2 text-muted-foreground text-micro uppercase tracking-wider">
         <span className="truncate select-text">{label}</span>
         <div className="flex items-center gap-1.5 shrink-0">
           {badge}
@@ -148,7 +148,7 @@ export function KpiCard({
 
       <div
         className={cn(
-          "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight tabular-nums select-text",
+          "text-kpi-value",
           colorStyle.value
         )}
       >
@@ -156,7 +156,7 @@ export function KpiCard({
       </div>
 
       {(description || trend) && (
-        <div className="flex items-center justify-between gap-2 pt-0.5 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 select-text">
+        <div className="flex items-center justify-between gap-2 pt-0.5 text-body-sm text-muted-foreground select-text">
           {description && <span className="truncate">{description}</span>}
           {trend && (
             <span

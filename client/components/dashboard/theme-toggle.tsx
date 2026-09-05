@@ -25,7 +25,7 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="size-9 rounded-lg border-slate-200/85 dark:border-slate-800 bg-white dark:bg-card text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+      className="size-9 rounded-lg border-slate-200/85 dark:border-slate-800 bg-white dark:bg-card text-foreground/85 hover:bg-slate-100 dark:hover:bg-slate-800/80"
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
     >

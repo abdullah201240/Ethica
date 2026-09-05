@@ -106,10 +106,10 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
             <Users className="size-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-foreground">
               System Administrator Not Found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               No administrator found matching identifier &quot;{adminId}&quot;.
             </p>
           </div>
@@ -192,7 +192,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
   const accessBadgeStyles: Record<AdminAccessLevel, string> = {
     "Super Admin": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
     "System Admin": "bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/30",
-    "Governance Admin": "bg-[#002752]/10 text-[#002752] dark:text-sky-300 border-[#002752]/30",
+    "Governance Admin": "bg-[#002752]/10 text-primary dark:text-sky-300 border-[#002752]/30",
     "Security & Audit": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
     "Operations Admin": "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30",
   }
@@ -203,7 +203,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 px-4 sm:px-0">
         <Link
           href="/admin/admins"
-          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-3.5 mr-1.5" />
           <span>Back to System Admin List</span>
@@ -217,7 +217,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               size="sm"
               className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-slate-200 dark:border-slate-800"
             >
-              <Users className="size-3.5 text-[#002752] dark:text-sky-400" />
+              <Users className="size-3.5 text-primary dark:text-sky-400" />
               <span>All Users</span>
             </Button>
           </Link>
@@ -238,18 +238,18 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
       <Card className="p-5 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
+            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
               {initials}
             </div>
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                   {admin.name}
                 </h1>
                 {admin.accessLevel === "Super Admin" && (
                   <Badge
                     variant="outline"
-                    className="text-[10px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30 px-1.5 py-0.5"
+                    className="text-micro font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30 px-1.5 py-0.5"
                   >
                     ROOT AUTHORITY
                   </Badge>
@@ -280,11 +280,11 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                     {admin.role} • {admin.department}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-1 text-muted-foreground">
                   <Calendar className="size-3.5 text-slate-400 shrink-0" />
                   <span>Appointed {admin.addedAt}</span>
                 </div>
-                <div className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+                <div className="font-mono text-xs font-bold text-primary dark:text-sky-300">
                   {admin.id}
                 </div>
               </div>
@@ -292,13 +292,13 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200"
+                  className="text-micro font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-foreground/85"
                 >
                   Daffodil International University
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1"
+                  className="text-micro font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1"
                 >
                   <Clock className="size-3 text-slate-400" />
                   <span>Last active: {admin.lastActive}</span>
@@ -316,7 +316,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 aria-label="Toggle administrator status"
               />
               <span className={`text-xs font-semibold ${
-                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground"
               }`}>
                 {isActive ? "Active" : "Inactive"}
               </span>
@@ -363,8 +363,8 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Institutional Coordinates & Role Scope */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Building2 className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Building2 className="size-4 text-primary dark:text-sky-400" />
               <span>Administrative Profile & Directorate Coordinates</span>
             </h3>
 
@@ -374,7 +374,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {admin.department}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   Daffodil International University
                 </span>
               </div>
@@ -384,7 +384,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {admin.role}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   Tier: {admin.accessLevel}
                 </span>
               </div>
@@ -393,7 +393,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 <span className="text-slate-400 block font-medium">Official Contact Email</span>
                 <a
                   href={`mailto:${admin.email}`}
-                  className="font-bold text-[#002752] dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
+                  className="font-bold text-primary dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
                 >
                   <Mail className="size-3.5 text-slate-400 shrink-0" />
                   <span>{admin.email}</span>
@@ -412,11 +412,11 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
           {/* Card: Granted Administrative Privileges */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>Granted Administrative Privileges & RBAC Authorizations</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Cryptographically signed capabilities authorized by the Institutional Compliance Secretariat:
             </p>
 
@@ -424,7 +424,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               {(admin.permissions || []).map((perm) => (
                 <div
                   key={perm}
-                  className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-800 dark:text-slate-200"
+                  className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 text-xs text-foreground"
                 >
                   <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span className="font-medium">{perm}</span>
@@ -438,17 +438,17 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Hardware Security Module (HSM) Token */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Fingerprint className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Fingerprint className="size-4 text-primary dark:text-sky-400" />
               <span>HSM Token & PKI Credentials</span>
             </h3>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Hardware Security Module public key token for signing governance decisions and audit certificates.
             </p>
 
             <div className="p-3 rounded-lg bg-slate-900 text-slate-200 dark:bg-slate-950 border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between text-[11px]">
+              <div className="flex items-center justify-between text-micro">
                 <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
                   <CheckCircle2 className="size-3.5" />
                   <span>TOKEN ACTIVE</span>
@@ -458,7 +458,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyHash}
-                  className="h-6 px-2 text-[10px] text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
+                  className="h-6 px-2 text-micro text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
                 >
                   {copiedHash ? (
                     <Check className="size-3 mr-1 text-emerald-400" />
@@ -469,7 +469,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 </Button>
               </div>
 
-              <div className="font-mono text-[10px] break-all text-slate-300 bg-slate-950/80 p-2 rounded border border-slate-800 select-text">
+              <div className="font-mono text-micro break-all text-slate-300 bg-slate-950/80 p-2 rounded border border-slate-800 select-text">
                 SHA256:{admin.id.replace(/-/g, "")}9f8b7c6d5e4a3b2c1d0e9f8a7b6c5d4e
               </div>
             </div>
@@ -477,26 +477,26 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
           {/* Card: Security Authority & Cryptographic Signing */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Award className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Award className="size-4 text-primary dark:text-sky-400" />
               <span>Oversight Scope</span>
             </h3>
 
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Total Protocols</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="text-muted-foreground">Total Protocols</span>
+                <span className="font-bold text-foreground">
                   {admin.protocols} cases
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Security Clearance</span>
+                <span className="text-muted-foreground">Security Clearance</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   FIPS 140-3 L3
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Governance Term</span>
+                <span className="text-muted-foreground">Governance Term</span>
                 <span className="font-semibold text-slate-700 dark:text-slate-300">
                   Permanent Appointee
                 </span>
@@ -510,10 +510,10 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
       <Sheet open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
           <SheetHeader className="p-0 pb-3">
-            <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
+            <SheetTitle className="text-base font-bold text-primary dark:text-white">
               Edit Administrator Credentials: {admin.name}
             </SheetTitle>
-            <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
+            <SheetDescription className="text-xs text-muted-foreground">
               Update designation, access privileges, and departmental assignment.
             </SheetDescription>
           </SheetHeader>
@@ -586,7 +586,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                       variant={editForm.accessLevel === lvl ? "default" : "outline"}
                       size="sm"
                       onClick={() => setEditForm({ ...editForm, accessLevel: lvl })}
-                      className={`h-6 px-2 text-[10px] font-semibold rounded ${
+                      className={`h-6 px-2 text-micro font-semibold rounded ${
                         editForm.accessLevel === lvl
                           ? "bg-[#002752] text-white"
                           : "text-slate-600 dark:text-slate-300"

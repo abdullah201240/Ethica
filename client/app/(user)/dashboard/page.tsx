@@ -51,7 +51,7 @@ export default function UserDashboardPage() {
         sortable: true,
         headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-base font-bold px-2 py-1 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+          <span className="font-mono text-table-cell font-bold px-2 py-1 rounded-md bg-primary/8 dark:bg-white/8 text-primary dark:text-sky-300 border border-primary/10 dark:border-white/10 whitespace-nowrap inline-block">
             {row.id}
           </span>
         ),
@@ -63,16 +63,16 @@ export default function UserDashboardPage() {
         sortable: true,
         cell: ({ row }) => (
           <div className="max-w-md min-w-56">
-            <p className="font-semibold text-slate-900 dark:text-white text-[13px] leading-snug line-clamp-2">
+            <p className="font-semibold text-foreground text-table-cell leading-snug line-clamp-2">
               {row.title}
             </p>
-            <div className="flex items-center gap-1.5 mt-1 text-[0.7rem] text-slate-400 dark:text-slate-500 flex-wrap">
+            <div className="flex items-center gap-1.5 mt-1 text-micro text-muted-foreground flex-wrap">
               <span className="inline-flex items-center gap-1">
                 <Building2 className="size-3 shrink-0" />
                 <span className="truncate">{row.department}</span>
               </span>
               <span className="text-slate-300 dark:text-slate-700">·</span>
-              <span className="truncate font-medium text-slate-500 dark:text-slate-400">
+              <span className="truncate font-medium text-muted-foreground">
                 {row.board}
               </span>
             </div>
@@ -87,7 +87,7 @@ export default function UserDashboardPage() {
         headerClassName: "w-44",
         cell: ({ row }) => (
           <span
-            className={`inline-flex items-center gap-1.5 text-[0.7rem] font-bold px-2.5 py-1 rounded-md border whitespace-nowrap ${
+            className={`inline-flex items-center gap-1.5 text-micro font-bold px-2.5 py-1 rounded-md border whitespace-nowrap ${
               row.statusColor === "emerald"
                 ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
                 : row.statusColor === "amber"
@@ -120,7 +120,7 @@ export default function UserDashboardPage() {
         headerClassName: "w-36",
         cell: ({ row }) => (
           <span
-            className={`text-[0.7rem] font-semibold px-2 py-1 rounded-md whitespace-nowrap inline-block ${
+            className={`text-micro font-semibold px-2 py-1 rounded-md whitespace-nowrap inline-block ${
               row.riskColor === "emerald"
                 ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400"
                 : row.riskColor === "purple"
@@ -139,7 +139,7 @@ export default function UserDashboardPage() {
         sortable: true,
         headerClassName: "w-32",
         cell: ({ row }) => (
-          <div className="flex items-center gap-1.5 text-base text-slate-500 dark:text-slate-400 whitespace-nowrap">
+          <div className="flex items-center gap-1.5 text-table-cell text-muted-foreground whitespace-nowrap">
             <Calendar className="size-3.5 text-slate-400 shrink-0" />
             {row.submissionDate}
           </div>
@@ -153,7 +153,7 @@ export default function UserDashboardPage() {
         align: "center",
         headerClassName: "w-20",
         cell: ({ row }) => (
-          <span className="text-base font-bold text-slate-700 dark:text-slate-200 tabular-nums">
+          <span className="text-table-cell font-bold text-foreground/85 tabular-nums">
             {row.daysInReview}d
           </span>
         ),
@@ -170,7 +170,7 @@ export default function UserDashboardPage() {
                 href="/#certificate"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors cursor-pointer"
+                className="inline-flex items-center h-8 px-2.5 text-micro font-bold bg-secondary hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors cursor-pointer"
                 title="Download Digital Clearance Certificate in New Tab"
               >
                 <Download className="size-3.5" />
@@ -181,7 +181,7 @@ export default function UserDashboardPage() {
                 href="/#preview"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 gap-1 transition-colors cursor-pointer"
+                className="inline-flex items-center h-8 px-2.5 text-micro font-bold rounded-lg border border-border text-foreground/85 hover:bg-muted gap-1 transition-colors cursor-pointer"
                 title="Inspect Protocol in New Tab"
               >
                 <span>Inspect</span>
@@ -192,7 +192,7 @@ export default function UserDashboardPage() {
               href="/#preview"
               target="_blank"
               rel="noopener noreferrer"
-              className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="size-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
               title="Open Protocol Inspector in New Tab"
             >
               <ExternalLink className="size-3.5" />
@@ -295,7 +295,7 @@ export default function UserDashboardPage() {
           toolbarActions={
             <Link
               href="/apply"
-              className="inline-flex items-center gap-1.5 h-8 px-3 text-base font-bold bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
+              className="inline-flex items-center gap-1.5 h-8 px-3 text-body-sm font-bold bg-primary hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
             >
               <Plus className="size-3.5" />
               <span className="hidden sm:inline">New Submission</span>
@@ -308,14 +308,14 @@ export default function UserDashboardPage() {
       {/* Institutional Support & Integrity Banner */}
       <div className="p-4 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-[#198754]/30 bg-[#198754]/5 dark:bg-[#198754]/10 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="size-10 rounded-xl bg-[#198754] text-white flex items-center justify-center shrink-0 shadow-xs">
+          <div className="size-10 rounded-xl bg-secondary text-white flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="size-6" />
           </div>
           <div>
-            <h4 className="text-base sm:text-base font-bold text-[#002752] dark:text-white">
+            <h4 className="text-card-title text-primary dark:text-white">
               Institutional Ethics Helpline & Guidance Secretariat
             </h4>
-            <p className="text-base text-slate-600 dark:text-slate-300">
+            <p className="text-body text-foreground/70">
               Need assistance determining human participant risk categorization or crafting informed consent documentation?
             </p>
           </div>
@@ -323,7 +323,7 @@ export default function UserDashboardPage() {
 
         <Link
           href="/#faq"
-          className="inline-flex items-center h-9 px-4 text-base font-bold rounded-xl border border-[#198754]/40 text-[#198754] hover:bg-[#198754]/10 shrink-0 transition-colors"
+          className="inline-flex items-center h-9 px-4 text-body-sm font-bold rounded-xl border border-secondary/40 text-secondary hover:bg-secondary/10 shrink-0 transition-colors"
         >
           Read Institutional Ethics Guidelines
         </Link>
@@ -333,15 +333,15 @@ export default function UserDashboardPage() {
       <div id="certificates" className="space-y-4 px-3 sm:px-0">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <Award className="size-5 text-[#198754]" />
+            <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <Award className="size-5 text-secondary" />
               <span>Digital Ethical Clearance Certificates</span>
             </h3>
-            <p className="text-base text-slate-500 dark:text-slate-400">
+            <p className="text-body text-muted-foreground">
               Official tamper-evident ethical clearance seals issued by DIU Institutional Review Board
             </p>
           </div>
-          <Badge className="bg-[#198754]/10 text-[#198754] border-[#198754]/30 font-mono text-base font-bold">
+          <Badge className="bg-secondary/10 text-secondary border-secondary/30 font-mono text-micro font-bold">
             12 Valid Certificates
           </Badge>
         </div>
@@ -350,28 +350,28 @@ export default function UserDashboardPage() {
           <Card className="p-5 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300">
+                <span className="font-mono text-table-cell font-bold text-primary dark:text-sky-300">
                   ETH-2026-074
                 </span>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                <h4 className="text-card-title text-foreground mt-1">
                   Cognitive Load and Decision Fatigue in Telemedicine Triage Nurses
                 </h4>
               </div>
-              <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-base font-mono">
+              <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-micro font-mono">
                 Exempt - Fast Track
               </Badge>
             </div>
-            <div className="text-base text-slate-500 dark:text-slate-400 font-mono space-y-0.5">
+            <div className="text-body-sm text-muted-foreground font-mono space-y-0.5">
               <div>Seal Hash: 8f92...a34e (SHA-256 Verified)</div>
               <div>Issued: Aug 14, 2026 • Valid until Aug 14, 2027</div>
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-base font-semibold text-[#198754] flex items-center gap-1">
+              <span className="text-body-sm font-semibold text-secondary flex items-center gap-1">
                 <Check className="size-3.5" /> Institutional Seal Confirmed
               </span>
               <Link
                 href="/#certificate"
-                className="inline-flex items-center gap-1 text-base font-bold text-[#002752] dark:text-sky-300 hover:underline"
+                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline"
               >
                 <span>View Full Seal</span>
                 <ExternalLink className="size-3" />
@@ -382,28 +382,28 @@ export default function UserDashboardPage() {
           <Card className="p-5 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300">
+                <span className="font-mono text-table-cell font-bold text-primary dark:text-sky-300">
                   ETH-2026-061
                 </span>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                <h4 className="text-card-title text-foreground mt-1">
                   Anonymized Genomic Sequence Sharing Protocol for Oncology Consortium
                 </h4>
               </div>
-              <Badge className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 text-base font-mono">
+              <Badge className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20 text-micro font-mono">
                 Full Committee
               </Badge>
             </div>
-            <div className="text-base text-slate-500 dark:text-slate-400 font-mono space-y-0.5">
+            <div className="text-body-sm text-muted-foreground font-mono space-y-0.5">
               <div>Seal Hash: c104...e571 (SHA-256 Verified)</div>
               <div>Issued: Jul 19, 2026 • Valid until Jul 19, 2027</div>
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="text-base font-semibold text-[#198754] flex items-center gap-1">
+              <span className="text-body-sm font-semibold text-secondary flex items-center gap-1">
                 <Check className="size-3.5" /> Institutional Seal Confirmed
               </span>
               <Link
                 href="/#certificate"
-                className="inline-flex items-center gap-1 text-base font-bold text-[#002752] dark:text-sky-300 hover:underline"
+                className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline"
               >
                 <span>View Full Seal</span>
                 <ExternalLink className="size-3" />
@@ -417,17 +417,17 @@ export default function UserDashboardPage() {
       <div id="eligibility" className="space-y-4 px-3 sm:px-0">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
+            <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
               <Sparkles className="size-5 text-amber-500" />
               <span>Fast-Track & Exemption Eligibility Self-Assessment</span>
             </h3>
-            <p className="text-base text-slate-500 dark:text-slate-400">
+            <p className="text-body text-muted-foreground">
               Evaluate whether your planned study qualifies for expedited triage or IRB review exemption
             </p>
           </div>
           <Link
             href="/#checker"
-            className="inline-flex items-center gap-1 text-base font-bold text-[#002752] dark:text-sky-300 hover:underline"
+            className="inline-flex items-center gap-1 text-body-sm font-bold text-primary dark:text-sky-300 hover:underline"
           >
             <span>Launch Interactive Simulator</span>
             <ExternalLink className="size-3" />
@@ -435,31 +435,31 @@ export default function UserDashboardPage() {
         </div>
 
         <Card className="p-6 rounded-2xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-base">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-body">
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
-              <div className="size-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-base">
+              <div className="size-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-body-sm">
                 1
               </div>
-              <h4 className="font-bold text-slate-900 dark:text-white">Minimal Risk Threshold</h4>
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="font-bold text-foreground">Minimal Risk Threshold</h4>
+              <p className="text-muted-foreground leading-relaxed">
                 Surveys, anonymous interviews, non-invasive physiological measurements with no vulnerable cohorts.
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
-              <div className="size-8 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center font-bold text-base">
+              <div className="size-8 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center font-bold text-body-sm">
                 2
               </div>
-              <h4 className="font-bold text-slate-900 dark:text-white">De-Identified Data Use</h4>
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="font-bold text-foreground">De-Identified Data Use</h4>
+              <p className="text-muted-foreground leading-relaxed">
                 Secondary analysis of anonymized medical datasets or public institutional records.
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-2">
-              <div className="size-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold text-base">
+              <div className="size-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold text-body-sm">
                 3
               </div>
-              <h4 className="font-bold text-slate-900 dark:text-white">Educational & QA Studies</h4>
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h4 className="font-bold text-foreground">Educational & QA Studies</h4>
+              <p className="text-muted-foreground leading-relaxed">
                 Curriculum evaluations, pedagogy effectiveness research, and quality improvement audits.
               </p>
             </div>
@@ -470,28 +470,28 @@ export default function UserDashboardPage() {
       {/* ── Section: Institutional Guidelines & Regulatory Policies ───────── */}
       <div id="guidelines" className="space-y-4">
         <div>
-          <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
-            <BookOpen className="size-5 text-[#002752] dark:text-sky-300" />
+          <h3 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
+            <BookOpen className="size-5 text-primary dark:text-sky-300" />
             <span>Institutional Bioethics Guidelines & Standard Operating Procedures</span>
           </h3>
-          <p className="text-base text-slate-500 dark:text-slate-400">
+          <p className="text-body text-muted-foreground">
             Daffodil International University Research Ethics Board Governance Manual (2026 Edition)
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-body">
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900 dark:text-white text-base">
+              <h4 className="font-bold text-foreground text-card-title">
                 Informed Consent Templates
               </h4>
-              <p className="text-slate-500 dark:text-slate-400">
+              <p className="text-muted-foreground">
                 Standard adult consent, pediatric assent, and digital teletherapy participant agreements.
               </p>
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="font-mono text-base text-slate-400">DOCX & PDF</span>
-              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+              <span className="font-mono text-body-sm text-muted-foreground">DOCX & PDF</span>
+              <span className="text-primary dark:text-sky-300 font-bold hover:underline cursor-pointer">
                 Download Kit
               </span>
             </div>
@@ -499,16 +499,16 @@ export default function UserDashboardPage() {
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900 dark:text-white text-base">
+              <h4 className="font-bold text-foreground text-card-title">
                 Data Privacy & Security Protocols
               </h4>
-              <p className="text-slate-500 dark:text-slate-400">
+              <p className="text-muted-foreground">
                 Guidelines on participant de-identification, encryption standards, and cloud repository audits.
               </p>
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="font-mono text-base text-slate-400">PDF • 1.8 MB</span>
-              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+              <span className="font-mono text-body-sm text-muted-foreground">PDF • 1.8 MB</span>
+              <span className="text-primary dark:text-sky-300 font-bold hover:underline cursor-pointer">
                 Read Policy
               </span>
             </div>
@@ -516,16 +516,16 @@ export default function UserDashboardPage() {
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs flex flex-col justify-between gap-3">
             <div className="space-y-1">
-              <h4 className="font-bold text-slate-900 dark:text-white text-base">
+              <h4 className="font-bold text-foreground text-card-title">
                 AI & Algorithm Deliberation Framework
               </h4>
-              <p className="text-slate-500 dark:text-slate-400">
+              <p className="text-muted-foreground">
                 Specialized ethics criteria for generative models, clinical decision support, and training datasets.
               </p>
             </div>
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <span className="font-mono text-base text-slate-400">PDF • 2.2 MB</span>
-              <span className="text-[#002752] dark:text-sky-300 font-bold hover:underline cursor-pointer">
+              <span className="font-mono text-body-sm text-muted-foreground">PDF • 2.2 MB</span>
+              <span className="text-primary dark:text-sky-300 font-bold hover:underline cursor-pointer">
                 Read Framework
               </span>
             </div>

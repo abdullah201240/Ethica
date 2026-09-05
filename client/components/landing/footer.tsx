@@ -127,23 +127,23 @@ export function Footer() {
             </span>
             <ul className="space-y-2.5 text-xs sm:text-sm font-medium text-slate-300">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                 <span>Declaration of Helsinki</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                 <span>CIOMS Ethical Guidelines</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                 <span>The Belmont Report</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                 <span>ICH-GCP Compliance</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3.5 text-[#198754] shrink-0" />
+                <CheckCircle2 className="size-3.5 text-secondary shrink-0" />
                 <span>ISO 27001 & SOC 2 Ready</span>
               </li>
             </ul>

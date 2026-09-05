@@ -52,14 +52,14 @@ export function CertificateShowcase() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             CERTIFICATION
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               TAMPER-PROOF DIGITAL <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 ETHICAL CLEARANCE
@@ -82,15 +82,15 @@ export function CertificateShowcase() {
           {/* Left Column: Certification Features & Live Validation Trigger */}
           <div className="lg:col-span-5 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="size-12 sm:size-14 rounded-2xl bg-gradient-to-tr from-[#198754]/20 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 border border-[#198754]/30 text-[#198754] flex items-center justify-center shadow-xs">
+              <div className="size-12 sm:size-14 rounded-2xl bg-gradient-to-tr from-[#198754]/20 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 border border-[#198754]/30 text-secondary flex items-center justify-center shadow-xs">
                 <Award className="size-6 sm:size-7" />
               </div>
-              <span className="font-mono text-xs font-black uppercase tracking-wider text-[#198754]">
+              <span className="font-mono text-xs font-black uppercase tracking-wider text-secondary">
                 Institutional Certificate Repository
               </span>
             </div>
 
-            <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-[#002752] dark:text-white leading-[1.12] tracking-tight">
+            <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-primary dark:text-white leading-[1.12] tracking-tight">
               CRYPTOGRAPHICALLY SIGNED & INTERNATIONALLY RECOGNIZED
             </h3>
 
@@ -108,10 +108,10 @@ export function CertificateShowcase() {
                     <CheckCircle2 className="size-4.5" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-black text-[#002752] dark:text-white">
+                    <h4 className="text-sm sm:text-base font-black text-primary dark:text-white">
                       SHA-256 Ledger Fingerprint
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
                       Immutable cryptographic hash binding protocol version, participant consents, and committee terms.
                     </p>
                   </div>
@@ -124,10 +124,10 @@ export function CertificateShowcase() {
                     <QrCode className="size-4.5" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-black text-[#002752] dark:text-white">
+                    <h4 className="text-sm sm:text-base font-black text-primary dark:text-white">
                       Instant Global QR Verification
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
                       Scannable live registry validates approval status in seconds for academic publishers worldwide.
                     </p>
                   </div>
@@ -140,10 +140,10 @@ export function CertificateShowcase() {
                     <FileCheck2 className="size-4.5" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-black text-[#002752] dark:text-white">
+                    <h4 className="text-sm sm:text-base font-black text-primary dark:text-white">
                       Multi-Signatory Quorum Consensus
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
                       Certified with official institutional seals and verified credentials of the review board chair.
                     </p>
                   </div>
@@ -163,22 +163,22 @@ export function CertificateShowcase() {
                       <Lock className="size-4 text-white" />
                     </div>
                     <span>Verify Certificate Authenticity</span>
-                    <ShieldCheck className="size-4.5 text-[#198754]" />
+                    <ShieldCheck className="size-4.5 text-secondary" />
                   </Button>
                 } />
 
                 <DialogContent className="sm:max-w-md rounded-2xl border border-slate-200/85 dark:border-slate-800/80 shadow-2xl p-6 sm:p-8 bg-white dark:bg-card">
                   <DialogHeader>
-                    <div className="flex items-center gap-2 text-[#198754] mb-1">
+                    <div className="flex items-center gap-2 text-secondary mb-1">
                       <CheckCircle2 className="size-5" />
                       <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">
                         Cryptographic Verification Passed
                       </span>
                     </div>
-                    <DialogTitle className="text-xl sm:text-2xl font-black text-[#002752] dark:text-white">
+                    <DialogTitle className="text-xl sm:text-2xl font-black text-primary dark:text-white">
                       Ethical Clearance Validity Report
                     </DialogTitle>
-                    <DialogDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
                       Live cryptographic proof confirming protocol approval and signature authenticity.
                     </DialogDescription>
                   </DialogHeader>
@@ -186,29 +186,29 @@ export function CertificateShowcase() {
                   <div className="space-y-4 py-3 text-sm">
                     <div className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/40 space-y-2.5">
                       <div className="flex justify-between text-xs sm:text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Protocol ID:</span>
-                        <span className="font-mono font-bold text-[#002752] dark:text-white">ETH-2026-MED-0419</span>
+                        <span className="text-muted-foreground">Protocol ID:</span>
+                        <span className="font-mono font-bold text-primary dark:text-white">ETH-2026-MED-0419</span>
                       </div>
                       <div className="flex justify-between text-xs sm:text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Status:</span>
-                        <span className="font-bold text-[#198754]">Active & Certified</span>
+                        <span className="text-muted-foreground">Status:</span>
+                        <span className="font-bold text-secondary">Active & Certified</span>
                       </div>
                       <div className="flex justify-between text-xs sm:text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Lead PI:</span>
-                        <span className="font-semibold text-[#002752] dark:text-white">Dr. Evelyn Reed</span>
+                        <span className="text-muted-foreground">Lead PI:</span>
+                        <span className="font-semibold text-primary dark:text-white">Dr. Evelyn Reed</span>
                       </div>
                       <div className="flex justify-between text-xs sm:text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Approved by:</span>
-                        <span className="font-semibold text-[#002752] dark:text-white">Biomedical IRB Quorum</span>
+                        <span className="text-muted-foreground">Approved by:</span>
+                        <span className="font-semibold text-primary dark:text-white">Biomedical IRB Quorum</span>
                       </div>
                       <div className="flex justify-between text-xs sm:text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Ledger timestamp:</span>
+                        <span className="text-muted-foreground">Ledger timestamp:</span>
                         <span className="font-mono tabular-nums text-slate-700 dark:text-slate-300">2026-09-03 10:00:00 UTC</span>
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <span className="text-xs text-slate-500 dark:text-slate-400 block font-bold uppercase tracking-wider">
+                      <span className="text-xs text-muted-foreground block font-bold uppercase tracking-wider">
                         SHA-256 digital signature:
                       </span>
                       <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs break-all">
@@ -216,11 +216,11 @@ export function CertificateShowcase() {
                         <button
                           type="button"
                           onClick={handleCopyHash}
-                          className="ml-2 p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-[#002752] dark:hover:text-white shrink-0 transition-colors"
+                          className="ml-2 p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white shrink-0 transition-colors"
                           title="Copy Hash"
                           aria-label="Copy SHA-256 hash"
                         >
-                          {copied ? <Check className="size-4 text-[#198754]" /> : <Copy className="size-4" />}
+                          {copied ? <Check className="size-4 text-secondary" /> : <Copy className="size-4" />}
                         </button>
                       </div>
                     </div>
@@ -257,12 +257,12 @@ export function CertificateShowcase() {
                   <span className="size-3 rounded-full bg-[#27C93F] border border-[#1AAB29]/50 inline-block" />
                 </div>
 
-                <div className="flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-[0.7rem] sm:text-xs text-slate-500 dark:text-slate-400 font-mono shadow-2xs max-w-sm w-full mx-2 truncate">
-                  <Lock className="size-3 text-[#198754] shrink-0" />
+                <div className="flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-micro sm:text-xs text-muted-foreground font-mono shadow-2xs max-w-sm w-full mx-2 truncate">
+                  <Lock className="size-3 text-secondary shrink-0" />
                   <span className="truncate">https://ethica.diu.edu.bd/verify/ETH-2026-MED-0419</span>
                 </div>
 
-                <div className="flex items-center gap-1 text-xs font-bold text-[#198754]">
+                <div className="flex items-center gap-1 text-xs font-bold text-secondary">
                   <CheckCircle2 className="size-3.5" />
                   <span className="hidden sm:inline">Certified</span>
                 </div>

@@ -278,7 +278,7 @@ export default function AdminCategoriesPage() {
         headerClassName: "w-36",
         cell: ({ row }) => (
           <div className="space-y-1">
-            <span className="font-mono text-base font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+            <span className="font-mono text-base font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-primary dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
               {row.code}
             </span>
             <span className="block font-mono text-base text-slate-400 dark:text-slate-500">
@@ -296,11 +296,11 @@ export default function AdminCategoriesPage() {
           <div className="max-w-md min-w-[240px]">
             <Link
               href={`/admin/categories/${encodeURIComponent(row.id)}`}
-              className="font-bold text-slate-900 dark:text-white text-[13px] hover:text-[#002752] dark:hover:text-sky-400 hover:underline leading-snug line-clamp-1"
+              className="font-bold text-foreground text-table-cell hover:text-primary dark:hover:text-sky-400 hover:underline leading-snug line-clamp-1"
             >
               {row.name}
             </Link>
-            <p className="text-base text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+            <p className="text-base text-muted-foreground line-clamp-1 mt-0.5">
               {row.description}
             </p>
           </div>
@@ -317,7 +317,7 @@ export default function AdminCategoriesPage() {
             variant="outline"
             className="text-base font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap"
           >
-            <Building2 className="size-3 mr-1 text-[#002752] dark:text-sky-400" />
+            <Building2 className="size-3 mr-1 text-primary dark:text-sky-400" />
             {row.board}
           </Badge>
         ),
@@ -330,7 +330,7 @@ export default function AdminCategoriesPage() {
         headerClassName: "w-40",
         cell: ({ row }) => (
           <div className="whitespace-nowrap">
-            <span className="font-bold text-slate-900 dark:text-white text-base">
+            <span className="font-bold text-foreground text-base">
               ৳ {row.priceBdt.toLocaleString()}
             </span>
             <span className="text-base text-slate-400 dark:text-slate-500 block uppercase font-mono">
@@ -413,7 +413,7 @@ export default function AdminCategoriesPage() {
                 size="icon-xs"
                 title="Inspect Category Dossier"
                 aria-label={`View dossier for ${row.name}`}
-                className="text-slate-500 hover:text-[#002752] dark:hover:text-sky-300"
+                className="text-slate-500 hover:text-primary dark:hover:text-sky-300"
               >
                 <ExternalLink className="size-3.5" />
               </Button>
@@ -564,8 +564,8 @@ export default function AdminCategoriesPage() {
           <form onSubmit={handleCreateSubmit} className="flex flex-col h-full" noValidate>
             <SheetHeader className="p-0 pb-3">
               <div className="flex items-center justify-between gap-2">
-                <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
-                  <Layers className="size-5 text-[#198754]" />
+                <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
+                  <Layers className="size-5 text-secondary" />
                   <span>Add New Research Category</span>
                 </SheetTitle>
                 <Button
@@ -573,7 +573,7 @@ export default function AdminCategoriesPage() {
                   variant="outline"
                   size="xs"
                   onClick={handleAutofillDemo}
-                  className="text-base font-bold text-[#002752] dark:text-sky-300 gap-1"
+                  className="text-base font-bold text-primary dark:text-sky-300 gap-1"
                 >
                   <Sparkles className="size-3 text-amber-500" />
                   <span>Autofill Sample</span>
@@ -707,7 +707,7 @@ export default function AdminCategoriesPage() {
                     />
                     <Label
                       htmlFor="create-expedited-toggle"
-                      className="text-base font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                      className="text-base font-bold text-foreground cursor-pointer"
                     >
                       Enable Fast-Track Expedited Review (72-Hour Triage)
                     </Label>
@@ -837,8 +837,8 @@ export default function AdminCategoriesPage() {
           {categoryToEdit && (
             <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
               <SheetHeader className="p-0 pb-3">
-                <SheetTitle className="text-lg font-black text-[#002752] dark:text-white flex items-center gap-2">
-                  <Edit2 className="size-5 text-[#198754]" />
+                <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
+                  <Edit2 className="size-5 text-secondary" />
                   <span>Edit Category: {categoryToEdit.code}</span>
                 </SheetTitle>
                 <SheetDescription className="text-base text-muted-foreground">
@@ -958,7 +958,7 @@ export default function AdminCategoriesPage() {
                       />
                       <Label
                         htmlFor="edit-expedited-toggle"
-                        className="text-base font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                        className="text-base font-bold text-foreground cursor-pointer"
                       >
                         Enable Fast-Track Expedited Review (72-Hour Triage)
                       </Label>
@@ -1096,7 +1096,7 @@ export default function AdminCategoriesPage() {
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Are you sure you want to permanently delete the research category{" "}
-              <strong className="text-slate-900 dark:text-white">
+              <strong className="text-foreground">
                 {categoryToDelete?.name} ({categoryToDelete?.code})
               </strong>
               ? This action removes its BDT fee structure from the institutional schedule. Existing submitted protocols will retain their historical fee snapshots.

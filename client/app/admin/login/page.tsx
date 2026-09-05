@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 dark:from-[#040e1a] dark:via-[#071321] dark:to-[#040e1a] text-slate-900 dark:text-white flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 dark:from-[#040e1a] dark:via-[#071321] dark:to-[#040e1a] text-foreground flex flex-col justify-between overflow-x-hidden">
       {/* Soft Ambient Background Luminous Glow */}
       <div
         aria-hidden="true"
@@ -75,13 +75,13 @@ export default function AdminLoginPage() {
       <header className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#002752] via-[#003875] to-[#002752] text-white transition-transform group-hover:scale-105">
-            <Sliders className="size-5 text-[#198754]" />
+            <Sliders className="size-5 text-secondary" />
           </div>
           <div>
-            <span className="font-sans text-xl font-black tracking-tight text-[#002752] dark:text-white block leading-tight">
+            <span className="font-sans text-xl font-black tracking-tight text-primary dark:text-white block leading-tight">
               ETHICA
             </span>
-            <span className="font-mono text-[0.65rem] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="font-mono text-micro font-bold text-slate-500 uppercase tracking-wider block">
               Governance Administration
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/reviewer/login"
-            className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-[#002752] dark:hover:text-white flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200"
+            className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200"
           >
             <Scale className="size-3.5 text-blue-600" />
             <span className="hidden sm:inline">IRB Committee</span>
@@ -98,7 +98,7 @@ export default function AdminLoginPage() {
           </Link>
           <Link
             href="/"
-            className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-[#002752] dark:hover:text-white flex items-center gap-1 transition-colors"
+            className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-primary dark:hover:text-white flex items-center gap-1 transition-colors"
           >
             <ArrowLeft className="size-3.5" />
             <span className="hidden sm:inline">Back to</span> Home
@@ -112,7 +112,7 @@ export default function AdminLoginPage() {
         {/* Giant Ghost Watermark Typography */}
         <div
           aria-hidden="true"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[14rem] uppercase tracking-[0.18em] text-[#002752]/[0.03] dark:text-white/[0.025] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[14rem] uppercase tracking-[0.18em] text-primary/[0.03] dark:text-white/[0.025] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
         >
           GOVERNANCE
         </div>
@@ -121,14 +121,14 @@ export default function AdminLoginPage() {
           
           {/* Form Header */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#198754]/10 text-[#198754] text-xs font-bold border border-[#198754]/25 mb-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#198754]/10 text-secondary text-xs font-bold border border-[#198754]/25 mb-1">
               <Sliders className="size-3.5" />
               <span>Institutional System Administration</span>
             </div>
-            <h1 className="font-sans text-2xl sm:text-3xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
+            <h1 className="font-sans text-2xl sm:text-3xl font-black text-primary dark:text-white tracking-tight uppercase">
               Admin Console Sign In
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-xs sm:text-sm text-muted-foreground font-medium">
               Authorized Institutional Compliance Officers & System Administrators
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function AdminLoginPage() {
           {/* Quick Demo Autofill Banner */}
           <div className="p-3 sm:p-3.5 rounded-xl border border-emerald-200/80 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-emerald-950/40 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-emerald-800 dark:text-emerald-300 font-medium">
-              <Sparkles className="size-4 text-[#198754] shrink-0" />
+              <Sparkles className="size-4 text-secondary shrink-0" />
               <span>Testing administrator access?</span>
             </div>
             <Button
@@ -176,7 +176,7 @@ export default function AdminLoginPage() {
                     errors.adminId
                       ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                       : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
-                  } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
+                  } text-foreground placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
                 />
               </div>
               {errors.adminId && (
@@ -198,7 +198,7 @@ export default function AdminLoginPage() {
                     e.preventDefault()
                     setStatusMessage("Contact Institutional Governance Board for credential assistance.")
                   }}
-                  className="text-xs font-semibold text-[#198754] hover:underline"
+                  className="text-xs font-semibold text-secondary hover:underline"
                 >
                   Forgot credentials?
                 </a>
@@ -215,7 +215,7 @@ export default function AdminLoginPage() {
                     errors.passphrase
                       ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                       : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
-                  } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
+                  } text-foreground placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
                 />
                 <Button
                   type="button"
@@ -247,12 +247,12 @@ export default function AdminLoginPage() {
 
           {/* Switch Portal Links */}
           <div className="pt-2 text-center border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-4 text-xs">
-            <Link href="/login" className="font-semibold text-slate-500 hover:text-[#002752] flex items-center gap-1">
-              <GraduationCap className="size-3.5 text-[#198754]" />
+            <Link href="/login" className="font-semibold text-slate-500 hover:text-primary flex items-center gap-1">
+              <GraduationCap className="size-3.5 text-secondary" />
               <span>Researcher Portal</span>
             </Link>
             <span className="text-slate-300">•</span>
-            <Link href="/reviewer/login" className="font-semibold text-slate-500 hover:text-[#002752] flex items-center gap-1">
+            <Link href="/reviewer/login" className="font-semibold text-slate-500 hover:text-primary flex items-center gap-1">
               <Scale className="size-3.5 text-blue-600" />
               <span>IRB Committee Portal</span>
             </Link>
@@ -262,10 +262,10 @@ export default function AdminLoginPage() {
       </main>
 
       {/* Footer Security Badges */}
-      <footer className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/40 dark:bg-card/40 backdrop-blur-md">
+      <footer className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground border-t border-slate-200/60 dark:border-slate-800/60 bg-white/40 dark:bg-card/40 backdrop-blur-md">
         <span>© {new Date().getFullYear()} Ethica Institutional System Administration Console</span>
-        <div className="flex items-center gap-4 text-[0.7rem] font-semibold">
-          <span className="flex items-center gap-1 text-[#198754]">
+        <div className="flex items-center gap-4 text-micro font-semibold">
+          <span className="flex items-center gap-1 text-secondary">
             <ShieldCheck className="size-3.5" />
             ISO 27001 & SOC 2 Audited
           </span>

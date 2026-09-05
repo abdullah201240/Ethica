@@ -252,7 +252,7 @@ export default function AdminListPage() {
       cell: ({ row }) => (
         <Link
           href={`/admin/admins/${encodeURIComponent(row.id)}`}
-          className="font-mono text-base font-bold text-slate-800 dark:text-slate-200 hover:text-[#002752] dark:hover:text-sky-400 hover:underline select-text inline-flex items-center gap-1"
+          className="font-mono text-base font-bold text-foreground hover:text-primary dark:hover:text-sky-400 hover:underline select-text inline-flex items-center gap-1"
         >
           {row.id}
         </Link>
@@ -277,7 +277,7 @@ export default function AdminListPage() {
           <div className="flex items-center gap-3">
             <Link
               href={`/admin/admins/${encodeURIComponent(row.id)}`}
-              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text hover:ring-2 hover:ring-[#002752]/30 transition-all"
+              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text hover:ring-2 hover:ring-[#002752]/30 transition-all"
             >
               {initials}
             </Link>
@@ -285,7 +285,7 @@ export default function AdminListPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href={`/admin/admins/${encodeURIComponent(row.id)}`}
-                  className="text-base font-bold text-slate-900 dark:text-white truncate select-text hover:text-[#002752] dark:hover:text-sky-400 hover:underline"
+                  className="text-base font-bold text-foreground truncate select-text hover:text-primary dark:hover:text-sky-400 hover:underline"
                 >
                   {row.name}
                 </Link>
@@ -298,7 +298,7 @@ export default function AdminListPage() {
                   </Badge>
                 )}
               </div>
-              <div className="text-base text-slate-500 dark:text-slate-400 truncate flex items-center gap-2 select-text">
+              <div className="text-base text-muted-foreground truncate flex items-center gap-2 select-text">
                 <Mail className="size-3 text-slate-400 shrink-0" />
                 <span>{row.email}</span>
               </div>
@@ -316,14 +316,14 @@ export default function AdminListPage() {
         const accessBadgeStyles: Record<AdminAccessLevel, string> = {
           "Super Admin": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
           "System Admin": "bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/30",
-          "Governance Admin": "bg-[#002752]/10 text-[#002752] dark:text-sky-300 border-[#002752]/30",
+          "Governance Admin": "bg-[#002752]/10 text-primary dark:text-sky-300 border-[#002752]/30",
           "Security & Audit": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
           "Operations Admin": "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30",
         }
 
         return (
           <div className="space-y-1">
-            <div className="text-base font-bold text-slate-800 dark:text-slate-200 select-text">
+            <div className="text-base font-bold text-foreground select-text">
               {row.role}
             </div>
             <Badge
@@ -366,7 +366,7 @@ export default function AdminListPage() {
       header: "Last Active",
       sortable: true,
       cell: ({ row }) => (
-        <div className="flex items-center gap-1.5 text-base text-slate-500 dark:text-slate-400 select-text">
+        <div className="flex items-center gap-1.5 text-base text-muted-foreground select-text">
           <Clock className="size-3 text-slate-400 shrink-0" />
           <span>{row.lastActive}</span>
         </div>
@@ -407,7 +407,7 @@ export default function AdminListPage() {
               className="h-7 px-2 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               title="View Security Dossier"
             >
-              <Eye className="size-3.5 mr-1 text-[#002752] dark:text-sky-400" />
+              <Eye className="size-3.5 mr-1 text-primary dark:text-sky-400" />
               <span>Dossier</span>
             </Button>
           </Link>
@@ -505,16 +505,16 @@ export default function AdminListPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/users"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-base transition-colors shrink-0"
               >
-                <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <Users className="size-3.5 mr-1.5 text-primary dark:text-sky-400" />
                 <span>All Users</span>
               </Link>
               <Link
                 href="/admin/roster"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-base transition-colors shrink-0"
               >
-                <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <Users className="size-3.5 mr-1.5 text-primary dark:text-sky-400" />
                 <span>Reviewer Roster</span>
               </Link>
 
@@ -531,10 +531,10 @@ export default function AdminListPage() {
                 } />
                 <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
                   <SheetHeader className="p-0 pb-3">
-                    <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <SheetTitle className="text-base font-bold text-primary dark:text-white">
                       Appoint Institutional System Administrator
                     </SheetTitle>
-                    <SheetDescription className="text-base text-slate-500 dark:text-slate-400">
+                    <SheetDescription className="text-base text-muted-foreground">
                       Register a new institutional officer with privileged access to the Ethica governance engine.
                     </SheetDescription>
                   </SheetHeader>
@@ -696,7 +696,7 @@ export default function AdminListPage() {
                               }
                               className={`flex items-center gap-2 p-1.5 rounded cursor-pointer text-base font-medium transition-colors ${
                                 isSelected
-                                  ? "bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 font-bold"
+                                  ? "bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 font-bold"
                                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                               }`}
                             >
@@ -747,10 +747,10 @@ export default function AdminListPage() {
         >
           <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
             <SheetHeader className="p-0 pb-3">
-              <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
+              <SheetTitle className="text-base font-bold text-primary dark:text-white">
                 Edit Administrator Credentials: {selectedAdminForEdit.name}
               </SheetTitle>
-              <SheetDescription className="text-base text-slate-500 dark:text-slate-400">
+              <SheetDescription className="text-base text-muted-foreground">
                 Update designation, access privileges, and departmental assignment.
               </SheetDescription>
             </SheetHeader>
@@ -872,7 +872,7 @@ export default function AdminListPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-[#002752] dark:text-white">
+            <AlertDialogTitle className="flex items-center gap-2 text-primary dark:text-white">
               <ToggleLeft className="size-5 text-amber-500" />
               {pendingToggleAdmin?.status === "Active"
                 ? "Suspend Administrator Account"

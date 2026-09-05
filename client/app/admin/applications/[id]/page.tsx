@@ -195,18 +195,18 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
       <div className="space-y-6">
         <Link
           href="/admin/applications"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#002752] dark:text-slate-300 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-primary dark:text-slate-300 transition-colors"
         >
           <ArrowLeft className="size-3.5" />
           <span>Back to Applications Roster</span>
         </Link>
         <Card className="p-8 text-center border-slate-200/85 dark:border-slate-800">
           <AlertCircle className="size-12 text-rose-500 mx-auto mb-3" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-xl font-bold text-foreground">
             Application Dossier Not Found
           </h2>
           <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
-            The application identifier <code className="font-mono font-bold text-[#002752] dark:text-sky-300">{appId}</code> could not be found in the current institutional registry.
+            The application identifier <code className="font-mono font-bold text-primary dark:text-sky-300">{appId}</code> could not be found in the current institutional registry.
           </p>
           <div className="mt-5">
             <Link
@@ -232,13 +232,13 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
         <div className="flex items-center gap-2">
           <Link
             href="/admin/applications"
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 shadow-xs transition-colors"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] text-xs font-bold text-foreground/85 hover:bg-slate-50 dark:hover:bg-slate-800/60 shadow-xs transition-colors"
           >
             <ArrowLeft className="size-3.5" />
             <span>Applications List</span>
           </Link>
           <span className="text-slate-300 dark:text-slate-700">/</span>
-          <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400">
+          <span className="font-mono text-xs font-bold text-muted-foreground">
             {application.id}
           </span>
         </div>
@@ -287,7 +287,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
             </div>
             <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-[#002752] dark:text-white">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-primary dark:text-white">
                   {application.fullName}
                 </h1>
                 <Badge
@@ -303,7 +303,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                 <span className="text-slate-300 dark:text-slate-700">·</span>
                 <span>{application.department}</span>
                 <span className="text-slate-300 dark:text-slate-700">·</span>
-                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span className="text-muted-foreground flex items-center gap-1">
                   <Building2 className="size-3.5" />
                   {application.institution}
                 </span>
@@ -314,18 +314,18 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           {/* Quick Stats Pill Counters */}
           <div className="flex items-center gap-3 self-start lg:self-center shrink-0">
             <div className="px-4 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/70 dark:border-slate-800 text-center">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="block text-micro font-bold text-slate-400 uppercase tracking-wider">
                 Experience
               </span>
-              <span className="block text-base sm:text-lg font-black text-slate-900 dark:text-white">
+              <span className="block text-base sm:text-lg font-black text-foreground">
                 {application.yearsExperience} yrs
               </span>
             </div>
             <div className="px-4 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/70 dark:border-slate-800 text-center">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="block text-micro font-bold text-slate-400 uppercase tracking-wider">
                 Domains
               </span>
-              <span className="block text-base sm:text-lg font-black text-slate-900 dark:text-white">
+              <span className="block text-base sm:text-lg font-black text-foreground">
                 {application.expertise.length}
               </span>
             </div>
@@ -340,8 +340,8 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           {/* Card: Academic Profile & Institutional Affiliation */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-5">
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-3 flex items-center justify-between">
-              <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
-                <GraduationCap className="size-5 text-[#002752] dark:text-sky-300" />
+              <h2 className="text-base sm:text-lg font-bold text-primary dark:text-white flex items-center gap-2">
+                <GraduationCap className="size-5 text-primary dark:text-sky-300" />
                 <span>Academic & Institutional Verification</span>
               </h2>
               <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
@@ -352,35 +352,35 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Degree & Qualifications
                 </span>
-                <p className="font-semibold text-slate-900 dark:text-white">{application.degree}</p>
+                <p className="font-semibold text-foreground">{application.degree}</p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Current Faculty Designation
                 </span>
-                <p className="font-semibold text-slate-900 dark:text-white">{application.position}</p>
+                <p className="font-semibold text-foreground">{application.position}</p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Parent Institution
                 </span>
-                <p className="font-semibold text-slate-900 dark:text-white">{application.institution}</p>
+                <p className="font-semibold text-foreground">{application.institution}</p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Academic Department
                 </span>
-                <p className="font-semibold text-slate-900 dark:text-white">{application.department}</p>
+                <p className="font-semibold text-foreground">{application.department}</p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Institutional Email
                 </span>
                 <p className="font-mono text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -390,7 +390,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
               </div>
 
               <div className="space-y-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                   Direct Telephone
                 </span>
                 <p className="font-mono text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -401,14 +401,14 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
               {application.orcid && (
                 <div className="sm:col-span-2 space-y-1 pt-1">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-micro font-bold text-slate-400 uppercase tracking-wider">
                     ORCID Research Identifier
                   </span>
                   <a
                     href={`https://orcid.org/${application.orcid}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#198754] hover:underline"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-secondary hover:underline"
                   >
                     <span>{application.orcid}</span>
                     <ExternalLink className="size-3" />
@@ -420,7 +420,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
           {/* Card: Bioethics Domains & Expertise */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
-            <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-bold text-primary dark:text-white flex items-center gap-2">
               <Award className="size-5 text-amber-500" />
               <span>Certified Ethics Review Expertise</span>
             </h2>
@@ -428,7 +428,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
               {application.expertise.map((exp) => (
                 <span
                   key={exp}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/15 dark:border-white/10"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#002752]/8 dark:bg-white/8 text-primary dark:text-sky-300 border border-[#002752]/15 dark:border-white/10"
                 >
                   {exp}
                 </span>
@@ -438,18 +438,18 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
           {/* Card: Formal Statement of Interest */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
-            <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
-              <Briefcase className="size-5 text-[#198754]" />
+            <h2 className="text-base sm:text-lg font-bold text-primary dark:text-white flex items-center gap-2">
+              <Briefcase className="size-5 text-secondary" />
               <span>Statement of Motivation & Regulatory Bioethics Experience</span>
             </h2>
-            <blockquote className="p-4 rounded-xl border-l-4 border-[#002752] dark:border-sky-400 bg-slate-50 dark:bg-white/[0.02] text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed italic">
+            <blockquote className="p-4 rounded-xl border-l-4 border-[#002752] dark:border-sky-400 bg-slate-50 dark:bg-white/[0.02] text-xs sm:text-sm text-foreground/85 leading-relaxed italic">
               &ldquo;{application.statement}&rdquo;
             </blockquote>
           </Card>
 
           {/* Card: Curriculum Vitae & Certification Dossier */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
-            <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-bold text-primary dark:text-white flex items-center gap-2">
               <FileText className="size-5 text-slate-500" />
               <span>Applicant Curriculum Vitae Dossier</span>
             </h2>
@@ -459,10 +459,10 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                   PDF
                 </div>
                 <div className="min-w-0">
-                  <span className="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                  <span className="block text-xs sm:text-sm font-bold text-foreground truncate">
                     {application.cvFileName || `${application.fullName.replace(/\s+/g, "_")}_CV.pdf`}
                   </span>
-                  <span className="block text-[11px] text-slate-400 font-mono">
+                  <span className="block text-micro text-slate-400 font-mono">
                     2.4 MB • SHA-256 Verified Digital Seal
                   </span>
                 </div>
@@ -491,20 +491,20 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           {/* Deliberation & Adjudication Console */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-sm p-5 sm:p-6 space-y-5">
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-3">
-              <h2 className="text-base sm:text-lg font-black text-[#002752] dark:text-white uppercase tracking-tight">
+              <h2 className="text-base sm:text-lg font-black text-primary dark:text-white uppercase tracking-tight">
                 Secretariat Adjudication
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Official accreditation determination and decision seal
               </p>
             </div>
 
             {application.decisionDate && (
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/70 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-micro font-bold text-slate-400 uppercase tracking-wider block">
                   Last Adjudicated
                 </span>
-                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <p className="text-xs font-semibold text-foreground">
                   {application.decisionDate}
                 </p>
                 {application.decisionNotes && (
@@ -542,11 +542,11 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                       Confirm Reviewer Accreditation
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Are you sure you want to approve accreditation for <strong className="text-slate-900 dark:text-white">{application.fullName}</strong> ({application.institution})?
+                      Are you sure you want to approve accreditation for <strong className="text-foreground">{application.fullName}</strong> ({application.institution})?
                       This action will grant official reviewer status on the Institutional Ethics Committee.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -586,11 +586,11 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                 } />
                 <AlertDialogContent className="sm:max-w-md">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                       Decline Reviewer Application
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Are you sure you want to decline the reviewer application for <strong className="text-slate-900 dark:text-white">{application.fullName}</strong>?
+                      Are you sure you want to decline the reviewer application for <strong className="text-foreground">{application.fullName}</strong>?
                       The recorded secretariat notes will be provided as feedback.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -610,7 +610,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
           {/* Institutional Compliance Checklist */}
           <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider">
               Accreditation Compliance Criteria
             </h3>
             <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">

@@ -120,10 +120,10 @@ export default function UserDossierDetailPage({ params }: PageProps) {
             <Users className="size-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-foreground">
               Platform User Not Found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               No account found matching identifier &quot;{userId}&quot;.
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 px-4 sm:px-0">
         <Link
           href="/admin/users"
-          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="size-3.5 mr-1.5" />
           <span>Back to All Users Directory</span>
@@ -250,12 +250,12 @@ export default function UserDossierDetailPage({ params }: PageProps) {
       <Card className="p-5 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
+            <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
               {initials}
             </div>
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                   {user.name}
                 </h1>
                 <Badge
@@ -284,11 +284,11 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                     {user.role} • {user.department}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-1 text-muted-foreground">
                   <Calendar className="size-3.5 text-slate-400 shrink-0" />
                   <span>Registered {user.joinedAt}</span>
                 </div>
-                <div className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+                <div className="font-mono text-xs font-bold text-primary dark:text-sky-300">
                   {user.id}
                 </div>
               </div>
@@ -296,20 +296,20 @@ export default function UserDossierDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200"
+                  className="text-micro font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-foreground/85"
                 >
                   {user.institution}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                  className="text-micro font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
                 >
                   <CheckCircle2 className="size-3 mr-1 inline text-emerald-600" />
                   {user.verificationStatus}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className="text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                  className="text-micro font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
                 >
                   Last active: {user.lastLogin}
                 </Badge>
@@ -346,7 +346,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
               } />
               <AlertDialogContent className="max-w-md">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white">
+                  <AlertDialogTitle className="flex items-center gap-2 text-base font-bold text-foreground">
                     {isActive ? (
                       <>
                         <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
@@ -363,7 +363,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                     {isActive ? (
                       <>
                         Are you sure you want to suspend{" "}
-                        <strong className="text-slate-900 dark:text-white">
+                        <strong className="text-foreground">
                           {user.name}
                         </strong>{" "}
                         ({user.id})?
@@ -376,7 +376,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                     ) : (
                       <>
                         Are you sure you want to restore{" "}
-                        <strong className="text-slate-900 dark:text-white">
+                        <strong className="text-foreground">
                           {user.name}
                         </strong>{" "}
                         ({user.id}) to <strong>Active</strong> standing?
@@ -460,8 +460,8 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Institutional & Contact Coordinates */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Building2 className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Building2 className="size-4 text-primary dark:text-sky-400" />
               <span>Institutional Coordinates & Directory Info</span>
             </h3>
 
@@ -471,7 +471,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {user.institution}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   {user.department}
                 </span>
               </div>
@@ -481,7 +481,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
                   {user.role}
                 </span>
-                <span className="text-slate-500 dark:text-slate-400 block mt-0.5">
+                <span className="text-muted-foreground block mt-0.5">
                   Pillar: {user.pillar}
                 </span>
               </div>
@@ -490,7 +490,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
                 <span className="text-slate-400 block font-medium">Official Contact Email</span>
                 <a
                   href={`mailto:${user.email}`}
-                  className="font-bold text-[#002752] dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
+                  className="font-bold text-primary dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
                 >
                   <Mail className="size-3.5 text-slate-400 shrink-0" />
                   <span>{user.email}</span>
@@ -510,8 +510,8 @@ export default function UserDossierDetailPage({ params }: PageProps) {
           {/* Card: Biography / Research Profile */}
           {user.bio && (
             <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-              <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <FileText className="size-4 text-[#002752] dark:text-sky-400" />
+              <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <FileText className="size-4 text-primary dark:text-sky-400" />
                 <span>Profile Statement & Academic Focus</span>
               </h3>
               <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200/70 dark:border-slate-800">
@@ -525,35 +525,35 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Security & RBAC Clearance */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <ShieldCheck className="size-4 text-[#002752] dark:text-sky-400" />
+            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <ShieldCheck className="size-4 text-primary dark:text-sky-400" />
               <span>Identity & Security Status</span>
             </h3>
 
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Identity Verification</span>
+                <span className="text-muted-foreground">Identity Verification</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {user.verificationStatus}
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Account Standing</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
+                <span className="text-muted-foreground">Account Standing</span>
+                <span className="font-bold text-foreground">
                   {user.status}
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">2FA / Hardware Auth</span>
+                <span className="text-muted-foreground">2FA / Hardware Auth</span>
                 <span className="font-semibold text-slate-700 dark:text-slate-300">
                   Enforced via DIU SSO
                 </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Last Session</span>
+                <span className="text-muted-foreground">Last Session</span>
                 <span className="font-semibold text-slate-700 dark:text-slate-300">
                   {user.lastLogin}
                 </span>
@@ -567,10 +567,10 @@ export default function UserDossierDetailPage({ params }: PageProps) {
       <Sheet open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
           <SheetHeader className="p-0 pb-3">
-            <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
+            <SheetTitle className="text-base font-bold text-primary dark:text-white">
               Edit User Profile: {user.name}
             </SheetTitle>
-            <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
+            <SheetDescription className="text-xs text-muted-foreground">
               Update institutional coordinates, contact information, and role designation.
             </SheetDescription>
           </SheetHeader>

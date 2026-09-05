@@ -140,17 +140,17 @@ export function DashboardShell({
 
   const activeNavBg =
     roleColor === "green"
-      ? "bg-gradient-to-r from-[#198754]/12 to-emerald-500/5 text-[#198754] dark:text-emerald-300 border-l-2 border-[#198754]"
+      ? "bg-gradient-to-r from-[#198754]/12 to-emerald-500/5 text-secondary dark:text-emerald-300 border-l-2 border-[#198754]"
       : roleColor === "gold"
         ? "bg-gradient-to-r from-[#E0C23C]/12 to-amber-400/5 text-[#b09214] dark:text-[#E0C23C] border-l-2 border-[#E0C23C]"
-        : "bg-gradient-to-r from-[#002752]/10 to-blue-500/5 text-[#002752] dark:text-sky-300 border-l-2 border-[#002752] dark:border-sky-400"
+        : "bg-gradient-to-r from-[#002752]/10 to-blue-500/5 text-primary dark:text-sky-300 border-l-2 border-[#002752] dark:border-sky-400"
 
   const activeNavIconClass =
     roleColor === "green"
-      ? "text-[#198754] dark:text-emerald-300"
+      ? "text-secondary dark:text-emerald-300"
       : roleColor === "gold"
         ? "text-[#b09214] dark:text-[#E0C23C]"
-        : "text-[#002752] dark:text-sky-300"
+        : "text-primary dark:text-sky-300"
 
   const activeCollapsedBg =
     roleColor === "green"
@@ -209,7 +209,7 @@ export function DashboardShell({
                 variant="ghost"
                 size="icon-xs"
                 onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-[#002752] dark:hover:text-sky-300"
+                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-primary dark:hover:text-sky-300"
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
@@ -225,10 +225,10 @@ export function DashboardShell({
                   <ShieldCheck className="size-5" />
                 </div>
                 <div className="min-w-0 leading-none">
-                  <span className="block text-base sm:text-lg font-black tracking-tight text-[#002752] dark:text-white">
+                  <span className="block text-base sm:text-lg font-black tracking-tight text-primary dark:text-white">
                     ETHICA
                   </span>
-                  <span className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
+                  <span className="block text-micro text-muted-foreground uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
                     {roleBadge ? `${roleBadge} • ` : ""}{roleTitle}
                   </span>
                 </div>
@@ -257,7 +257,7 @@ export function DashboardShell({
             <div key={group} className={gi > 0 && !collapsed ? "pt-3" : ""}>
               {!collapsed && group !== "_main" && (
                 <div className="px-2.5 pb-1.5 pt-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
+                  <span className="text-micro font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
                     {group}
                   </span>
                 </div>
@@ -270,10 +270,10 @@ export function DashboardShell({
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
                     title={collapsed ? item.label : undefined}
-                    className={`group relative flex items-center rounded-lg text-sm font-semibold transition-all duration-150 ${
+                    className={`group relative flex items-center rounded-lg text-nav-item transition-all duration-150 ${
                       collapsed
                         ? `justify-center size-10 mx-auto my-0.5 ${
-                            isActive ? activeCollapsedBg : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white"
+                            isActive ? activeCollapsedBg : "text-muted-foreground hover:bg-slate-50 dark:hover:bg-white/[0.05] hover:text-foreground dark:hover:text-white"
                           }`
                         : `gap-3 px-3.5 py-2.5 w-full ${
                             isActive
@@ -311,7 +311,7 @@ export function DashboardShell({
                 type="button"
                 variant="ghost"
                 title={collapsed ? "Sign Out" : undefined}
-                className={`group flex items-center rounded-lg text-sm font-semibold text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 cursor-pointer ${
+                className={`group flex items-center rounded-lg text-nav-item text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 cursor-pointer ${
                   collapsed ? "justify-center size-10 mx-auto mt-0.5 p-0" : "gap-3 px-3.5 py-2.5 w-full justify-start h-auto"
                 }`}
               >
@@ -321,7 +321,7 @@ export function DashboardShell({
             } />
             <AlertDialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-md">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                <AlertDialogTitle className="text-base sm:text-lg font-bold text-foreground">
                   Confirm Workspace Sign Out
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -359,7 +359,7 @@ export function DashboardShell({
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex lg:hidden size-9 text-slate-500 dark:text-slate-400"
+              className="flex lg:hidden size-9 text-muted-foreground"
               aria-label="Toggle Sidebar"
             >
               {sidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -367,7 +367,7 @@ export function DashboardShell({
 
             {/* Page breadcrumb – desktop only */}
             <div className="hidden lg:flex items-center gap-1.5 pl-0.5">
-              <span className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">
+              <span className="text-body-sm sm:text-body font-bold text-foreground">
                 {currentPageLabel}
               </span>
             </div>
@@ -380,7 +380,7 @@ export function DashboardShell({
               type="button"
               variant="ghost"
               size="icon"
-              className="relative flex size-9 text-slate-500 dark:text-slate-400"
+              className="relative flex size-9 text-muted-foreground"
               aria-label="Notifications"
             >
               <Bell className="size-5" />
@@ -415,10 +415,10 @@ export function DashboardShell({
                   )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
-                  <span className="block text-sm font-bold text-slate-800 dark:text-slate-100 truncate max-w-36">
+                  <span className="block text-body-sm font-bold text-foreground truncate max-w-36">
                     {user.name}
                   </span>
-                  <span className="block text-xs font-medium text-slate-400 dark:text-slate-500 truncate max-w-36 mt-0.5">
+                  <span className="block text-micro text-muted-foreground truncate max-w-36 mt-0.5">
                     {user.title}
                   </span>
                 </div>
@@ -445,10 +445,10 @@ export function DashboardShell({
                   )}
                 </div>
                 <div className="hidden xl:block text-left leading-tight">
-                  <span className="block text-sm font-bold text-slate-800 dark:text-slate-100 truncate max-w-36">
+                  <span className="block text-body-sm font-bold text-foreground truncate max-w-36">
                     {user.name}
                   </span>
-                  <span className="block text-xs font-medium text-slate-400 dark:text-slate-500 truncate max-w-36 mt-0.5">
+                  <span className="block text-micro text-muted-foreground truncate max-w-36 mt-0.5">
                     {user.title}
                   </span>
                 </div>
@@ -464,10 +464,10 @@ export function DashboardShell({
         </main>
 
         {/* ── FOOTER ─────────────────────────────────────────────── */}
-        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-6 md:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-6 md:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-micro text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-slate-600 dark:text-slate-300">
+            <span className="font-semibold text-foreground/70">
               Ethica Ledger: SHA-256 Verified
             </span>
             <span className="text-slate-300 dark:text-slate-700">·</span>
@@ -475,7 +475,7 @@ export function DashboardShell({
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
-              <Lock className="size-3 text-[#198754]" />
+              <Lock className="size-3 text-secondary" />
               <span>Encrypted Session</span>
             </span>
             <span className="text-slate-300 dark:text-slate-700">·</span>

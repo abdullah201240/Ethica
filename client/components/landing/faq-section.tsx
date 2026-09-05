@@ -58,14 +58,14 @@ export function FaqSection() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             QUESTIONS
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               FREQUENTLY ASKED <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 QUESTIONS
@@ -91,9 +91,9 @@ export function FaqSection() {
             >
               <Accordion className="w-full">
                 <AccordionItem value={`faq-${idx}`} className="border-none">
-                  <AccordionTrigger className="text-left font-sans font-black text-base sm:text-lg text-[#002752] dark:text-white py-1 hover:no-underline hover:text-[#198754] dark:hover:text-[#22c55e] transition-colors">
+                  <AccordionTrigger className="text-left font-sans font-black text-base sm:text-lg text-primary dark:text-white py-1 hover:no-underline hover:text-secondary dark:hover:text-[#22c55e] transition-colors">
                     <div className="flex items-start gap-3.5 pr-2">
-                      <span className="font-mono text-xs font-black text-[#198754] bg-[#198754]/10 px-2.5 py-1 rounded-full shrink-0 mt-0.5">
+                      <span className="font-mono text-xs font-black text-secondary bg-[#198754]/10 px-2.5 py-1 rounded-full shrink-0 mt-0.5">
                         0{idx + 1}
                       </span>
                       <span className="leading-snug">{item.question}</span>
@@ -111,14 +111,14 @@ export function FaqSection() {
         {/* Support Callout Pill Card */}
         <div className="mt-10 sm:mt-12 p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-200/85 dark:border-slate-800/80 bg-white/80 dark:bg-card/80 backdrop-blur-md shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="size-12 sm:size-14 rounded-2xl bg-gradient-to-tr from-[#002752]/10 to-sky-100 dark:from-white/10 dark:to-white/5 border border-[#002752]/15 flex items-center justify-center text-[#002752] dark:text-white shrink-0">
+            <div className="size-12 sm:size-14 rounded-2xl bg-gradient-to-tr from-[#002752]/10 to-sky-100 dark:from-white/10 dark:to-white/5 border border-[#002752]/15 flex items-center justify-center text-primary dark:text-white shrink-0">
               <HelpCircle className="size-6 sm:size-7" />
             </div>
             <div>
-              <h4 className="text-base sm:text-lg font-black text-[#002752] dark:text-white">
+              <h4 className="text-base sm:text-lg font-black text-primary dark:text-white">
                 Have specific institutional questions or custom IRB workflows?
               </h4>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
                 Our academic compliance specialists can help configure Ethica for your university.
               </p>
             </div>

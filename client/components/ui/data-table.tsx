@@ -364,7 +364,7 @@ export function DataTable<T extends object>({
           <div className="space-y-1">
             <div className="flex items-center gap-2.5">
               {typeof title === "string" ? (
-                <CardTitle className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight">
+                <CardTitle className="text-section-heading text-primary uppercase tracking-tight">
                   {title}
                 </CardTitle>
               ) : (
@@ -373,14 +373,14 @@ export function DataTable<T extends object>({
               {totalCountBadge ?? (
                 <Badge
                   variant="secondary"
-                  className="font-mono text-xs font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  className="font-mono text-micro font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-foreground/85"
                 >
                   {totalRows} {totalRows === 1 ? "Record" : "Records"}
                 </Badge>
               )}
             </div>
             {description && (
-              <CardDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <CardDescription className="text-micro sm:text-body-sm text-muted-foreground font-medium">
                 {description}
               </CardDescription>
             )}
@@ -407,7 +407,7 @@ export function DataTable<T extends object>({
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="h-9 pl-9 pr-8 bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-xs sm:text-sm"
+                  className="h-9 pl-9 pr-8 bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-micro sm:text-body-sm"
                   aria-label="Search records"
                 />
                 {searchQuery && (
@@ -443,9 +443,9 @@ export function DataTable<T extends object>({
                           variant="outline"
                           size="sm"
                           className={cn(
-                            "h-9 gap-2 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800",
+                            "h-9 gap-2 text-micro font-semibold rounded-lg bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-foreground/85 hover:bg-slate-50 dark:hover:bg-slate-800",
                             isFiltered &&
-                              "border-[#002752]/40 bg-slate-50 dark:bg-slate-800 text-[#002752] dark:text-sky-300 font-bold"
+                              "border-primary/40 bg-slate-50 dark:bg-slate-800 text-primary font-bold"
                           )}
                           aria-label={`Filter by ${filter.title}`}
                         >
@@ -464,13 +464,13 @@ export function DataTable<T extends object>({
                         value={currentValue}
                         onValueChange={(val) => handleFilterChange(filter.id, val)}
                       >
-                        <DropdownMenuLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2 py-1.5">
+                        <DropdownMenuLabel className="text-micro font-bold uppercase tracking-wider text-muted-foreground px-2 py-1.5">
                           Filter by {filter.title}
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioItem
                           value="all"
-                          className="text-xs sm:text-sm font-medium cursor-pointer py-1.5 px-2"
+                          className="text-micro sm:text-body-sm font-medium cursor-pointer py-1.5 px-2"
                         >
                           All {filter.title}s
                         </DropdownMenuRadioItem>
@@ -478,13 +478,13 @@ export function DataTable<T extends object>({
                           <DropdownMenuRadioItem
                             key={opt.value}
                             value={opt.value}
-                            className="text-xs sm:text-sm font-medium cursor-pointer py-1.5 px-2 flex items-center justify-between"
+                            className="text-micro sm:text-body-sm font-medium cursor-pointer py-1.5 px-2 flex items-center justify-between"
                           >
                             <span>{opt.label}</span>
                             {opt.badge != null && (
                               <Badge
                                 variant="outline"
-                                className="text-xs ml-2 px-1.5 py-0 font-mono"
+                                className="text-micro ml-2 px-1.5 py-0 font-mono"
                               >
                                 {opt.badge}
                               </Badge>
@@ -505,14 +505,14 @@ export function DataTable<T extends object>({
                 variant="ghost"
                 size="sm"
                 onClick={handleResetFilters}
-                className="h-8 gap-1.5 px-2.5 text-xs sm:text-sm font-bold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="h-8 gap-1.5 px-2.5 text-micro sm:text-body-sm font-bold text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                 title="Reset active search and filters"
               >
                 <RotateCcw className="size-3" />
                 <span>Reset</span>
                 <Badge
                   variant="outline"
-                  className="size-4 p-0 rounded-full font-mono text-xs items-center justify-center border-slate-300 dark:border-slate-700"
+                  className="size-4 p-0 rounded-full font-mono text-micro items-center justify-center border-slate-300 dark:border-slate-700"
                 >
                   {activeFilterCount}
                 </Badge>
@@ -523,7 +523,7 @@ export function DataTable<T extends object>({
           {/* Right: Page Size Selector using UI DropdownMenu */}
           <div className="flex items-center gap-3 self-end lg:self-center shrink-0">
             {showPageSize && (
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <div className="flex items-center gap-2 text-micro sm:text-body-sm text-muted-foreground font-medium">
                 <span className="hidden sm:inline">Rows per page:</span>
                 <span className="sm:hidden">Show:</span>
                 <DropdownMenu>
@@ -533,7 +533,7 @@ export function DataTable<T extends object>({
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="h-8 gap-1.5 px-2.5 text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 rounded-lg text-slate-800 dark:text-slate-200"
+                        className="h-8 gap-1.5 px-2.5 text-micro sm:text-body-sm font-bold bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 rounded-lg text-foreground/85"
                         aria-label="Select rows per page"
                       >
                         <span>{pageSize}</span>
@@ -546,7 +546,7 @@ export function DataTable<T extends object>({
                       value={String(pageSize)}
                       onValueChange={(val) => handlePageSizeChange(Number(val))}
                     >
-                      <DropdownMenuLabel className="text-xs uppercase font-bold text-muted-foreground px-2 py-1">
+                      <DropdownMenuLabel className="text-micro uppercase font-bold text-muted-foreground px-2 py-1">
                         Rows per page
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
@@ -554,7 +554,7 @@ export function DataTable<T extends object>({
                         <DropdownMenuRadioItem
                           key={opt}
                           value={String(opt)}
-                          className="text-xs font-bold cursor-pointer py-1.5 px-2"
+                          className="text-micro font-bold cursor-pointer py-1.5 px-2"
                         >
                           {opt} rows
                         </DropdownMenuRadioItem>
@@ -571,7 +571,7 @@ export function DataTable<T extends object>({
       {/* ── Table Viewport Container using UI Table Primitives ─────────────── */}
       <div
         className={cn(
-          "w-full selection:bg-[#198754]/20 selection:text-[#002752]",
+          "w-full selection:bg-secondary/20 selection:text-primary",
           tableWrapperClassName
         )}
       >
@@ -588,7 +588,7 @@ export function DataTable<T extends object>({
                   <TableHead
                     key={colId}
                     className={cn(
-                      "px-4 py-3.5 text-sm sm:text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap select-none h-auto",
+                      "px-4 py-3.5 text-table-header font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap select-none h-auto",
                       col.align === "center"
                         ? "text-center"
                         : col.align === "right"
@@ -604,9 +604,9 @@ export function DataTable<T extends object>({
                         size="xs"
                         onClick={() => handleSort(colId)}
                         className={cn(
-                          "h-auto p-0 hover:bg-transparent font-bold tracking-wider uppercase text-slate-500 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors gap-1.5",
+                          "h-auto p-0 hover:bg-transparent font-bold tracking-wider uppercase text-muted-foreground hover:text-primary transition-colors gap-1.5",
                           isCurrentSorted &&
-                            "text-[#002752] dark:text-sky-300 font-black"
+                            "text-primary font-black"
                         )}
                         aria-label={`Sort by ${colId}`}
                       >
@@ -620,9 +620,9 @@ export function DataTable<T extends object>({
                         </span>
                         <span className="shrink-0 text-slate-400 transition-colors">
                           {isCurrentSorted && sortDirection === "asc" ? (
-                            <ArrowUp className="size-3.5 text-[#002752] dark:text-sky-400" />
+                            <ArrowUp className="size-3.5 text-primary" />
                           ) : isCurrentSorted && sortDirection === "desc" ? (
-                            <ArrowDown className="size-3.5 text-[#002752] dark:text-sky-400" />
+                            <ArrowDown className="size-3.5 text-primary" />
                           ) : (
                             <ArrowUpDown className="size-3 opacity-60 hover:opacity-100" />
                           )}
@@ -706,7 +706,7 @@ export function DataTable<T extends object>({
                       <TableCell
                         key={colId}
                         className={cn(
-                          "px-4 py-4 align-middle text-slate-700 dark:text-slate-200 text-base whitespace-normal",
+                          "px-4 py-4 align-middle text-foreground/85 text-table-cell whitespace-normal",
                           col.align === "center"
                             ? "text-center"
                             : col.align === "right"
@@ -738,10 +738,10 @@ export function DataTable<T extends object>({
                       <div className="size-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto shadow-2xs">
                         <FileQuestion className="size-6" />
                       </div>
-                      <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                      <h4 className="text-body-sm font-bold text-foreground">
                         {emptyTitle}
                       </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                      <p className="text-micro text-muted-foreground leading-relaxed">
                         {emptyDescription}
                       </p>
                       {activeFilterCount > 0 && (
@@ -750,7 +750,7 @@ export function DataTable<T extends object>({
                           variant="link"
                           size="sm"
                           onClick={handleResetFilters}
-                          className="gap-1.5 text-xs font-bold text-[#002752] dark:text-sky-400 pt-1 h-auto p-0"
+                          className="gap-1.5 text-micro font-bold text-primary pt-1 h-auto p-0"
                         >
                           <RotateCcw className="size-3" />
                           <span>Clear filters and search query</span>
@@ -769,12 +769,12 @@ export function DataTable<T extends object>({
       {showPagination && totalRows > 0 && (
         <div className="px-4 py-3 sm:px-6 sm:py-3.5 bg-slate-50/60 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Result Counter */}
-          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center sm:text-left">
-            Showing <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{totalRows > 0 ? startIndex + 1 : 0}</strong> to{" "}
-            <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{endIndex}</strong> of{" "}
-            <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{totalRows}</strong> {totalRows === 1 ? "entry" : "entries"}
+          <div className="text-micro text-muted-foreground font-medium text-center sm:text-left">
+            Showing <strong className="text-foreground tabular-nums">{totalRows > 0 ? startIndex + 1 : 0}</strong> to{" "}
+            <strong className="text-foreground tabular-nums">{endIndex}</strong> of{" "}
+            <strong className="text-foreground tabular-nums">{totalRows}</strong> {totalRows === 1 ? "entry" : "entries"}
             {searchQuery && (
-              <span className="ml-1 text-slate-400 dark:text-slate-500">
+              <span className="ml-1 text-muted-foreground/70">
                 (filtered from {data.length} total)
               </span>
             )}
@@ -833,9 +833,9 @@ export function DataTable<T extends object>({
                           setCurrentPage(page)
                         }}
                         className={cn(
-                          "size-8 rounded-lg text-xs font-bold transition-colors",
+                          "size-8 rounded-lg text-micro font-bold transition-colors",
                           page === safeCurrentPage
-                            ? "bg-[#002752] text-white shadow-xs dark:bg-sky-500 dark:text-[#002752]"
+                            ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-primary"
                             : "border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                         )}
                       >

@@ -33,7 +33,7 @@ const TIERS = [
       container: "bg-gradient-to-b from-emerald-50 via-emerald-100/50 to-emerald-50/20 dark:from-emerald-950/40 dark:to-emerald-900/10 border-emerald-200/60 dark:border-emerald-800/40 shadow-emerald-500/10",
       glow: "from-emerald-400/20 to-teal-300/10",
       primaryIcon: Award,
-      primaryColor: "text-[#198754] dark:text-emerald-400",
+      primaryColor: "text-secondary dark:text-emerald-400",
       secondaryIcon: CheckCircle2,
       secondaryColor: "text-emerald-600 dark:text-emerald-300",
     },
@@ -81,7 +81,7 @@ const TIERS = [
       container: "bg-gradient-to-b from-slate-100 via-blue-100/40 to-slate-50/30 dark:from-slate-800/50 dark:to-blue-950/20 border-slate-300/70 dark:border-slate-700/60 shadow-blue-500/10",
       glow: "from-blue-600/20 to-[#002752]/15",
       primaryIcon: Shield,
-      primaryColor: "text-[#002752] dark:text-blue-300",
+      primaryColor: "text-primary dark:text-blue-300",
       secondaryIcon: Lock,
       secondaryColor: "text-blue-700 dark:text-blue-400",
     },
@@ -108,14 +108,14 @@ export function EthicsCheckerWidget() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             CLEARANCE
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               RESEARCH ETHICS CLEARANCE <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 DETERMINATION MATRIX
@@ -151,7 +151,7 @@ export function EthicsCheckerWidget() {
                 {/* Card Top: Tier Header + Small Round Badge */}
                 <div>
                   <div className="flex items-center justify-between pb-6">
-                    <h3 className="font-heading text-lg sm:text-xl font-black text-[#002752] dark:text-white tracking-tight">
+                    <h3 className="font-heading text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                       {item.tierNumber}: {item.tierName}
                     </h3>
                     <div
@@ -182,18 +182,18 @@ export function EthicsCheckerWidget() {
 
                   {/* Risk Title & Explanation */}
                   <div className="pt-3 space-y-1">
-                    <h4 className="text-base sm:text-lg font-black text-[#002752] dark:text-white">
+                    <h4 className="text-base sm:text-lg font-black text-primary dark:text-white">
                       {item.riskTitle}
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                       {item.riskDescription}
                     </p>
                   </div>
 
                   {/* Typical Processing Badge */}
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#002752] dark:text-slate-200">
-                      <Clock className="size-3.5 text-[#198754]" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-primary dark:text-slate-200">
+                      <Clock className="size-3.5 text-secondary" />
                       <span>Typical Processing: {item.processingTime}</span>
                     </div>
                   </div>

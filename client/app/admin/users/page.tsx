@@ -179,7 +179,7 @@ export default function AdminUsersDirectoryPage() {
       cell: ({ row }) => (
         <Link
           href={`/admin/users/${encodeURIComponent(row.id)}`}
-          className="font-mono text-base font-bold text-[#002752] dark:text-sky-300 block hover:underline select-text"
+          className="font-mono text-base font-bold text-primary dark:text-sky-300 block hover:underline select-text"
         >
           {row.id}
         </Link>
@@ -205,7 +205,7 @@ export default function AdminUsersDirectoryPage() {
           <div className="flex items-center gap-3 select-text">
             <Link
               href={`/admin/users/${encodeURIComponent(row.id)}`}
-              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 hover:ring-2 hover:ring-[#002752]/20 transition-all"
+              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 hover:ring-2 hover:ring-[#002752]/20 transition-all"
               title={`Inspect ${row.name}'s Profile`}
             >
               {initials}
@@ -213,11 +213,11 @@ export default function AdminUsersDirectoryPage() {
             <div className="min-w-0">
               <Link
                 href={`/admin/users/${encodeURIComponent(row.id)}`}
-                className="text-base font-bold text-slate-900 dark:text-white truncate block hover:underline hover:text-[#002752] dark:hover:text-sky-300"
+                className="text-base font-bold text-foreground truncate block hover:underline hover:text-primary dark:hover:text-sky-300"
               >
                 {row.name}
               </Link>
-              <div className="text-base text-slate-500 dark:text-slate-400 truncate flex items-center gap-1 mt-0.5">
+              <div className="text-base text-muted-foreground truncate flex items-center gap-1 mt-0.5">
                 <Mail className="size-3 text-slate-400 shrink-0" />
                 <span>{row.email}</span>
               </div>
@@ -267,10 +267,10 @@ export default function AdminUsersDirectoryPage() {
       sortable: true,
       cell: ({ row }) => (
         <div className="space-y-0.5 select-text">
-          <div className="text-base font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">
+          <div className="text-base font-bold text-foreground truncate max-w-[200px]">
             {row.role}
           </div>
-          <div className="text-base text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
+          <div className="text-base text-muted-foreground truncate max-w-[200px]">
             {row.department}
           </div>
         </div>
@@ -284,7 +284,7 @@ export default function AdminUsersDirectoryPage() {
       headerClassName: "w-32 text-center",
       cell: ({ row }) => (
         <div className="text-center select-text">
-          <span className="inline-flex items-center justify-center font-mono font-bold text-base text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md">
+          <span className="inline-flex items-center justify-center font-mono font-bold text-base text-foreground bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md">
             {row.protocolsCount}
           </span>
           <span className="block text-base text-slate-400 mt-0.5">
@@ -368,7 +368,7 @@ export default function AdminUsersDirectoryPage() {
                 className="h-7 px-2 text-base font-semibold rounded-md border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 title={`Inspect ${user.name}'s Profile`}
               >
-                <Eye className="size-3.5 mr-1 text-[#002752] dark:text-sky-400" />
+                <Eye className="size-3.5 mr-1 text-primary dark:text-sky-400" />
                 <span>Inspect</span>
               </Button>
             </Link>
@@ -459,7 +459,7 @@ export default function AdminUsersDirectoryPage() {
                   size="sm"
                   className="h-8 gap-1.5 text-base font-semibold rounded-lg border-slate-200 dark:border-slate-800"
                 >
-                  <ShieldCheck className="size-3.5 text-[#002752] dark:text-sky-400" />
+                  <ShieldCheck className="size-3.5 text-primary dark:text-sky-400" />
                   <span>Admin List</span>
                 </Button>
               </Link>
@@ -470,7 +470,7 @@ export default function AdminUsersDirectoryPage() {
                   size="sm"
                   className="h-8 gap-1.5 text-base font-semibold rounded-lg border-slate-200 dark:border-slate-800"
                 >
-                  <Scale className="size-3.5 text-[#002752] dark:text-sky-400" />
+                  <Scale className="size-3.5 text-primary dark:text-sky-400" />
                   <span>Reviewer Roster</span>
                 </Button>
               </Link>
@@ -488,10 +488,10 @@ export default function AdminUsersDirectoryPage() {
                 } />
                 <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
                   <SheetHeader className="p-0 pb-3">
-                    <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    <SheetTitle className="text-base font-bold text-primary dark:text-white">
                       Register Platform User Account
                     </SheetTitle>
-                    <SheetDescription className="text-base text-slate-500 dark:text-slate-400">
+                    <SheetDescription className="text-base text-muted-foreground">
                       Provision a new researcher, committee reviewer, or institutional administrator in the Ethica ecosystem.
                     </SheetDescription>
                   </SheetHeader>
@@ -736,7 +736,7 @@ export default function AdminUsersDirectoryPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-[#002752] dark:text-white">
+            <AlertDialogTitle className="flex items-center gap-2 text-primary dark:text-white">
               <ToggleLeft className="size-5 text-amber-500" />
               {pendingToggleUser?.status === "Active"
                 ? "Suspend User Account"

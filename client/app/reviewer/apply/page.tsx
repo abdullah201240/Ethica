@@ -249,13 +249,13 @@ export default function ApplyAsReviewerPage() {
                   <CheckCircle2 className="size-14 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 size-9 rounded-full bg-[#E0C23C] flex items-center justify-center shadow">
-                  <Star className="size-5 text-[#002752]" />
+                  <Star className="size-5 text-primary" />
                 </div>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-4xl sm:text-5xl font-black text-[#002752] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl font-black text-primary tracking-tight">
                 Application Submitted!
               </h1>
               <p className="text-slate-500 text-base leading-relaxed">
@@ -266,7 +266,7 @@ export default function ApplyAsReviewerPage() {
 
             <div className="w-full p-6 rounded-xl bg-white border border-border/75 text-left space-y-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                <Clock className="size-3.5 text-[#198754]" />
+                <Clock className="size-3.5 text-secondary" />
                 What happens next
               </div>
               <ul className="space-y-3">
@@ -276,7 +276,7 @@ export default function ApplyAsReviewerPage() {
                   "A secure onboarding email is sent with your reviewer portal credentials",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="mt-0.5 size-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-[11px] font-bold shrink-0">
+                    <span className="mt-0.5 size-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-micro font-bold shrink-0">
                       {i + 1}
                     </span>
                     <span className="text-sm text-slate-600">{item}</span>
@@ -295,7 +295,7 @@ export default function ApplyAsReviewerPage() {
               </Link>
               <Link
                 href="/admin/applications"
-                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-lg border border-[#002752]/30 bg-[#002752]/5 text-[#002752] text-sm font-semibold hover:bg-[#002752]/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-lg border border-[#002752]/30 bg-[#002752]/5 text-primary text-sm font-semibold hover:bg-[#002752]/10 transition-colors"
               >
                 View in Admin Queue
                 <ChevronRight className="size-4" />
@@ -324,7 +324,7 @@ export default function ApplyAsReviewerPage() {
 
         {/* ── Page hero header ────────────────────────────────────────────── */}
         <div className="w-full mb-10 space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#002752] tracking-tight leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-primary tracking-tight leading-tight">
             Apply to Join the<br />Ethics Review Board
           </h1>
           <p className="text-sm sm:text-base text-slate-500 leading-relaxed">
@@ -335,7 +335,7 @@ export default function ApplyAsReviewerPage() {
         {/* Quick Demo Autofill Banner */}
         <div className="w-full mb-8 p-3.5 sm:p-4 rounded-xl border border-emerald-200/80 bg-emerald-50/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-800 font-medium">
-            <Sparkles className="size-4.5 text-[#198754] shrink-0" />
+            <Sparkles className="size-4.5 text-secondary shrink-0" />
             <span>Testing reviewer accreditation? Pre-populate a verified clinical investigator dossier:</span>
           </div>
           <Button
@@ -371,8 +371,8 @@ export default function ApplyAsReviewerPage() {
                       {done ? <CheckCircle2 className="size-5" /> : <Icon className="size-5" />}
                     </div>
                     <span
-                      className={`hidden sm:block text-[11px] font-semibold whitespace-nowrap ${
-                        active ? "text-[#002752]" : done ? "text-[#198754]" : "text-slate-400"
+                      className={`hidden sm:block text-micro font-semibold whitespace-nowrap ${
+                        active ? "text-primary" : done ? "text-secondary" : "text-slate-400"
                       }`}
                     >
                       {s.label}
@@ -475,7 +475,7 @@ export default function ApplyAsReviewerPage() {
                             errors[field.name]
                               ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                               : "border-border/75 bg-slate-50"
-                          } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
+                          } text-table-cell text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
                         />
                         {errors[field.name] && (
                           <p className="text-xs text-rose-600 font-semibold mt-1">
@@ -487,7 +487,7 @@ export default function ApplyAsReviewerPage() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-[#002752]/5 border border-[#002752]/10">
-                    <Lock className="size-4 text-[#002752] mt-0.5 shrink-0" />
+                    <Lock className="size-4 text-primary mt-0.5 shrink-0" />
                     <p className="text-xs text-slate-500 leading-relaxed">
                       All personal data is encrypted and processed in accordance with the DIU Data Protection Policy and Bangladesh Digital Security Act 2018. Your information is used solely for reviewer credential verification.
                     </p>
@@ -562,7 +562,7 @@ export default function ApplyAsReviewerPage() {
                               errors[field.name]
                                 ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                                 : "border-border/75 bg-slate-50"
-                            } text-[13px] text-slate-700 focus-visible:ring-2 focus-visible:ring-[#002752]/20 focus-visible:border-[#002752]/40 transition-all cursor-pointer`}
+                            } text-table-cell text-slate-700 focus-visible:ring-2 focus-visible:ring-[#002752]/20 focus-visible:border-[#002752]/40 transition-all cursor-pointer`}
                           >
                             <SelectValue placeholder="Select…" />
                           </SelectTrigger>
@@ -584,7 +584,7 @@ export default function ApplyAsReviewerPage() {
                             errors[field.name]
                               ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                               : "border-border/75 bg-slate-50"
-                          } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
+                          } text-table-cell text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all`}
                         />
                       )}
                       {errors[field.name] && (
@@ -614,7 +614,7 @@ export default function ApplyAsReviewerPage() {
                             type="button"
                             variant="outline"
                             onClick={() => toggleExpertise(area)}
-                            className={`flex items-center gap-1.5 h-auto px-4 py-2 rounded-lg text-[13px] font-semibold border transition-all duration-150 cursor-pointer ${
+                            className={`flex items-center gap-1.5 h-auto px-4 py-2 rounded-lg text-table-cell font-semibold border transition-all duration-150 cursor-pointer ${
                               selected
                                 ? "bg-[#002752] text-white border-[#002752] hover:bg-[#001c3d] hover:text-white shadow-xs"
                                 : "bg-slate-50 text-slate-600 border-border/75 hover:bg-slate-100 hover:border-slate-300"
@@ -652,14 +652,14 @@ export default function ApplyAsReviewerPage() {
                         errors.statement
                           ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                           : "border-border/75 bg-slate-50"
-                      } text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all resize-none min-h-[160px]`}
+                      } text-table-cell text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002752]/20 focus:border-[#002752]/40 transition-all resize-none min-h-[160px]`}
                     />
                     {errors.statement ? (
                       <p className="text-xs text-rose-600 font-semibold mt-1">
                         {errors.statement.message}
                       </p>
                     ) : (
-                      <p className="text-[10px] text-slate-400">Minimum 20 characters recommended</p>
+                      <p className="text-micro text-slate-400">Minimum 20 characters recommended</p>
                     )}
                   </div>
 
@@ -676,10 +676,10 @@ export default function ApplyAsReviewerPage() {
                         <Upload className="size-5" />
                       </AttachmentMedia>
                       <AttachmentContent className="min-w-0 flex-1">
-                        <AttachmentTitle className="text-[13px] font-semibold text-slate-700 truncate">
+                        <AttachmentTitle className="text-table-cell font-semibold text-slate-700 truncate">
                           {formValues.cvFileName || "Click to upload your CV"}
                         </AttachmentTitle>
-                        <AttachmentDescription className="text-[11px] text-slate-400 mt-0.5">
+                        <AttachmentDescription className="text-micro text-slate-400 mt-0.5">
                           PDF or DOCX · Max 5MB
                         </AttachmentDescription>
                       </AttachmentContent>
@@ -713,7 +713,7 @@ export default function ApplyAsReviewerPage() {
                 <>
                   <div className="w-full space-y-0 divide-y divide-border/60 rounded-xl border border-border/75 overflow-hidden">
                     <div className="px-5 py-3 bg-slate-50">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Application Summary</span>
+                      <span className="text-micro font-bold text-slate-400 uppercase tracking-widest">Application Summary</span>
                     </div>
                     {[
                       { label: "Full Name", value: formValues.fullName },
@@ -729,8 +729,8 @@ export default function ApplyAsReviewerPage() {
                       { label: "CV File", value: formValues.cvFileName || "Not uploaded" },
                     ].map(({ label, value }) => (
                       <div key={label} className="flex items-start justify-between gap-6 px-5 py-3 hover:bg-slate-50/60 transition-colors">
-                        <span className="text-[11px] font-semibold text-slate-400 shrink-0 w-32">{label}</span>
-                        <span className="text-[13px] text-slate-700 text-right break-words">
+                        <span className="text-micro font-semibold text-slate-400 shrink-0 w-32">{label}</span>
+                        <span className="text-table-cell text-slate-700 text-right break-words">
                           {value || <span className="text-slate-300 italic">Not provided</span>}
                         </span>
                       </div>
@@ -754,7 +754,7 @@ export default function ApplyAsReviewerPage() {
                         />
                         <Label
                           htmlFor="agreeTerms"
-                          className="text-[13px] font-semibold text-slate-700 cursor-pointer"
+                          className="text-table-cell font-semibold text-slate-700 cursor-pointer"
                         >
                           I agree to the above declaration and DIU IRB Reviewer Code of Conduct
                         </Label>
@@ -777,7 +777,7 @@ export default function ApplyAsReviewerPage() {
                 variant="outline"
                 onClick={handleBack}
                 disabled={currentStep === 1}
-                className="flex items-center gap-2 h-10 px-5 rounded-lg text-[13px] font-semibold text-slate-500 hover:text-slate-800 bg-white border border-border/75 hover:border-slate-300 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-2 h-10 px-5 rounded-lg text-table-cell font-semibold text-slate-500 hover:text-slate-800 bg-white border border-border/75 hover:border-slate-300 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ArrowLeft className="size-4" />
                 Back
@@ -803,7 +803,7 @@ export default function ApplyAsReviewerPage() {
                 <Button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-2 h-10 px-6 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md cursor-pointer"
+                  className="flex items-center gap-2 h-10 px-6 rounded-lg bg-[#002752] hover:bg-[#001c3d] text-white text-table-cell font-semibold transition-all shadow-sm hover:shadow-md cursor-pointer"
                 >
                   Continue
                   <ChevronRight className="size-4" />
@@ -814,7 +814,7 @@ export default function ApplyAsReviewerPage() {
                     <Button
                       type="button"
                       disabled={!formValues.agreeTerms}
-                      className="flex items-center gap-2 h-10 px-6 rounded-lg bg-gradient-to-r from-[#198754] to-emerald-500 hover:opacity-95 text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      className="flex items-center gap-2 h-10 px-6 rounded-lg bg-gradient-to-r from-[#198754] to-emerald-500 hover:opacity-95 text-white text-table-cell font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                     >
                       <CheckCircle2 className="size-4" />
                       Submit Application
@@ -822,11 +822,11 @@ export default function ApplyAsReviewerPage() {
                   } />
                   <AlertDialogContent className="sm:max-w-md">
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                      <AlertDialogTitle className="text-base font-bold text-primary dark:text-white">
                         Confirm Reviewer Application Submission
                       </AlertDialogTitle>
                       <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        You are about to formally submit your reviewer application for <strong className="text-slate-900 dark:text-white">{formValues.fullName || "Applicant"}</strong> to the Daffodil International University Institutional Review Board. Please verify that all entered credentials and declarations are accurate.
+                        You are about to formally submit your reviewer application for <strong className="text-foreground">{formValues.fullName || "Applicant"}</strong> to the Daffodil International University Institutional Review Board. Please verify that all entered credentials and declarations are accurate.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

@@ -94,6 +94,23 @@
   --sidebar-accent-foreground: #002752;
   --sidebar-border: #E5E7EB;
   --sidebar-ring: #002752;
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * CENTRALIZED TYPOGRAPHY SCALE
+   * ───────────────────────────────────────────────────────────────────────
+   * Adjust these values to globally change font sizes across the ENTIRE
+   * platform (landing page, dashboards, workspaces) from ONE location.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  --text-xs: 0.72rem;       /* 11.5px – micro labels, badges, timestamps */
+  --text-sm: 0.8rem;        /* 12.8px – table cell text, metadata */
+  --text-base: 0.875rem;    /* 14px   – body text, descriptions */
+  --text-md: 0.95rem;       /* 15.2px – emphasis body, card titles */
+  --text-lg: 1.0625rem;     /* 17px   – subheadings */
+  --text-xl: 1.2rem;        /* 19.2px – section sub-titles */
+  --text-2xl: 1.45rem;      /* 23.2px – card section headers */
+  --text-3xl: 1.75rem;      /* 28px   – page section titles */
+  --text-4xl: 2.25rem;      /* 36px   – page hero titles */
+  --text-5xl: 3rem;         /* 48px   – KPI stat values */
 }
 
 .dark {
@@ -140,6 +157,112 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+ * CENTRALIZED SEMANTIC TYPOGRAPHY CLASSES
+ * ───────────────────────────────────────────────────────────────────────────
+ * Use these classes instead of hardcoded text sizes so that adjusting the
+ * CSS custom properties above propagates everywhere automatically.
+ * ═════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  /* Page-level hero titles (dashboard workspace pages) */
+  .text-page-title {
+    font-size: var(--text-3xl);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  @media (min-width: 640px) {
+    .text-page-title { font-size: var(--text-4xl); }
+  }
+
+  /* Section headings within pages (audit trail, policy engine, etc.) */
+  .text-section-heading {
+    font-size: var(--text-xl);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  @media (min-width: 640px) {
+    .text-section-heading { font-size: var(--text-2xl); }
+  }
+
+  /* Card titles and emphasized sub-headers */
+  .text-card-title {
+    font-size: var(--text-md);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  @media (min-width: 640px) {
+    .text-card-title { font-size: var(--text-lg); }
+  }
+
+  /* Standard body / description text */
+  .text-body {
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  @media (min-width: 640px) {
+    .text-body { font-size: var(--text-md); }
+  }
+
+  /* Smaller body text (table descriptions, secondary info) */
+  .text-body-sm {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* Micro text – badges, pills, timestamps, mono labels */
+  .text-micro {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  /* KPI / stat counter values */
+  .text-kpi-value {
+    font-size: var(--text-4xl);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (min-width: 640px) {
+    .text-kpi-value { font-size: var(--text-5xl); }
+  }
+
+  /* Table cell content */
+  .text-table-cell {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Table column headers */
+  .text-table-header {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+  }
+
+  /* Sidebar navigation item text */
+  .text-nav-item {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* Form label text */
+  .text-label {
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: 1.4;
   }
 }
 

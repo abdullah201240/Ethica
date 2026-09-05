@@ -11,7 +11,7 @@ const METRICS = [
     icon: TrendingUp,
     theme: {
       container: "bg-gradient-to-b from-emerald-50 via-emerald-100/40 to-white dark:from-emerald-950/30 dark:to-card border-emerald-200/60 dark:border-emerald-800/40",
-      iconColor: "text-[#198754] dark:text-emerald-400",
+      iconColor: "text-secondary dark:text-emerald-400",
       glow: "from-emerald-400/20 to-teal-300/10",
       badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
     },
@@ -24,9 +24,9 @@ const METRICS = [
     icon: ShieldCheck,
     theme: {
       container: "bg-gradient-to-b from-slate-100 via-blue-100/40 to-white dark:from-slate-900/40 dark:to-card border-slate-300/70 dark:border-slate-700/60",
-      iconColor: "text-[#002752] dark:text-sky-400",
+      iconColor: "text-primary dark:text-sky-400",
       glow: "from-blue-600/20 to-[#002752]/15",
-      badge: "bg-[#002752]/10 text-[#002752] dark:text-sky-300 border-[#002752]/20",
+      badge: "bg-[#002752]/10 text-primary dark:text-sky-300 border-[#002752]/20",
     },
   },
   {
@@ -76,14 +76,14 @@ export function ImpactMetrics() {
           {/* Giant Ghost Watermark Typography (Behind Header) */}
           <div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-[#002752]/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[52%] font-sans font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] uppercase tracking-[0.18em] text-primary/[0.038] dark:text-white/[0.03] select-none pointer-events-none whitespace-nowrap z-0 leading-none"
           >
             IMPACT
           </div>
 
           {/* Foreground Title & Accent */}
           <div className="relative z-10 w-full">
-            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-[#002752] dark:text-white leading-[1.05] uppercase">
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-tight text-primary dark:text-white leading-[1.05] uppercase">
               MEASURABLE ACCELERATION IN <br />
               <span className="bg-gradient-to-r from-[#198754] via-[#22c55e] to-[#0d9488] bg-clip-text text-transparent drop-shadow-2xs">
                 ACADEMIC GOVERNANCE
@@ -134,10 +134,10 @@ export function ImpactMetrics() {
 
                   {/* Giant Stat Value */}
                   <div className="space-y-2">
-                    <span className="font-sans text-5xl sm:text-6xl font-black text-[#002752] dark:text-white tracking-tight tabular-nums block">
+                    <span className="font-sans text-5xl sm:text-6xl font-black text-primary dark:text-white tracking-tight tabular-nums block">
                       {item.value}
                     </span>
-                    <h3 className="text-base sm:text-lg font-black text-[#002752] dark:text-white">
+                    <h3 className="text-base sm:text-lg font-black text-primary dark:text-white">
                       {item.label}
                     </h3>
                   </div>
@@ -145,7 +145,7 @@ export function ImpactMetrics() {
 
                 {/* Card Bottom: Description */}
                 <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
                     {item.description}
                   </p>
                 </div>

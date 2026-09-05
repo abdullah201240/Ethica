@@ -140,7 +140,7 @@ function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
   return (
     <ToastPrimitive.Title
       data-slot="toast-title"
-      className={cn("text-xs sm:text-sm font-bold text-[#002752] dark:text-white leading-snug select-text", className)}
+      className={cn("text-micro sm:text-body-sm font-bold text-primary leading-snug select-text", className)}
       {...props}
     />
   )
@@ -153,7 +153,7 @@ function ToastDescription({
   return (
     <ToastPrimitive.Description
       data-slot="toast-description"
-      className={cn("text-xs text-slate-600 dark:text-slate-300 leading-relaxed select-text", className)}
+      className={cn("text-micro text-foreground/70 leading-relaxed select-text", className)}
       {...props}
     />
   )
@@ -203,13 +203,13 @@ function ToastIcon({ type }: { type: string | undefined }) {
 
   if (type === "success") {
     icon = (
-      <CircleCheckIcon className="size-4 text-[#198754] dark:text-emerald-400" aria-hidden="true" />
+      <CircleCheckIcon className="size-4 text-secondary dark:text-emerald-400" aria-hidden="true" />
     )
   }
 
   if (type === "info") {
     icon = (
-      <InfoIcon className="size-4 text-[#002752] dark:text-sky-400" aria-hidden="true" />
+      <InfoIcon className="size-4 text-primary dark:text-sky-400" aria-hidden="true" />
     )
   }
 
@@ -227,7 +227,7 @@ function ToastIcon({ type }: { type: string | undefined }) {
 
   if (type === "loading") {
     icon = (
-      <Loader2Icon className="size-4 animate-spin text-[#002752] dark:text-sky-300" aria-hidden="true" />
+      <Loader2Icon className="size-4 animate-spin text-primary dark:text-sky-300" aria-hidden="true" />
     )
   }
 
