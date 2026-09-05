@@ -392,47 +392,6 @@ export default function UserDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Welcome Banner Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#198754]/10 text-[#198754] text-xs font-bold border border-[#198754]/25">
-              <ShieldCheck className="size-3.5" />
-              <span>Daffodil International University IRB Portal</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
-              Investigator Protocol Workspace
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-              Welcome back, <strong className="text-slate-900 dark:text-white">Dr. Elena Rostova</strong>. You have 2 protocols undergoing active IRB committee deliberation and 1 protocol requiring revision updates.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/#checker"
-              className="inline-flex items-center h-10 px-4 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-xl transition-colors shadow-xs"
-            >
-              <Sparkles className="size-3.5 text-[#198754] mr-1.5" />
-              <span>Check Fast-Track</span>
-            </Link>
-            <Link
-              href="#new-protocol"
-              className="inline-flex items-center h-10 px-4 bg-[#198754] hover:bg-[#146c43] text-white font-bold text-xs rounded-xl transition-colors shadow-xs"
-            >
-              <Plus className="size-3.5 mr-1.5" />
-              <span>Submit New Protocol</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Ambient background decoration */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -bottom-10 w-72 h-72 bg-gradient-to-br from-[#198754]/10 to-transparent blur-2xl rounded-full"
-        />
-      </div>
-
       {/* Centralized Institutional Metric Counters Grid */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -470,10 +429,10 @@ export default function UserDashboardPage() {
         <DataTable<Protocol>
           data={sampleProtocols}
           columns={columns}
-          title="My Protocol Dossiers"
-          description="Real-time multi-stage governance tracking from initial screening to digital clearance certificate"
-          searchPlaceholder="Search by ID, title, department, or board..."
-          searchKeys={["id", "title", "department", "board"]}
+          title="Institutional Research Ethics Docket"
+          description="Comprehensive human subject research protocols registered under Daffodil International University IRB oversight"
+          searchPlaceholder="Search by protocol title, ID, board, or department..."
+          searchKeys={["title", "id", "department", "board"]}
           filters={filters}
           initialPageSize={5}
           pageSizeOptions={[5, 10, 20, 50]}

@@ -6,7 +6,6 @@ import {
   Scale,
   Clock,
   CheckCircle2,
-  Users,
   Calendar,
   ExternalLink,
   Vote,
@@ -75,48 +74,6 @@ export default function ReviewerDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      
-      {/* Reviewer Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0C23C]/15 text-[#b09214] dark:text-[#E0C23C] text-xs font-bold border border-[#E0C23C]/30">
-              <Scale className="size-3.5" />
-              <span>IRB Deliberation Chamber Active</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
-              Ethical Review Deliberation Hub
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-              Welcome, <strong className="text-slate-900 dark:text-white">Prof. Charles Montgomery</strong>. 2 protocols require your casting vote to establish institutional quorum before the Friday deadline.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/#stakeholders"
-              className="inline-flex items-center h-10 px-4 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-xl transition-colors"
-            >
-              <Users className="size-3.5 text-amber-400 mr-1.5" />
-              <span>View Committee Roster</span>
-            </Link>
-            <Link
-              href="#convene"
-              className="inline-flex items-center h-10 px-4 bg-[#198754] hover:bg-[#146c43] text-white font-bold text-xs rounded-xl transition-colors"
-            >
-              <Calendar className="size-3.5 mr-1.5" />
-              <span>Convene Board Meeting</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Ambient background decoration */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -bottom-10 w-72 h-72 bg-gradient-to-br from-[#E0C23C]/10 to-transparent blur-2xl rounded-full"
-        />
-      </div>
-
       {/* Centralized Review Metrics Counters */}
       <KpiGrid columns={4}>
         <KpiCard

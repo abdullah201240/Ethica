@@ -3,11 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import {
-  Sliders,
   Users,
   ScrollText,
-  ShieldCheck,
-  Download,
   Building2,
   CheckCircle2,
   Lock,
@@ -104,48 +101,6 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      
-      {/* Admin Governance Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#002752]/10 text-[#002752] dark:text-sky-300 text-xs font-bold border border-[#002752]/20 dark:border-sky-500/20">
-              <Sliders className="size-3.5" />
-              <span>Institutional Research Ethics Secretariat</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#002752] dark:text-white tracking-tight uppercase">
-              System Governance & Audit Console
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-              Welcome, <strong className="text-slate-900 dark:text-white">Dr. Marcus Vance</strong>. Institutional ethics quorum rate is operating at <span className="text-[#198754] font-bold">96.4%</span> across all 14 university research divisions.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/#certificate"
-              className="inline-flex items-center h-10 px-4 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-xl transition-colors"
-            >
-              <ShieldCheck className="size-3.5 text-[#198754] mr-1.5" />
-              <span>Inspect Certificate Authority</span>
-            </Link>
-            <Link
-              href="#export"
-              className="inline-flex items-center h-10 px-4 bg-[#198754] hover:bg-[#146c43] text-white font-bold text-xs rounded-xl transition-colors"
-            >
-              <Download className="size-3.5 mr-1.5" />
-              <span>Export Ledger Audit Report</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Ambient background decoration */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -bottom-10 w-72 h-72 bg-gradient-to-br from-[#002752]/10 dark:from-sky-500/10 to-transparent blur-2xl rounded-full"
-        />
-      </div>
-
       {/* Centralized Institutional Metrics Grid */}
       <KpiGrid columns={4}>
         <KpiCard
