@@ -6,19 +6,15 @@ import { usePathname, useRouter } from "next/navigation"
 import {
   ShieldCheck,
   Bell,
-  Search,
   LogOut,
   Menu,
   X,
   Lock,
-  ChevronRight,
-  ExternalLink,
   PanelLeft,
   ChevronDown,
 } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -71,30 +67,24 @@ export function DashboardShell({
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
   const [collapsed, setCollapsed] = React.useState(false)
-  const [currentHash, setCurrentHash] = React.useState("")
 
-  React.useEffect(() => {
-    const updateHash = () => {
-      setCurrentHash(typeof window !== "undefined" ? window.location.hash || "" : "")
-    }
-    updateHash()
-    window.addEventListener("hashchange", updateHash)
-    window.addEventListener("popstate", updateHash)
-    return () => {
-      window.removeEventListener("hashchange", updateHash)
-      window.removeEventListener("popstate", updateHash)
-    }
+  // Derive current hash segment from pathname (no manual history tracking)
+  const currentHash = React.useMemo(() => {
+    const hashIndex = pathname.indexOf("#")
+    return hashIndex >= 0 ? pathname.slice(hashIndex) : ""
   }, [pathname])
 
   const isItemActive = React.useCallback(
     (itemHref: string) => {
+      // Strip hash from current pathname for path comparison
+      const currentPath = pathname.split("#")[0]
       const [itemPath, itemHash] = itemHref.split("#")
       const hasHash = Boolean(itemHash)
 
       if (hasHash) {
-        return pathname === itemPath && currentHash === `#${itemHash}`
+        return currentPath === itemPath && currentHash === `#${itemHash}`
       }
-      if (pathname === itemPath) {
+      if (currentPath === itemPath) {
         if (currentHash) {
           const matchesOtherHash = navItems.some((other) => {
             const [, otherHash] = other.href.split("#")
@@ -112,22 +102,19 @@ export function DashboardShell({
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setSidebarOpen(false)
     const [targetPath, targetHash] = href.split("#")
+    const currentPath = pathname.split("#")[0]
 
-    if (targetHash && (targetPath === pathname || !targetPath)) {
+    if (targetHash && (targetPath === currentPath || !targetPath)) {
+      // Same-page hash navigation: prevent default, scroll smoothly
       e.preventDefault()
-      setCurrentHash(`#${targetHash}`)
-      window.history.pushState(null, "", `${pathname}#${targetHash}`)
       const el = document.getElementById(targetHash)
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" })
       }
-    } else if (!targetHash && targetPath === pathname) {
-      if (currentHash) {
-        setCurrentHash("")
-        window.history.pushState(null, "", pathname)
-      }
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      // Update URL hash via Next.js router (stays in sync with router state)
+      router.push(`${currentPath}#${targetHash}`, { scroll: false })
     }
+    // For cross-path navigation, let Next.js <Link> handle client-side transition
   }
 
   // ── Derived color tokens ──────────────────────────────────────────────────
@@ -249,27 +236,7 @@ export function DashboardShell({
         </div>
 
         {/* ── Divider ────────────────────────────────────────────── */}
-        <div className="mx-3 h-px bg-slate-100 dark:bg-white/[0.06] shrink-0" />
-
-        {/* ── Role status pill ───────────────────────────────────── */}
-        {!collapsed && (
-          <div className="px-3 py-2.5 shrink-0">
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-border/60">
-              <div className="min-w-0">
-                <span className="block text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  {roleBadge}
-                </span>
-                <span className="block text-[12px] font-semibold text-slate-700 dark:text-slate-200 mt-0.5 truncate">
-                  {roleTitle}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Live</span>
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="mx-3 mb-2 h-px bg-slate-100 dark:bg-white/[0.06] shrink-0" />
 
         {/* ── Navigation ─────────────────────────────────────────── */}
         <nav className="flex-1 overflow-y-auto px-2.5 py-1 space-y-0.5 min-h-0">
@@ -328,25 +295,9 @@ export function DashboardShell({
           ))}
         </nav>
 
-        {/* ── Bottom utilities + user card ───────────────────────── */}
+        {/* ── Bottom utilities ───────────────────────── */}
         <div className="px-2.5 pb-3 pt-2 shrink-0">
           <div className="mx-0.5 mb-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
-
-          <Link
-            href="/"
-            title={collapsed ? "Institutional Portal" : undefined}
-            className={`group flex items-center rounded-lg text-[13px] font-medium text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all duration-150 ${
-              collapsed ? "justify-center size-10 mx-auto" : "gap-3 px-3 py-2 w-full"
-            }`}
-          >
-            <ExternalLink className="size-4 shrink-0" />
-            {!collapsed && (
-              <>
-                <span className="flex-1 truncate">Institutional Portal</span>
-                <ChevronRight className="size-3.5 text-slate-300 dark:text-slate-600" />
-              </>
-            )}
-          </Link>
 
           <AlertDialog>
             <AlertDialogTrigger render={
@@ -382,51 +333,6 @@ export function DashboardShell({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
-          {/* User profile card (expanded only) */}
-          {!collapsed && (
-            <>
-              <div className="mx-0.5 my-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
-              {profileHref ? (
-                <Link
-                  href={profileHref}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer group"
-                >
-                  <div
-                    className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
-                  >
-                    {user.avatarInitials}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 group-hover:text-[#002752] dark:group-hover:text-sky-300 transition-colors truncate">
-                      {user.name}
-                    </span>
-                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                      {user.title}
-                    </span>
-                  </div>
-                  <ChevronRight className="size-3.5 text-slate-300 dark:text-slate-600 group-hover:text-slate-500 shrink-0" />
-                </Link>
-              ) : (
-                <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer">
-                  <div
-                    className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
-                  >
-                    {user.avatarInitials}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate">
-                      {user.name}
-                    </span>
-                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                      {user.email}
-                    </span>
-                  </div>
-                  <ChevronDown className="size-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
-                </div>
-              )}
-            </>
-          )}
         </div>
       </aside>
 
@@ -456,21 +362,6 @@ export function DashboardShell({
               <span className="text-[13px] font-semibold text-slate-800 dark:text-slate-100">
                 {currentPageLabel}
               </span>
-            </div>
-          </div>
-
-          {/* Centre: Search */}
-          <div className="flex-1 max-w-lg hidden md:block mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none z-10" />
-              <Input
-                type="text"
-                placeholder="Search protocols, ethics ID, approvals… (⌘K)"
-                className="w-full h-9 pl-9 pr-14 rounded-lg bg-slate-100/80 dark:bg-white/[0.04] border-transparent hover:border-border/50 text-[13px]"
-              />
-              <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-medium text-slate-400 bg-slate-200/70 dark:bg-white/5 dark:text-slate-500">
-                ⌘K
-              </kbd>
             </div>
           </div>
 

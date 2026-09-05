@@ -1,23 +1,66 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   Users,
   ScrollText,
   Building2,
   CheckCircle2,
+  XCircle,
   Lock,
   ArrowUpRight,
   Database,
-  Search,
   ShieldCheck,
   Settings,
   Key,
+  UserPlus,
+  UserCheck,
+  UserX,
+  ChevronDown,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "@/components/ui/dropdown-menu"
+import {
+  getStoredAdminMembers,
+  subscribeAdminMembers,
+  addAdminMember,
+  toggleAdminMemberStatus,
+  type AdminMember,
+  initialAdminMembers,
+} from "@/lib/admin-roster"
 
 const auditLedgerLogs = [
   {
@@ -58,49 +101,297 @@ const auditLedgerLogs = [
   },
 ]
 
-const memberRoster = [
-  {
-    name: "Dr. Elena Rostova",
-    role: "Principal Investigator",
-    department: "Public Health & Clinical Epidemiology",
-    status: "Active",
-    protocols: 4,
-    email: "elena.rostova@diu.edu.bd",
-  },
-  {
-    name: "Prof. Charles Montgomery",
-    role: "IRB Committee Chair",
-    department: "Biomedical Research Ethics Board",
-    status: "Active",
-    protocols: 18,
-    email: "charles.montgomery@diu.edu.bd",
-  },
-  {
-    name: "Dr. Ayesha Rahman",
-    role: "Co-Investigator",
-    department: "Pediatrics & Behavioral Health",
-    status: "Active",
-    protocols: 2,
-    email: "ayesha.rahman@diu.edu.bd",
-  },
-  {
-    name: "Nusrat Jahan, M.Sc.",
-    role: "Screening Triage Officer",
-    department: "Research Compliance Secretariat",
-    status: "Active",
-    protocols: 31,
-    email: "nusrat.jahan@diu.edu.bd",
-  },
-]
-
 export default function AdminDashboardPage() {
-  const [searchTerm, setSearchTerm] = React.useState("")
+  const [statusNotice, setStatusNotice] = React.useState<string | null>(null)
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState(false)
+  const [formError, setFormError] = React.useState<string | null>(null)
 
-  const filteredMembers = memberRoster.filter(
-    (m) =>
-      m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.department.toLowerCase().includes(searchTerm.toLowerCase())
+  const [newAdmin, setNewAdmin] = React.useState({
+    name: "",
+    email: "",
+    role: "System Administrator",
+    department: "Research Compliance Secretariat",
+    status: "Active" as "Active" | "Inactive",
+    protocols: 0,
+  })
+
+  const members = React.useSyncExternalStore(
+    subscribeAdminMembers,
+    getStoredAdminMembers,
+    () => initialAdminMembers
+  )
+
+  const handleToggleStatus = (id: string, name: string) => {
+    const updated = toggleAdminMemberStatus(id)
+    if (updated) {
+      setStatusNotice(
+        `Administrator account for ${name} (${updated.id}) is now ${updated.status}. Institutional governance access ${
+          updated.status === "Active" ? "restored" : "suspended"
+        }.`
+      )
+      setTimeout(() => setStatusNotice(null), 5000)
+    }
+  }
+
+  const handleCreateAdmin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    if (!newAdmin.name.trim()) {
+      setFormError("Please enter the administrator's full name.")
+      return
+    }
+    if (!newAdmin.email.trim() || !newAdmin.email.includes("@")) {
+      setFormError("Please enter a valid institutional email address.")
+      return
+    }
+    const created = addAdminMember({
+      name: newAdmin.name,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      department: newAdmin.department,
+      status: newAdmin.status,
+      protocols: Number(newAdmin.protocols) || 0,
+    })
+    setStatusNotice(
+      `New administrator ${created.name} (${created.id}) successfully appointed as ${created.role} with ${created.status} status.`
+    )
+    setNewAdmin({
+      name: "",
+      email: "",
+      role: "System Administrator",
+      department: "Research Compliance Secretariat",
+      status: "Active",
+      protocols: 0,
+    })
+    setFormError(null)
+    setIsAddModalOpen(false)
+    setTimeout(() => setStatusNotice(null), 5000)
+  }
+
+  // ── DataTable Column Definitions ──────────────────────────────────────────
+  const columns = React.useMemo<ColumnDef<AdminMember>[]>(
+    () => [
+      {
+        id: "id",
+        accessorKey: "id",
+        header: "Admin ID",
+        sortable: true,
+        headerClassName: "w-[130px]",
+        cell: ({ row }) => (
+          <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+            {row.id}
+          </span>
+        ),
+      },
+      {
+        id: "name",
+        accessorKey: "name",
+        header: "Officer / Administrator",
+        sortable: true,
+        cell: ({ row }) => {
+          const initials =
+            row.name
+              .split(" ")
+              .filter(Boolean)
+              .map((p) => p[0])
+              .slice(0, 2)
+              .join("")
+              .toUpperCase() || "AD"
+
+          return (
+            <div className="flex items-center gap-3">
+              <div className="size-8 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-xs shrink-0 border border-[#002752]/15 dark:border-sky-500/20">
+                {initials}
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                  {row.name}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  {row.email}
+                </div>
+              </div>
+            </div>
+          )
+        },
+      },
+      {
+        id: "role",
+        accessorKey: "role",
+        header: "Governance Role",
+        sortable: true,
+        cell: ({ row }) => (
+          <Badge
+            variant="outline"
+            className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 whitespace-nowrap"
+          >
+            {row.role}
+          </Badge>
+        ),
+      },
+      {
+        id: "department",
+        accessorKey: "department",
+        header: "Department / Secretariat",
+        sortable: true,
+        cell: ({ row }) => (
+          <span className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-[220px] block">
+            {row.department}
+          </span>
+        ),
+      },
+      {
+        id: "protocols",
+        accessorKey: "protocols",
+        header: "Protocols",
+        sortable: true,
+        align: "center",
+        headerClassName: "w-[100px]",
+        cell: ({ row }) => (
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-200 tabular-nums">
+            {row.protocols}
+          </span>
+        ),
+      },
+      {
+        id: "status",
+        accessorKey: "status",
+        header: "Account Status",
+        sortable: true,
+        headerClassName: "w-[130px]",
+        cell: ({ row }) => {
+          const isActive = row.status === "Active"
+          return (
+            <span
+              className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-md border ${
+                isActive
+                  ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25"
+                  : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/25"
+              }`}
+            >
+              <span
+                className={`size-2 rounded-full ${
+                  isActive ? "bg-emerald-500 animate-pulse" : "bg-rose-500"
+                }`}
+              />
+              <span>{row.status}</span>
+            </span>
+          )
+        },
+      },
+      {
+        id: "actions",
+        header: "Manage Access",
+        align: "right",
+        headerClassName: "w-[140px]",
+        cell: ({ row }) => {
+          const isActive = row.status === "Active"
+          return (
+            <div className="flex items-center justify-end">
+              {isActive ? (
+                <AlertDialog>
+                  <AlertDialogTrigger render={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2.5 text-xs font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer gap-1"
+                      title="Deactivate Administrator Account"
+                    >
+                      <UserX className="size-3.5" />
+                      <span>Deactivate</span>
+                    </Button>
+                  } />
+                  <AlertDialogContent className="sm:max-w-md">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                        Deactivate Administrator Account
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Are you sure you want to deactivate <strong className="text-slate-900 dark:text-white">{row.name}</strong> ({row.email})?
+                        Their institutional governance permissions, protocol assignment authority, and credential signing access will be suspended immediately.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="text-xs font-semibold">Keep Active</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleToggleStatus(row.id, row.name)}
+                        className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                      >
+                        Confirm Deactivation
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger render={
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="h-7 px-2.5 text-xs font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white cursor-pointer gap-1"
+                      title="Activate Administrator Account"
+                    >
+                      <UserCheck className="size-3.5" />
+                      <span>Activate</span>
+                    </Button>
+                  } />
+                  <AlertDialogContent className="sm:max-w-md">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                        Restore Administrator Account
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Are you sure you want to activate <strong className="text-slate-900 dark:text-white">{row.name}</strong> ({row.email})?
+                        Full institutional governance authority and protocol assignment privileges will be restored immediately.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="text-xs font-semibold">Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleToggleStatus(row.id, row.name)}
+                        className="bg-[#198754] hover:bg-[#146c43] text-white text-xs font-bold"
+                      >
+                        Restore & Activate
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </div>
+          )
+        },
+      },
+    ],
+    []
+  )
+
+  // ── DataTable Filters ─────────────────────────────────────────────────────
+  const filters: DataTableFilter<AdminMember>[] = React.useMemo(
+    () => [
+      {
+        id: "status",
+        title: "Status",
+        accessorKey: "status",
+        options: [
+          { label: "Active Admins", value: "Active" },
+          { label: "Inactive Admins", value: "Inactive" },
+        ],
+      },
+      {
+        id: "role",
+        title: "Role",
+        accessorKey: "role",
+        options: [
+          { label: "Governance Director", value: "Director of Governance & Compliance" },
+          { label: "IRB Committee Chair", value: "IRB Committee Chair" },
+          { label: "Screening Triage Officer", value: "Screening Triage Officer" },
+          { label: "Principal Investigator", value: "Principal Investigator" },
+          { label: "Legal Counsel", value: "Institutional Legal & Ethics Counsel" },
+          { label: "System Administrator", value: "System Administrator" },
+        ],
+      },
+    ],
+    []
   )
 
   return (
@@ -196,62 +487,266 @@ export default function AdminDashboardPage() {
 
       </div>
 
-      {/* Institutional Member Directory */}
-      <div className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="roster">
-        
-        <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <Users className="size-5 text-[#002752] dark:text-sky-400" />
-              Institutional Ethics Directory & Roles
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Role-Based Access Control (RBAC) governance for investigators, committee members, and screening triage leads
-            </p>
-          </div>
+      {/* Institutional Member Directory & Governance Administration */}
+      <div id="roster" className="space-y-4">
+        {statusNotice && (
+          <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
+            <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+            <AlertTitle className="text-xs font-bold">Roster Directory Updated</AlertTitle>
+            <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
+              {statusNotice}
+            </AlertDescription>
+          </Alert>
+        )}
 
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400 pointer-events-none z-10" />
-            <Input
-              type="text"
-              placeholder="Filter members or roles..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800"
-            />
-          </div>
-        </div>
+        <DataTable<AdminMember>
+          data={members}
+          columns={columns}
+          title="Institutional Ethics Directory & Governance Administration"
+          description={`Role-Based Access Control (RBAC) governance across ${members.length} registered institutional officers (${members.filter((m) => m.status === "Active").length} Active, ${members.filter((m) => m.status === "Inactive").length} Inactive)`}
+          searchPlaceholder="Search administrators by name, email, role, or department..."
+          searchKeys={["name", "email", "role", "department"]}
+          filters={filters}
+          initialPageSize={5}
+          pageSizeOptions={[5, 10, 20]}
+          initialSort={{
+            columnId: "id",
+            direction: "asc",
+          }}
+          toolbarActions={
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/roster"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+              >
+                <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <span>Reviewer Roster & Controls</span>
+              </Link>
+              <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                <DialogTrigger render={
+                  <Button
+                    type="button"
+                    className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
+                  >
+                    <UserPlus className="size-3.5 mr-1.5" />
+                    <span>Add Administrator</span>
+                  </Button>
+                } />
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                    Appoint Institutional Administrator
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+                    Register a new ethics governance officer, committee secretariat member, or triage lead into the RBAC directory.
+                  </DialogDescription>
+                </DialogHeader>
 
-        <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
-          {filteredMembers.map((member) => (
-            <div
-              key={member.email}
-              className="p-4 sm:p-5 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {member.name}
-                  </span>
-                  <span className="text-[0.65rem] font-bold px-2 py-0.5 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300">
-                    {member.role}
-                  </span>
+                {formError && (
+                  <Alert className="border-rose-500/30 bg-rose-50/90 dark:bg-rose-950/40 text-rose-950 dark:text-rose-200 py-2">
+                    <XCircle className="size-4 text-rose-600 dark:text-rose-400" />
+                    <AlertDescription className="text-xs font-semibold text-rose-800 dark:text-rose-300">
+                      {formError}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="space-y-3 py-1 text-xs">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Full Name & Title <span className="text-rose-500">*</span>
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="e.g. Prof. Mohammad Kabir"
+                      value={newAdmin.name}
+                      onChange={(e) => {
+                        setFormError(null)
+                        setNewAdmin((p) => ({ ...p, name: e.target.value }))
+                      }}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Institutional Email Address <span className="text-rose-500">*</span>
+                    </label>
+                    <Input
+                      type="email"
+                      placeholder="e.g. m.kabir@diu.edu.bd"
+                      value={newAdmin.email}
+                      onChange={(e) => {
+                        setFormError(null)
+                        setNewAdmin((p) => ({ ...p, email: e.target.value }))
+                      }}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Governance Role
+                    </label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-between h-8 px-3 text-xs font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
+                        >
+                          <span className="truncate">{newAdmin.role}</span>
+                          <ChevronDown className="size-3.5 text-slate-400 shrink-0 ml-2" />
+                        </Button>
+                      } />
+                      <DropdownMenuContent className="w-[340px] max-h-56 overflow-y-auto">
+                        <DropdownMenuRadioGroup
+                          value={newAdmin.role}
+                          onValueChange={(val) => setNewAdmin((p) => ({ ...p, role: val }))}
+                        >
+                          {[
+                            "Director of Governance & Compliance",
+                            "System Administrator",
+                            "IRB Committee Chair",
+                            "Screening Triage Officer",
+                            "Principal Investigator",
+                            "Institutional Legal & Ethics Counsel",
+                            "Research Ethics Auditor",
+                          ].map((role) => (
+                            <DropdownMenuRadioItem
+                              key={role}
+                              value={role}
+                              className="text-xs font-medium cursor-pointer py-1.5 px-2.5"
+                            >
+                              {role}
+                            </DropdownMenuRadioItem>
+                          ))}
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Faculty / Department
+                    </label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-between h-8 px-3 text-xs font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
+                        >
+                          <span className="truncate">{newAdmin.department}</span>
+                          <ChevronDown className="size-3.5 text-slate-400 shrink-0 ml-2" />
+                        </Button>
+                      } />
+                      <DropdownMenuContent className="w-[340px] max-h-56 overflow-y-auto">
+                        <DropdownMenuRadioGroup
+                          value={newAdmin.department}
+                          onValueChange={(val) => setNewAdmin((p) => ({ ...p, department: val }))}
+                        >
+                          {[
+                            "Research Compliance Secretariat",
+                            "Biomedical Research Ethics Board",
+                            "Public Health & Clinical Epidemiology",
+                            "Pediatrics & Behavioral Health",
+                            "AI & Data Science Ethics Board",
+                            "Legal & Regulatory Affairs",
+                          ].map((dept) => (
+                            <DropdownMenuRadioItem
+                              key={dept}
+                              value={dept}
+                              className="text-xs font-medium cursor-pointer py-1.5 px-2.5"
+                            >
+                              {dept}
+                            </DropdownMenuRadioItem>
+                          ))}
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Assigned Protocols
+                      </label>
+                      <Input
+                        type="number"
+                        min={0}
+                        value={newAdmin.protocols}
+                        onChange={(e) =>
+                          setNewAdmin((p) => ({
+                            ...p,
+                            protocols: Math.max(0, parseInt(e.target.value) || 0),
+                          }))
+                        }
+                        className="h-8 text-xs tabular-nums"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Initial Status
+                      </label>
+                      <div className="grid grid-cols-2 gap-1 pt-0.5">
+                        <Button
+                          type="button"
+                          variant={newAdmin.status === "Active" ? "default" : "outline"}
+                          onClick={() => setNewAdmin((p) => ({ ...p, status: "Active" }))}
+                          className={`h-7 px-2 text-[11px] font-bold cursor-pointer ${
+                            newAdmin.status === "Active"
+                              ? "bg-[#198754] hover:bg-[#146c43] text-white"
+                              : "text-slate-600 dark:text-slate-300"
+                          }`}
+                        >
+                          <UserCheck className="size-3 mr-1" />
+                          Active
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={newAdmin.status === "Inactive" ? "default" : "outline"}
+                          onClick={() => setNewAdmin((p) => ({ ...p, status: "Inactive" }))}
+                          className={`h-7 px-2 text-[11px] font-bold cursor-pointer ${
+                            newAdmin.status === "Inactive"
+                              ? "bg-slate-700 text-white"
+                              : "text-slate-600 dark:text-slate-300"
+                          }`}
+                        >
+                          <UserX className="size-3 mr-1" />
+                          Inactive
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <span>{member.department}</span>
-                  <span>•</span>
-                  <span>{member.email}</span>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
-                <span>{member.protocols} Assigned Protocols</span>
-                <span className="size-2 rounded-full bg-emerald-500" title="Active Account" />
-              </div>
+                <DialogFooter className="gap-2 sm:gap-0 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setFormError(null)
+                      setIsAddModalOpen(false)
+                    }}
+                    className="text-xs font-semibold"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleCreateAdmin}
+                    className="bg-[#002752] hover:bg-[#001c3d] text-white text-xs font-bold"
+                  >
+                    Confirm & Appoint
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             </div>
-          ))}
-        </div>
-
+          }
+        />
       </div>
 
       {/* ── Section: Certificate Authority ─────────────────────────────────── */}

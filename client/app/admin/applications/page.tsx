@@ -59,8 +59,8 @@ export default function AdminReviewerApplicationsPage() {
       "Approved",
       "Accreditation approved by Institutional Ethics Secretariat."
     )
-    toast.success("Secretariat Determination Recorded", {
-      description: `Accreditation approved for ${fullName} (${appId}). Official credentials and voting appointment issued.`,
+    toast.success("Reviewer Accreditation Granted", {
+      description: `${fullName} (${appId}) is now accredited and enrolled into the Institutional Reviewer Roster with Active voting status.`,
     })
   }
 
@@ -226,6 +226,17 @@ export default function AdminReviewerApplicationsPage() {
               <Eye className="size-3.5" />
               <span>Inspect</span>
             </Link>
+
+            {row.status === "Approved" && (
+              <Link
+                href={`/admin/roster?search=${encodeURIComponent(row.fullName)}`}
+                className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-bold gap-1 rounded-lg border border-emerald-300/80 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-950/40 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 transition-colors"
+                title="View in Accredited Reviewer Roster"
+              >
+                <Users className="size-3.5" />
+                <span className="hidden xl:inline">In Roster</span>
+              </Link>
+            )}
 
             {row.status !== "Approved" && (
               <AlertDialog>
@@ -399,14 +410,23 @@ export default function AdminReviewerApplicationsPage() {
             direction: "desc",
           }}
           toolbarActions={
-            <Link
-              href="/apply"
-              target="_blank"
-              className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0"
-            >
-              <ExternalLink className="size-3 mr-1.5" />
-              <span>Open Public Apply Form</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/roster"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+              >
+                <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <span>Accredited Reviewer Roster</span>
+              </Link>
+              <Link
+                href="/apply"
+                target="_blank"
+                className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0"
+              >
+                <ExternalLink className="size-3 mr-1.5" />
+                <span>Open Public Apply Form</span>
+              </Link>
+            </div>
           }
         />
       </div>

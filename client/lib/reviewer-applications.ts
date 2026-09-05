@@ -1,3 +1,5 @@
+import { syncApprovedReviewerToRoster, updateReviewerStatus } from "@/lib/reviewer-roster"
+
 export interface ReviewerApplication {
   id: string
   fullName: string
@@ -280,17 +282,43 @@ export function updateReviewerApplicationStatus(
     day: "2-digit",
     year: "numeric",
   })
+
+  let targetApp: ReviewerApplication | undefined
+
   const updated = current.map((app) => {
     if (app.id === id) {
-      return {
+      targetApp = {
         ...app,
         status,
         decisionNotes: notes ?? (status === "Approved" ? "Credentials approved by Institutional Ethics Secretariat." : "Application declined by Secretariat."),
         decisionDate: dateStr,
       }
+      return targetApp
     }
     return app
   })
+
   saveStoredApplications(updated)
+
+  // Automatically synchronize accredited reviewer roster
+  if (status === "Approved" && targetApp) {
+    syncApprovedReviewerToRoster({
+      id: targetApp.id,
+      fullName: targetApp.fullName,
+      email: targetApp.email,
+      phone: targetApp.phone,
+      institution: targetApp.institution,
+      department: targetApp.department,
+      position: targetApp.position,
+      degree: targetApp.degree,
+      orcid: targetApp.orcid,
+      expertise: targetApp.expertise,
+      statement: targetApp.statement,
+      decisionDate: dateStr,
+    })
+  } else if (status === "Rejected") {
+    updateReviewerStatus(id, "Inactive", "Accreditation rejected or revoked by Secretariat")
+  }
+
   return updated
 }

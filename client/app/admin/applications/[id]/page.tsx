@@ -19,6 +19,7 @@ import {
   AlertCircle,
   Check,
   Calendar,
+  Users,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -102,7 +103,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
     if (status === "Approved") {
       toast.success("Reviewer Accreditation Granted", {
-        description: "Credentials verified and sealed into the institutional ethics registry.",
+        description: `${application.fullName} is now accredited and enrolled into the Institutional Reviewer Roster with Active voting status.`,
       })
     } else {
       toast.error("Application Declined", {
@@ -494,6 +495,16 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
+
+              {isApproved && (
+                <Link
+                  href={`/admin/roster?search=${encodeURIComponent(application.fullName)}`}
+                  className="w-full flex items-center justify-center h-9 text-xs font-bold rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 gap-2 transition-colors shadow-2xs"
+                >
+                  <Users className="size-4" />
+                  <span>View in Institutional Reviewer Roster</span>
+                </Link>
+              )}
 
               <AlertDialog>
                 <AlertDialogTrigger render={
