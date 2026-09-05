@@ -149,3 +149,23 @@ export const reviewerApplicationSchema = z.object({
 })
 
 export type StoredReviewerApplication = z.infer<typeof reviewerApplicationSchema>
+
+/**
+ * Schema for addReviewerApplication input
+ */
+export const createReviewerApplicationInputSchema = z.object({
+  fullName: z.string().trim().min(2, "Full Name must be at least 2 characters"),
+  email: z.string().trim().email("Please enter a valid institutional email address"),
+  phone: z.string().trim().default("+880 1700-000000"),
+  institution: z.string().trim().min(2, "Institution is required"),
+  department: z.string().trim().min(2, "Department is required"),
+  position: z.string().trim().default("Research Faculty"),
+  degree: z.string().trim().default("PhD / Doctorate"),
+  yearsExperience: z.coerce.number().int().min(0).default(5),
+  orcid: z.string().trim().default("0000-0000-0000-0000"),
+  expertise: z.array(z.string()).min(1, "At least one area of expertise is required"),
+  statement: z.string().trim().min(10, "Statement of interest is required"),
+  cvFileName: z.string().trim().default("Curriculum_Vitae.pdf"),
+})
+
+export type CreateReviewerApplicationInput = z.input<typeof createReviewerApplicationInputSchema>

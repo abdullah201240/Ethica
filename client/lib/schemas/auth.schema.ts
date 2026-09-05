@@ -13,7 +13,7 @@ export const userLoginSchema = z.object({
     .string()
     .min(1, "Password is required")
     .min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().default(true),
+  rememberMe: z.boolean(),
 })
 
 export type UserLoginInput = z.infer<typeof userLoginSchema>

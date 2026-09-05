@@ -1,6 +1,10 @@
 import { syncApprovedReviewerToRoster, updateReviewerStatus } from "@/lib/reviewer-roster"
 import { z } from "zod"
-import { reviewerApplicationSchema } from "@/lib/schemas"
+import {
+  reviewerApplicationSchema,
+  createReviewerApplicationInputSchema,
+  type CreateReviewerApplicationInput,
+} from "@/lib/schemas"
 
 export interface ReviewerApplication {
   id: string
@@ -258,8 +262,9 @@ export function saveStoredApplications(apps: ReviewerApplication[]): void {
 }
 
 export function addReviewerApplication(
-  newApp: Omit<ReviewerApplication, "id" | "status" | "submittedAt">
+  newApp: CreateReviewerApplicationInput
 ): ReviewerApplication {
+  const validated = createReviewerApplicationInputSchema.parse(newApp)
   const current = getStoredApplications()
   const dateStr = new Date().toLocaleDateString("en-US", {
     month: "short",
@@ -268,7 +273,7 @@ export function addReviewerApplication(
   })
   const nextNum = current.length + 82
   const created: ReviewerApplication = {
-    ...newApp,
+    ...validated,
     id: `REV-2026-${String(nextNum).padStart(3, "0")}`,
     status: "Pending Verification",
     submittedAt: dateStr,

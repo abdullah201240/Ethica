@@ -1,3 +1,10 @@
+import { z } from "zod"
+import {
+  reviewerRosterSchema,
+  syncApprovedReviewerSchema,
+  type SyncApprovedReviewerInput,
+} from "@/lib/schemas"
+
 export interface AccreditedReviewer {
   id: string
   applicationId?: string
@@ -175,8 +182,13 @@ export function getStoredReviewers(): AccreditedReviewer[] {
       return cachedReviewers
     }
     lastRawRosterString = raw
-    const parsed = JSON.parse(raw) as AccreditedReviewer[]
-    cachedReviewers = Array.isArray(parsed) && parsed.length > 0 ? parsed : initialAccreditedReviewers
+    const parsed = JSON.parse(raw)
+    const validation = z.array(reviewerRosterSchema).safeParse(parsed)
+    if (validation.success && validation.data.length > 0) {
+      cachedReviewers = validation.data as AccreditedReviewer[]
+    } else {
+      cachedReviewers = initialAccreditedReviewers
+    }
     return cachedReviewers
   } catch {
     return initialAccreditedReviewers
@@ -234,25 +246,16 @@ function determineBoard(expertise: string[] = []): "Biomedical & Clinical IRB" |
   return "Biomedical & Clinical IRB"
 }
 
-export function syncApprovedReviewerToRoster(app: {
-  id: string
-  fullName: string
-  email: string
-  phone: string
-  institution: string
-  department: string
-  position: string
-  degree: string
-  orcid?: string
-  expertise: string[]
-  statement?: string
-  decisionDate?: string
-}): AccreditedReviewer {
+export function syncApprovedReviewerToRoster(
+  app: SyncApprovedReviewerInput
+): AccreditedReviewer {
+  const validation = syncApprovedReviewerSchema.safeParse(app)
+  const safeApp = validation.success ? validation.data : app
   const current = getStoredReviewers()
-  const existingIndex = current.findIndex((r) => r.applicationId === app.id || r.email.toLowerCase() === app.email.toLowerCase())
+  const existingIndex = current.findIndex((r) => r.applicationId === safeApp.id || r.email.toLowerCase() === safeApp.email.toLowerCase())
 
   const todayStr =
-    app.decisionDate ||
+    safeApp.decisionDate ||
     new Date().toLocaleDateString("en-US", {
       month: "short",
       day: "2-digit",
@@ -260,32 +263,32 @@ export function syncApprovedReviewerToRoster(app: {
     })
 
   // Generate deterministic digital seal hash based on applicant details
-  const rawHash = Array.from(`${app.id}-${app.email}-${todayStr}`)
+  const rawHash = Array.from(`${safeApp.id}-${safeApp.email}-${todayStr}`)
     .reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) >>> 0, 0x12345678)
     .toString(16)
     .padStart(8, "0")
   const sealHash = `${rawHash}b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852${rawHash}`
 
   const reviewerEntry: AccreditedReviewer = {
-    id: app.id,
-    applicationId: app.id,
-    name: app.fullName,
-    degree: app.degree,
-    position: app.position,
-    department: app.department,
-    institution: app.institution,
-    email: app.email,
-    phone: app.phone,
-    orcid: app.orcid,
-    board: determineBoard(app.expertise),
+    id: safeApp.id,
+    applicationId: safeApp.id,
+    name: safeApp.fullName,
+    degree: safeApp.degree,
+    position: safeApp.position,
+    department: safeApp.department,
+    institution: safeApp.institution,
+    email: safeApp.email,
+    phone: safeApp.phone,
+    orcid: safeApp.orcid,
+    board: determineBoard(safeApp.expertise),
     role: "Voting Member",
     clearanceLevel: "Full Voting Quorum",
     status: "Active",
-    specializations: app.expertise,
+    specializations: safeApp.expertise,
     assignedProtocols: existingIndex >= 0 ? current[existingIndex].assignedProtocols : 0,
     accreditationDate: todayStr,
     digitalSealHash: sealHash,
-    bioStatement: app.statement,
+    bioStatement: safeApp.statement,
   }
 
   let updated: AccreditedReviewer[]
@@ -310,13 +313,15 @@ export function updateReviewerStatus(
   status: "Active" | "Inactive",
   reason?: string
 ): AccreditedReviewer[] {
+  const statusValidation = z.enum(["Active", "Inactive"]).safeParse(status)
+  const safeStatus = statusValidation.success ? statusValidation.data : "Active"
   const current = getStoredReviewers()
   const updated = current.map((r) => {
     if (r.id === id) {
       return {
         ...r,
-        status,
-        statusReason: reason ?? (status === "Inactive" ? "Account suspended by Secretariat" : undefined),
+        status: safeStatus,
+        statusReason: reason ?? (safeStatus === "Inactive" ? "Account suspended by Secretariat" : undefined),
       }
     }
     return r

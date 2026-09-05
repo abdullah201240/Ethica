@@ -16,43 +16,41 @@ import {
   GraduationCap,
   ArrowLeft,
 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { reviewerLoginSchema } from "@/lib/schemas"
+import { reviewerLoginSchema, type ReviewerLoginInput } from "@/lib/schemas"
 
 export default function ReviewerLoginPage() {
   const router = useRouter()
-  const [memberId, setMemberId] = React.useState("")
-  const [passphrase, setPassphrase] = React.useState("")
   const [showPassphrase, setShowPassphrase] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = React.useState<{ memberId?: string; passphrase?: string }>({})
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ReviewerLoginInput>({
+    resolver: zodResolver(reviewerLoginSchema),
+    mode: "onChange",
+    defaultValues: {
+      memberId: "",
+      passphrase: "",
+    },
+  })
 
   const handleDemoFill = () => {
-    setMemberId("charles.montgomery@diu.edu.bd")
-    setPassphrase("IRB_Chair_SecureKey_2026!")
-    setFieldErrors({})
+    setValue("memberId", "charles.montgomery@diu.edu.bd", { shouldValidate: true })
+    setValue("passphrase", "IRB_Chair_SecureKey_2026!", { shouldValidate: true })
     setStatusMessage("Demo Committee Chair credentials loaded!")
     setTimeout(() => setStatusMessage(null), 3500)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    // Zod Runtime Schema Validation
-    const validation = reviewerLoginSchema.safeParse({ memberId, passphrase })
-    if (!validation.success) {
-      const flattened = validation.error.flatten().fieldErrors
-      setFieldErrors({
-        memberId: flattened.memberId?.[0],
-        passphrase: flattened.passphrase?.[0],
-      })
-      return
-    }
-
-    setFieldErrors({})
+  const onSubmit = () => {
     setLoading(true)
     setStatusMessage("Verifying institutional committee credentials...")
     setTimeout(() => {
@@ -158,7 +156,7 @@ export default function ReviewerLoginPage() {
           )}
 
           {/* Credentials Form */}
-          <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
             
             {/* Reviewer ID / Email */}
             <div className="space-y-1.5">
@@ -171,22 +169,18 @@ export default function ReviewerLoginPage() {
                   id="memberId"
                   type="email"
                   placeholder="chair.irb@diu.edu.bd"
-                  value={memberId}
-                  aria-invalid={Boolean(fieldErrors.memberId)}
-                  onChange={(e) => {
-                    setMemberId(e.target.value)
-                    if (fieldErrors.memberId) setFieldErrors(prev => ({ ...prev, memberId: undefined }))
-                  }}
+                  {...register("memberId")}
+                  aria-invalid={Boolean(errors.memberId)}
                   className={`w-full h-11 pl-10 pr-4 rounded-xl border ${
-                    fieldErrors.memberId
+                    errors.memberId
                       ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                       : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
                   } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
                 />
               </div>
-              {fieldErrors.memberId && (
+              {errors.memberId && (
                 <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-1">
-                  {fieldErrors.memberId}
+                  {errors.memberId.message}
                 </p>
               )}
             </div>
@@ -214,14 +208,10 @@ export default function ReviewerLoginPage() {
                   id="passphrase"
                   type={showPassphrase ? "text" : "password"}
                   placeholder="••••••••••••••••"
-                  value={passphrase}
-                  aria-invalid={Boolean(fieldErrors.passphrase)}
-                  onChange={(e) => {
-                    setPassphrase(e.target.value)
-                    if (fieldErrors.passphrase) setFieldErrors(prev => ({ ...prev, passphrase: undefined }))
-                  }}
+                  {...register("passphrase")}
+                  aria-invalid={Boolean(errors.passphrase)}
                   className={`w-full h-11 pl-10 pr-10 rounded-xl border ${
-                    fieldErrors.passphrase
+                    errors.passphrase
                       ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
                       : "border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60"
                   } text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all`}
@@ -237,9 +227,9 @@ export default function ReviewerLoginPage() {
                   {showPassphrase ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </Button>
               </div>
-              {fieldErrors.passphrase && (
+              {errors.passphrase && (
                 <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-1">
-                  {fieldErrors.passphrase}
+                  {errors.passphrase.message}
                 </p>
               )}
             </div>
