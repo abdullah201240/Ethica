@@ -126,7 +126,7 @@ export function ImpactMetrics() {
                     </div>
 
                     <span
-                      className={`text-[0.68rem] font-bold py-0.5 px-2.5 rounded-full border ${item.theme.badge}`}
+                      className={`text-micro font-bold py-0.5 px-2.5 rounded-full border ${item.theme.badge}`}
                     >
                       {item.tag}
                     </span>

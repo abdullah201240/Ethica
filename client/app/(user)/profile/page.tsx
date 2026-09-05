@@ -1157,7 +1157,7 @@ export default function InvestigatorProfilePage() {
           {/* Institutional Ethics Accreditations */}
           <DashboardCard className="space-y-4">
             <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
-              <Award className="size-4 text-[#E0C23C]" />
+              <Award className="size-4 text-accent" />
               Ethics Certifications & Training
             </h3>
 

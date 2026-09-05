@@ -222,12 +222,12 @@ export function RolePerspectives() {
                               <span className="size-2.5 sm:size-3 rounded-full bg-[#27C93F] border border-[#1AAB29]/50 inline-block" />
                             </div>
 
-                            <div className="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-[0.68rem] sm:text-xs text-muted-foreground font-mono shadow-2xs max-w-xs w-full mx-2 truncate">
+                            <div className="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-micro sm:text-xs text-muted-foreground font-mono shadow-2xs max-w-xs w-full mx-2 truncate">
                               <Lock className="size-2.5 sm:size-3 text-secondary shrink-0" />
                               <span className="truncate">{tab.url}</span>
                             </div>
 
-                            <div className="text-[0.68rem] font-bold text-secondary hidden sm:block">
+                            <div className="text-micro font-bold text-secondary hidden sm:block">
                               Active Workspace
                             </div>
                           </div>

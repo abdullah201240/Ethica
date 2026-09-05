@@ -142,14 +142,14 @@ export function DashboardShell({
     roleColor === "green"
       ? "bg-gradient-to-r from-[#198754]/12 to-emerald-500/5 text-secondary dark:text-emerald-300 border-l-2 border-[#198754]"
       : roleColor === "gold"
-        ? "bg-gradient-to-r from-[#E0C23C]/12 to-amber-400/5 text-[#b09214] dark:text-[#E0C23C] border-l-2 border-[#E0C23C]"
+        ? "bg-gradient-to-r from-[#E0C23C]/12 to-amber-400/5 text-accent-foreground dark:text-accent border-l-2 border-[#E0C23C]"
         : "bg-gradient-to-r from-[#002752]/10 to-blue-500/5 text-primary dark:text-sky-300 border-l-2 border-[#002752] dark:border-sky-400"
 
   const activeNavIconClass =
     roleColor === "green"
       ? "text-secondary dark:text-emerald-300"
       : roleColor === "gold"
-        ? "text-[#b09214] dark:text-[#E0C23C]"
+        ? "text-accent-foreground dark:text-accent"
         : "text-primary dark:text-sky-300"
 
   const activeCollapsedBg =

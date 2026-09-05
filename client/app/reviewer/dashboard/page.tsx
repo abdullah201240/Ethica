@@ -373,7 +373,7 @@ export default function ReviewerDashboardPage() {
           <Button
             className="h-9 px-3.5 text-micro font-bold rounded-xl bg-primary text-white hover:bg-[#001c3d]"
           >
-            <Sparkles className="size-3.5 text-[#E0C23C] mr-1.5" />
+            <Sparkles className="size-3.5 text-accent mr-1.5" />
             Launch Virtual Chamber
           </Button>
         </div>

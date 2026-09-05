@@ -91,7 +91,7 @@ export function FaqSection() {
             >
               <Accordion className="w-full">
                 <AccordionItem value={`faq-${idx}`} className="border-none">
-                  <AccordionTrigger className="text-left font-sans font-black text-base sm:text-lg text-primary dark:text-white py-1 hover:no-underline hover:text-secondary dark:hover:text-[#22c55e] transition-colors">
+                  <AccordionTrigger className="text-left font-sans font-black text-base sm:text-lg text-primary dark:text-white py-1 hover:no-underline hover:text-secondary dark:hover:text-emerald-400 transition-colors">
                     <div className="flex items-start gap-3.5 pr-2">
                       <span className="font-mono text-xs font-black text-secondary bg-[#198754]/10 px-2.5 py-1 rounded-full shrink-0 mt-0.5">
                         0{idx + 1}

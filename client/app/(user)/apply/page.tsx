@@ -832,7 +832,7 @@ export default function ApplyForResearchPermissionPage() {
                           {isSelected ? (
                             <CheckCircle2 className="size-4 text-secondary shrink-0 ml-2" />
                           ) : (
-                            <Badge variant="outline" className="text-[9px] font-semibold">
+                            <Badge variant="outline" className="text-micro font-semibold">
                               {cp.badge}
                             </Badge>
                           )}

@@ -74,7 +74,7 @@ export default function ReviewerLoginPage() {
       <header className="relative z-20 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-20 py-5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#002752] via-[#003875] to-[#002752] text-white transition-transform group-hover:scale-105">
-            <Scale className="size-6 text-[#E0C23C]" />
+            <Scale className="size-6 text-accent" />
           </div>
           <div>
             <span className="font-sans text-xl font-black tracking-tight text-primary dark:text-white block leading-tight">
@@ -121,7 +121,7 @@ export default function ReviewerLoginPage() {
           {/* Form Header */}
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#002752]/10 text-primary dark:text-amber-300 text-xs font-bold border border-[#002752]/20 mb-1">
-              <Scale className="size-3.5 text-primary dark:text-[#E0C23C]" />
+              <Scale className="size-3.5 text-primary dark:text-accent" />
               <span>Ethical Review Board Deliberation</span>
             </div>
             <h1 className="font-sans text-2xl sm:text-3xl font-black text-primary dark:text-white tracking-tight uppercase">
@@ -135,7 +135,7 @@ export default function ReviewerLoginPage() {
           {/* Quick Demo Autofill Banner */}
           <div className="p-3 sm:p-3.5 rounded-xl border border-amber-300/80 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/40 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs text-amber-900 dark:text-amber-300 font-medium">
-              <Sparkles className="size-4 text-[#E0C23C] shrink-0" />
+              <Sparkles className="size-4 text-accent shrink-0" />
               <span>Testing reviewer access?</span>
             </div>
             <Button

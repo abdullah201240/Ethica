@@ -169,7 +169,7 @@ export function WorkflowSteps() {
                     </div>
 
                     <span
-                      className={`text-[0.68rem] font-bold py-0.5 px-2.5 rounded-full border ${item.theme.pill}`}
+                      className={`text-micro font-bold py-0.5 px-2.5 rounded-full border ${item.theme.pill}`}
                     >
                       {item.tag}
                     </span>
