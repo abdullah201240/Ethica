@@ -18,27 +18,27 @@ const colorStyles: Record<
   }
 > = {
   navy: {
-    value: "text-primary dark:text-white",
+    value: "text-2xl dark:text-white",
     iconColor: "text-slate-400 dark:text-slate-500",
   },
   green: {
-    value: "text-secondary dark:text-emerald-400",
+    value: "text-2xl dark:text-emerald-400",
     iconColor: "text-secondary dark:text-emerald-400",
   },
   amber: {
-    value: "text-amber-600 dark:text-amber-400",
+    value: "text-2xl dark:text-amber-400",
     iconColor: "text-amber-500 dark:text-amber-400",
   },
   rose: {
-    value: "text-rose-600 dark:text-rose-400",
+    value: "text-2xl dark:text-rose-400",
     iconColor: "text-rose-500 dark:text-rose-400",
   },
   sky: {
-    value: "text-sky-600 dark:text-sky-400",
+    value: "text-2xl dark:text-sky-400",
     iconColor: "text-sky-500 dark:text-sky-400",
   },
   gold: {
-    value: "text-accent-foreground dark:text-accent",
+    value: "text-2xl dark:text-accent",
     iconColor: "text-accent dark:text-accent",
   },
 }

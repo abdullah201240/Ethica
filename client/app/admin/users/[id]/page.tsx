@@ -415,6 +415,7 @@ export default function UserDossierDetailPage({ params }: PageProps) {
         <KpiCard
           label="Protocols / Workload"
           value={user.protocolsCount}
+          description={
             user.pillar === "Investigator"
               ? "Submitted research protocols"
               : user.pillar === "Reviewer"

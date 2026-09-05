@@ -354,36 +354,23 @@ export function DataTable<T extends object>({
   return (
     <Card
       className={cn(
-        "w-full rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs py-0 gap-0",
+        "w-full rounded-none sm:rounded-2xl bg-white dark:bg-[#0C1E34] overflow-hidden py-0 gap-0 shadow-none border-0",
         className
       )}
     >
       {/* ── Optional Title & Description Header using CardHeader ───────────── */}
       {(title || description || totalCountBadge) && (
-        <CardHeader className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2.5">
+        <CardHeader className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 flex-wrap">
               {typeof title === "string" ? (
-                <CardTitle className="text-section-heading text-primary uppercase tracking-tight">
+                <CardTitle className="text-section-heading text-xl uppercase tracking-tight">
                   {title}
                 </CardTitle>
               ) : (
                 title
               )}
-              {totalCountBadge ?? (
-                <Badge
-                  variant="secondary"
-                  className="font-mono text-micro font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-foreground/85"
-                >
-                  {totalRows} {totalRows === 1 ? "Record" : "Records"}
-                </Badge>
-              )}
             </div>
-            {description && (
-              <CardDescription className="text-micro sm:text-body-sm text-muted-foreground font-medium">
-                {description}
-              </CardDescription>
-            )}
           </div>
           {toolbarActions && (
             <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
@@ -395,7 +382,7 @@ export function DataTable<T extends object>({
 
       {/* ── Toolbar: Search, Filters, Page Size & Clear ──────────────────────── */}
       {(showSearch || filters.length > 0 || activeFilterCount > 0) && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 border-b border-slate-200/75 dark:border-slate-800/80 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           {/* Left: Search Input & Faceted Filters */}
           <div className="flex flex-1 flex-wrap items-center gap-2.5 min-w-0">
             {/* Search Input using UI Input component */}
@@ -575,10 +562,10 @@ export function DataTable<T extends object>({
           tableWrapperClassName
         )}
       >
-        <Table>
+        <Table className="text-base">
           {/* Table Header using UI TableHeader & TableHead */}
           <TableHeader>
-            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/85 dark:border-slate-800 hover:bg-slate-50/90 dark:hover:bg-slate-900/60">
+            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 hover:bg-slate-50/90 dark:hover:bg-slate-900/60 border-b-0">
               {columns.map((col, idx) => {
                 const colId = col.id ?? String(col.accessorKey ?? idx)
                 const isCurrentSorted = sortColumn === colId
@@ -588,7 +575,7 @@ export function DataTable<T extends object>({
                   <TableHead
                     key={colId}
                     className={cn(
-                      "px-4 py-3.5 text-table-header font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap select-none h-auto",
+                      "px-4 py-3.5 text-base font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap select-none h-auto",
                       col.align === "center"
                         ? "text-center"
                         : col.align === "right"
@@ -604,13 +591,13 @@ export function DataTable<T extends object>({
                         size="xs"
                         onClick={() => handleSort(colId)}
                         className={cn(
-                          "h-auto p-0 hover:bg-transparent font-bold tracking-wider uppercase text-muted-foreground hover:text-primary transition-colors gap-1.5",
+                          "h-auto p-0 hover:bg-transparent text-base font-bold tracking-wider uppercase text-muted-foreground hover:text-primary transition-colors gap-2",
                           isCurrentSorted &&
                             "text-primary font-black"
                         )}
                         aria-label={`Sort by ${colId}`}
                       >
-                        <span>
+                        <span className="text-base font-bold">
                           {typeof col.header === "function"
                             ? col.header({
                                 isSorted: currentDirection ?? false,
@@ -620,11 +607,11 @@ export function DataTable<T extends object>({
                         </span>
                         <span className="shrink-0 text-slate-400 transition-colors">
                           {isCurrentSorted && sortDirection === "asc" ? (
-                            <ArrowUp className="size-3.5 text-primary" />
+                            <ArrowUp className="size-4 text-primary" />
                           ) : isCurrentSorted && sortDirection === "desc" ? (
-                            <ArrowDown className="size-3.5 text-primary" />
+                            <ArrowDown className="size-4 text-primary" />
                           ) : (
-                            <ArrowUpDown className="size-3 opacity-60 hover:opacity-100" />
+                            <ArrowUpDown className="size-3.5 opacity-60 hover:opacity-100" />
                           )}
                         </span>
                       </Button>
@@ -634,7 +621,7 @@ export function DataTable<T extends object>({
                         toggleSorting: () => {},
                       })
                     ) : (
-                      col.header
+                      <span className="text-base font-bold">{col.header}</span>
                     )}
                   </TableHead>
                 )
@@ -643,12 +630,12 @@ export function DataTable<T extends object>({
           </TableHeader>
 
           {/* Table Body using UI TableBody, TableRow & TableCell */}
-          <TableBody className="divide-y divide-slate-200/70 dark:divide-slate-800">
+          <TableBody className="divide-y-0">
             {isLoading ? (
               Array.from({ length: skeletonRowCount }).map((_, rIdx) => (
                 <TableRow
                   key={`skeleton-row-${rIdx}`}
-                  className="border-b border-slate-200/60 dark:border-slate-800/80"
+                  className="border-b-0"
                 >
                   {columns.map((col, cIdx) => (
                     <TableCell
@@ -665,7 +652,7 @@ export function DataTable<T extends object>({
                     >
                       <Skeleton
                         className={cn(
-                          "h-4 rounded-md",
+                          "h-5 rounded-md",
                           cIdx === 0
                             ? "w-3/4"
                             : cIdx === 1
@@ -689,7 +676,7 @@ export function DataTable<T extends object>({
                   }
                   onClick={() => onRowClick?.(row)}
                   className={cn(
-                    "group transition-colors border-b border-slate-200/60 dark:border-slate-800/80",
+                    "group transition-colors border-b-0",
                     onRowClick && "cursor-pointer",
                     "hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
                   )}
@@ -706,7 +693,7 @@ export function DataTable<T extends object>({
                       <TableCell
                         key={colId}
                         className={cn(
-                          "px-4 py-4 align-middle text-foreground/85 text-table-cell whitespace-normal",
+                          "px-4 py-4 align-middle text-foreground/90 text-base text-table-cell whitespace-normal select-text",
                           col.align === "center"
                             ? "text-center"
                             : col.align === "right"
@@ -715,15 +702,21 @@ export function DataTable<T extends object>({
                           col.className
                         )}
                       >
-                        {col.cell
-                          ? col.cell({
-                              row,
-                              index: startIndex + rowIdx,
-                              value: cellValue,
-                            })
-                          : cellValue != null
-                          ? String(cellValue)
-                          : "—"}
+                        {col.cell ? (
+                          col.cell({
+                            row,
+                            index: startIndex + rowIdx,
+                            value: cellValue,
+                          })
+                        ) : cellValue != null ? (
+                          <span className="text-base font-medium select-text">
+                            {String(cellValue)}
+                          </span>
+                        ) : (
+                          <span className="text-base text-muted-foreground/60 select-text">
+                            —
+                          </span>
+                        )}
                       </TableCell>
                     )
                   })}
@@ -767,7 +760,7 @@ export function DataTable<T extends object>({
 
       {/* ── Pagination Footer using UI Pagination Component ─────────────────── */}
       {showPagination && totalRows > 0 && (
-        <div className="px-4 py-3 sm:px-6 sm:py-3.5 bg-slate-50/60 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-4 py-3 sm:px-6 sm:py-3.5 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Result Counter */}
           <div className="text-micro text-muted-foreground font-medium text-center sm:text-left">
             Showing <strong className="text-foreground tabular-nums">{totalRows > 0 ? startIndex + 1 : 0}</strong> to{" "}
@@ -912,12 +905,12 @@ export function DataTableSkeleton({
   return (
     <Card
       className={cn(
-        "w-full rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs py-0 gap-0",
+        "w-full rounded-none sm:rounded-2xl border-0 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-none py-0 gap-0",
         className
       )}
     >
       {showHeader && (
-        <CardHeader className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <CardHeader className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-2">
             <Skeleton className="h-6 w-48 rounded-md" />
             <Skeleton className="h-4 w-72 rounded-md" />
@@ -927,7 +920,7 @@ export function DataTableSkeleton({
       )}
 
       {showToolbar && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 border-b border-slate-200/75 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3">
           <Skeleton className="h-9 w-full sm:w-72 rounded-md" />
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-24 rounded-md" />
@@ -937,27 +930,27 @@ export function DataTableSkeleton({
       )}
 
       <div className="w-full overflow-x-auto">
-        <Table>
+        <Table className="text-base">
           <TableHeader>
-            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/85 dark:border-slate-800">
+            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b-0">
               {Array.from({ length: columnCount }).map((_, idx) => (
-                <TableHead key={idx} className="px-4 py-3">
-                  <Skeleton className="h-4 w-20 rounded-md" />
+                <TableHead key={idx} className="px-4 py-3.5">
+                  <Skeleton className="h-5 w-24 rounded-md" />
                 </TableHead>
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="divide-y divide-slate-200/70 dark:divide-slate-800">
+          <TableBody className="divide-y-0">
             {Array.from({ length: rowCount }).map((_, rIdx) => (
               <TableRow
                 key={rIdx}
-                className="border-b border-slate-200/60 dark:border-slate-800/80"
+                className="border-b-0"
               >
                 {Array.from({ length: columnCount }).map((_, cIdx) => (
                   <TableCell key={cIdx} className="px-4 py-4">
                     <Skeleton
                       className={cn(
-                        "h-4 rounded-md",
+                        "h-5 rounded-md",
                         cIdx === 0
                           ? "w-3/4"
                           : cIdx === 1
@@ -976,7 +969,7 @@ export function DataTableSkeleton({
       </div>
 
       {showPagination && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 border-t border-slate-200/75 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3">
           <Skeleton className="h-4 w-44 rounded-md" />
           <div className="flex items-center gap-1.5">
             <Skeleton className="size-8 rounded-lg" />
