@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
   User,
+  FilePlus,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
@@ -13,6 +14,11 @@ const userNavItems: NavItem[] = [
     label: "Protocol Overview",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    label: "Apply for Permission",
+    href: "/dashboard/apply",
+    icon: FilePlus,
   },
   {
     label: "Investigator Profile",
