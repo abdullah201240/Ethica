@@ -173,6 +173,19 @@ All metric counters, statistical indicators, and executive KPI summaries across 
   - **Comprehensive Header:** Display the complete entity identity, degrees, titles, institutional badges, and direct status toggles (`AlertDialog` with Sonner toasts).
   - **Full-Width Deep Context:** Utilize multi-column responsive cards for institutional affiliation, board credentials, domain specializations, research statements, active deliberation workload, and FIPS 140-3 SHA-256 digital seals.
 
+---
+
+## 14. Theme Isolation Mandate (Pure Light Landing, Public & Authentication Login Routes)
+- **Zero Dark Theme on Landing, Public & Login Pages:** The public landing page (`/`), marketing sections, institutional application pages (`/apply`), and institutional entry login pages (`/login`, `/admin/login`, `/reviewer/login`) must **NEVER** be hampered or affected by dark theme toggles. They must strictly remain in the official institutional light palette (`#FFFFFF` background, Deep Navy `#002752` typography, DIU Green `#198754`, and Daffodil Gold `#E0C23C` accents) at all times.
+- **Strictly Isolated Workspace Theming:** Theme customization (light / dark mode switching via `ThemeToggle`) is strictly reserved for the 3 authenticated application workspace dashboard pillars:
+  1. **Investigator / Researcher Workspace:** [`/dashboard`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/page.tsx), `/(user)/*`
+  2. **Institutional Governance Admin Console:** [`/admin/*`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/dashboard/page.tsx)
+  3. **IRB Committee Deliberation Chamber:** [`/reviewer/*`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/reviewer/dashboard/page.tsx)
+- **Centralized Enforced Light Theme (`forcedTheme="light"`):**
+  - The centralized [`ThemeProvider`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/theme-provider.tsx) dynamically inspects the current pathname via `usePathname()`.
+  - On public and authentication routes (`/`, `/apply`, `/login`, `/admin/login`, `/reviewer/login`), it enforces `forcedTheme="light"` and strips `.dark` from `document.documentElement`, preventing theme leakage or unintended dark rendering from `localStorage`.
+  - When navigating between workspace dashboards and public/login pages, the user's workspace theme preference is seamlessly preserved in `localStorage` without polluting the public brand presentation or login experience.
+
 
 
 
