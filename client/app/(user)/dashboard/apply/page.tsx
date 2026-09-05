@@ -16,6 +16,7 @@ import {
   Check,
   Download,
   Wallet,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,6 +24,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "@/components/ui/sonner"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import {
   step1ProtocolGeneralSchema,
   step2ProtocolMethodologySchema,
@@ -32,6 +34,7 @@ import {
   IRB_BOARDS,
   STUDY_TYPES,
   RISK_TIERS,
+  CONSENT_PROCEDURES,
   FEE_TIERS,
   EXPEDITED_SURCHARGE_BDT,
   type Step1ProtocolGeneralInput,
@@ -260,6 +263,46 @@ export default function ApplyForResearchPermissionPage() {
     }, 1200)
   }
 
+  // ── Autofill Sample Research Protocol (Testing Assistant) ─────────────────
+  const handleAutofillDemoProtocol = () => {
+    setStep1({
+      title: "Randomized Evaluation of Point-of-Care Maternal Biomarker Surveillance in Rural Bangladesh",
+      department: "Public Health & Clinical Epidemiology",
+      board: "Biomedical IRB",
+      studyType: "Epidemiological / Observational",
+      durationMonths: 18,
+      studyLocation: "DIU Ashulia Research Center & Tangail Upazila Health Complex",
+      coInvestigators: "Dr. Farzana Choudhury (icddr,b), Prof. Charles Montgomery (DIU)",
+    })
+    setStep2({
+      abstract:
+        "This prospective clinical study evaluates the diagnostic efficacy, acceptability, and ethical safeguards of mobile point-of-care maternal pre-eclampsia biomarker screening across 500 rural participants in Bangladesh. Protocols follow Belmont Report principles with strict anonymization.",
+      targetSampleSize: 500,
+      vulnerablePopulations: ["Pregnant Women"],
+      riskTier: "Minimal Risk",
+      consentType: "Written Informed Consent (Bangla & English)",
+      dataConfidentiality:
+        "All patient identifiers will be cryptographically hashed using SHA-256. Primary research databases are hosted on encrypted DIU secure enclave servers with zero third-party disclosure.",
+    })
+    setStep3({
+      protocolProposalName: "Maternal_Biomarker_Protocol_Proposal_v2.pdf",
+      consentFormName: "Participant_Informed_Consent_Bengali_English.pdf",
+      dataToolsName: "Structured_Clinical_Intake_Questionnaire.pdf",
+      investigatorCvName: "Principal_Investigator_Biosketch_CV.pdf",
+    })
+    setFeeTier("faculty")
+    setIsExpedited(true)
+    setPaymentMethod("bkash")
+    setSenderNumber("01711998877")
+    setTransactionId("BKS99281726")
+    setPaymentVerified(true)
+    setAgreeHelsinki(true)
+    setStepErrors({})
+    toast.success("Sample Protocol Prefilled", {
+      description: "Complete biomedical protocol dataset, informed consent procedure, and verified BDT payment credentials populated.",
+    })
+  }
+
   // ── Final Protocol Submission ────────────────────────────────────────────
   const handleSubmitProtocol = () => {
     if (!agreeHelsinki) {
@@ -326,8 +369,8 @@ export default function ApplyForResearchPermissionPage() {
   // ── Success View ─────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="space-y-6 sm:space-y-8 select-text w-full py-4">
-        <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-6 sm:p-10 shadow-sm space-y-8 text-center max-w-3xl mx-auto">
+      <DashboardContainer className="py-4">
+        <div className="rounded-none sm:rounded-2xl border-y sm:border border-border/75 bg-card p-6 sm:p-10 shadow-sm space-y-8 text-center max-w-3xl mx-auto">
           {/* Animated Success Seal */}
           <div className="size-20 sm:size-24 rounded-full bg-[#198754]/10 text-[#198754] flex items-center justify-center mx-auto ring-8 ring-[#198754]/5">
             <CheckCircle2 className="size-10 sm:size-12" />
@@ -450,15 +493,15 @@ export default function ApplyForResearchPermissionPage() {
             </Button>
           </div>
         </div>
-      </div>
+      </DashboardContainer>
     )
   }
 
   // ── Main Wizard View ─────────────────────────────────────────────────────
   return (
-    <div className="space-y-6 sm:space-y-8 select-text w-full">
+    <DashboardContainer>
       {/* ── Wizard Stepper Bar ────────────────────────────────────────────── */}
-      <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-4 sm:p-5 shadow-xs">
+      <div className="rounded-none sm:rounded-2xl border-y sm:border border-border/75 bg-card p-4 sm:p-5 shadow-xs">
         <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 sm:pb-0">
           {STEPS.map((s, idx) => {
             const Icon = s.icon
@@ -513,8 +556,25 @@ export default function ApplyForResearchPermissionPage() {
         </div>
       </div>
 
+      {/* ── Quick Demo Autofill Helper Banner ────────────────────────────── */}
+      <div className="w-full p-3.5 sm:p-4 rounded-none sm:rounded-xl border-y sm:border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-900 dark:text-emerald-300 font-medium">
+          <Sparkles className="size-4 text-[#198754] shrink-0" />
+          <span>Testing ethics clearance intake? Populate verified protocol metadata & BDT payment credentials:</span>
+        </div>
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleAutofillDemoProtocol}
+          className="h-8 text-xs font-bold px-3.5 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
+        >
+          <Sparkles className="size-3 mr-1.5" />
+          Autofill Sample Protocol
+        </Button>
+      </div>
+
       {/* ── Active Wizard Step Content ────────────────────────────────────── */}
-      <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-none sm:rounded-2xl border-y sm:border border-border/75 bg-card p-4 sm:p-8 shadow-xs space-y-6">
         {/* ── STEP 1: GENERAL PROTOCOL INFORMATION ────────────────────────── */}
         {currentStep === 1 && (
           <div className="space-y-6">
@@ -588,17 +648,27 @@ export default function ApplyForResearchPermissionPage() {
                   {IRB_BOARDS.map((b) => {
                     const isSelected = step1.board === b
                     return (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
                         key={b}
-                        onClick={() => setStep1((p) => ({ ...p, board: b }))}
-                        className={`p-4 rounded-xl border text-left transition-all ${
+                        onClick={() => {
+                          setStep1((p) => ({ ...p, board: b }))
+                          if (stepErrors.board) {
+                            setStepErrors((prev) => {
+                              const next = { ...prev }
+                              delete next.board
+                              return next
+                            })
+                          }
+                        }}
+                        className={`p-4 rounded-xl border text-left h-auto flex flex-col items-stretch justify-start whitespace-normal font-normal transition-all cursor-pointer ${
                           isSelected
                             ? "border-[#002752] dark:border-sky-400 bg-[#002752]/5 dark:bg-white/5 ring-2 ring-[#002752]/20"
                             : "border-border/75 bg-muted/20 hover:bg-muted/40"
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1.5 w-full">
                           <strong className="text-xs font-bold text-foreground">{b}</strong>
                           {isSelected && <CheckCircle2 className="size-4 text-[#198754]" />}
                         </div>
@@ -609,7 +679,7 @@ export default function ApplyForResearchPermissionPage() {
                             ? "Surveys, community trials, qualitative interviews, educational studies."
                             : "Machine learning datasets, algorithm bias audits, electronic health records."}
                         </p>
-                      </button>
+                      </Button>
                     )
                   })}
                 </div>
@@ -696,38 +766,87 @@ export default function ApplyForResearchPermissionPage() {
                 )}
               </div>
 
-              {/* Sample Size & Consent Type */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">
-                    Target Participant Cohort Size *
-                  </label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={step2.targetSampleSize}
-                    onChange={(e) =>
-                      setStep2((p) => ({ ...p, targetSampleSize: Number(e.target.value) || 1 }))
+              {/* Target Sample Size */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground flex items-center justify-between">
+                  <span>Target Participant Cohort Size *</span>
+                  <span className="text-[11px] text-muted-foreground">Statistical sample cohort</span>
+                </label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={step2.targetSampleSize}
+                  onChange={(e) => {
+                    setStep2((p) => ({ ...p, targetSampleSize: Number(e.target.value) || 1 }))
+                    if (stepErrors.targetSampleSize) {
+                      setStepErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.targetSampleSize
+                        return next
+                      })
                     }
-                    className="h-10 text-xs font-mono"
-                  />
-                </div>
+                  }}
+                  className={`h-10 text-xs font-mono ${stepErrors.targetSampleSize ? "border-rose-500" : ""}`}
+                />
+                {stepErrors.targetSampleSize && (
+                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.targetSampleSize}</p>
+                )}
+              </div>
 
-                <div className="space-y-1.5">
+              {/* Informed Consent Architecture & Procedure Cards */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-foreground">
-                    Informed Consent Architecture *
+                    Informed Consent Architecture & Procedure *
                   </label>
-                  <Input
-                    value={step2.consentType}
-                    onChange={(e) =>
-                      setStep2((p) => ({
-                        ...p,
-                        consentType: e.target.value as Step2ProtocolMethodologyInput["consentType"],
-                      }))
-                    }
-                    className="h-10 text-xs"
-                  />
+                  <span className="text-[11px] text-muted-foreground">
+                    Institutional ethics consent standard
+                  </span>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {CONSENT_PROCEDURES.map((cp) => {
+                    const isSelected = step2.consentType === cp.type
+                    return (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        key={cp.type}
+                        onClick={() => {
+                          setStep2((p) => ({ ...p, consentType: cp.type }))
+                          if (stepErrors.consentType) {
+                            setStepErrors((prev) => {
+                              const next = { ...prev }
+                              delete next.consentType
+                              return next
+                            })
+                          }
+                        }}
+                        className={`p-4 rounded-xl border text-left h-auto flex flex-col items-stretch justify-start whitespace-normal font-normal transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-[#002752] dark:border-sky-400 bg-[#002752]/5 dark:bg-white/5 ring-2 ring-[#002752]/20"
+                            : "border-border/75 bg-muted/20 hover:bg-muted/40"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1.5 w-full">
+                          <strong className="text-xs font-bold text-foreground">{cp.type}</strong>
+                          {isSelected ? (
+                            <CheckCircle2 className="size-4 text-[#198754] shrink-0 ml-2" />
+                          ) : (
+                            <Badge variant="outline" className="text-[9px] font-semibold">
+                              {cp.badge}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground leading-snug">
+                          {cp.description}
+                        </p>
+                      </Button>
+                    )
+                  })}
+                </div>
+                {stepErrors.consentType && (
+                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.consentType}</p>
+                )}
               </div>
 
               {/* Risk Tier Selection (Crucial Ethics Standard) */}
@@ -739,11 +858,21 @@ export default function ApplyForResearchPermissionPage() {
                   {RISK_TIERS.map((tier) => {
                     const isSelected = step2.riskTier === tier
                     return (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
                         key={tier}
-                        onClick={() => setStep2((p) => ({ ...p, riskTier: tier }))}
-                        className={`p-4 rounded-xl border text-left transition-all ${
+                        onClick={() => {
+                          setStep2((p) => ({ ...p, riskTier: tier }))
+                          if (stepErrors.riskTier) {
+                            setStepErrors((prev) => {
+                              const next = { ...prev }
+                              delete next.riskTier
+                              return next
+                            })
+                          }
+                        }}
+                        className={`p-4 rounded-xl border text-left h-auto flex flex-col items-stretch justify-start whitespace-normal font-normal transition-all cursor-pointer ${
                           isSelected
                             ? tier === "Exempt - Fast Track"
                               ? "border-emerald-600 bg-emerald-50/30 dark:bg-emerald-950/20 ring-2 ring-emerald-500/20"
@@ -753,7 +882,7 @@ export default function ApplyForResearchPermissionPage() {
                             : "border-border/75 bg-muted/20 hover:bg-muted/40"
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1.5 w-full">
                           <strong className="text-xs font-bold text-foreground">{tier}</strong>
                           {isSelected && <CheckCircle2 className="size-4 text-[#198754]" />}
                         </div>
@@ -764,10 +893,13 @@ export default function ApplyForResearchPermissionPage() {
                             ? "Standard physiological monitoring, routine blood draw, psychological questionnaires."
                             : "Interventional drug administration, invasive biopsy, vulnerable groups or stress."}
                         </p>
-                      </button>
+                      </Button>
                     )
                   })}
                 </div>
+                {stepErrors.riskTier && (
+                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.riskTier}</p>
+                )}
               </div>
 
               {/* Confidentiality Statement */}
@@ -777,9 +909,21 @@ export default function ApplyForResearchPermissionPage() {
                 </label>
                 <Textarea
                   value={step2.dataConfidentiality}
-                  onChange={(e) => setStep2((p) => ({ ...p, dataConfidentiality: e.target.value }))}
-                  className="min-h-20 text-xs"
+                  onChange={(e) => {
+                    setStep2((p) => ({ ...p, dataConfidentiality: e.target.value }))
+                    if (stepErrors.dataConfidentiality) {
+                      setStepErrors((prev) => {
+                        const next = { ...prev }
+                        delete next.dataConfidentiality
+                        return next
+                      })
+                    }
+                  }}
+                  className={`min-h-20 text-xs ${stepErrors.dataConfidentiality ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
+                {stepErrors.dataConfidentiality && (
+                  <p className="text-[11px] text-rose-600 font-semibold">{stepErrors.dataConfidentiality}</p>
+                )}
               </div>
             </div>
           </div>
@@ -1067,20 +1211,21 @@ export default function ApplyForResearchPermissionPage() {
                   const tier = FEE_TIERS[key]
                   const isSelected = feeTier === key
                   return (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       key={key}
                       onClick={() => {
                         setFeeTier(key)
                         setPaymentVerified(false)
                       }}
-                      className={`p-4 rounded-xl border text-left transition-all ${
+                      className={`p-4 rounded-xl border text-left h-auto flex flex-col items-stretch justify-start whitespace-normal font-normal transition-all cursor-pointer ${
                         isSelected
                           ? "border-[#002752] dark:border-sky-400 bg-[#002752]/5 dark:bg-white/5 ring-2 ring-[#002752]/20"
                           : "border-border/75 bg-muted/20 hover:bg-muted/40"
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-1 w-full">
                         <strong className="text-xs font-bold text-foreground">{tier.label}</strong>
                         <span className="font-mono text-sm font-black text-[#198754]">
                           ৳ {tier.amountBdt.toLocaleString()} BDT
@@ -1095,7 +1240,7 @@ export default function ApplyForResearchPermissionPage() {
                           ? "Investigator-initiated clinical trials requiring full committee quorum."
                           : "Industry or internationally sponsored multicenter clinical protocols."}
                       </p>
-                    </button>
+                    </Button>
                   )
                 })}
               </div>
@@ -1159,14 +1304,15 @@ export default function ApplyForResearchPermissionPage() {
                 ].map((pm) => {
                   const isSelected = paymentMethod === pm.id
                   return (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       key={pm.id}
                       onClick={() => {
                         setPaymentMethod(pm.id as PaymentMethodKey)
                         setPaymentVerified(false)
                       }}
-                      className={`p-3 rounded-xl border text-center transition-all ${
+                      className={`p-3 rounded-xl border text-center h-auto flex flex-col items-center justify-center whitespace-normal font-normal transition-all cursor-pointer ${
                         isSelected
                           ? "border-[#002752] dark:border-sky-400 bg-[#002752]/10 dark:bg-white/10 ring-2 ring-[#002752]/20"
                           : "border-border/75 bg-muted/20 hover:bg-muted/40"
@@ -1174,7 +1320,7 @@ export default function ApplyForResearchPermissionPage() {
                     >
                       <span className="font-bold text-xs text-foreground block">{pm.label}</span>
                       <span className="text-[10px] text-muted-foreground block">{pm.type}</span>
-                    </button>
+                    </Button>
                   )
                 })}
               </div>
@@ -1359,6 +1505,11 @@ export default function ApplyForResearchPermissionPage() {
                 </div>
 
                 <div>
+                  <span className="text-muted-foreground block text-[11px]">Informed Consent Procedure:</span>
+                  <strong className="text-foreground block">{step2.consentType}</strong>
+                </div>
+
+                <div>
                   <span className="text-muted-foreground block text-[11px]">Duration & Location:</span>
                   <strong className="text-foreground block">{step1.durationMonths} months • {step1.studyLocation}</strong>
                 </div>
@@ -1461,6 +1612,6 @@ export default function ApplyForResearchPermissionPage() {
           )}
         </div>
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

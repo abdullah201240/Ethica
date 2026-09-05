@@ -24,6 +24,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/sonner"
 import {
@@ -115,10 +117,74 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="size-8 rounded-full border-2 border-[#002752] border-t-transparent animate-spin" />
-          <p className="text-xs font-medium text-slate-500">Retrieving applicant dossier...</p>
+      <div className="space-y-6 sm:space-y-8 select-none" aria-busy="true" aria-label="Loading applicant dossier">
+        {/* Top Breadcrumb & Status Skeleton */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-36 rounded-lg" />
+            <Skeleton className="h-4 w-4 rounded-md" />
+            <Skeleton className="h-4 w-28 rounded-md" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-7 w-36 rounded-md" />
+            <Skeleton className="h-7 w-28 rounded-md" />
+          </div>
+        </div>
+
+        {/* Main Applicant Header Card Skeleton */}
+        <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <Skeleton className="size-14 sm:size-16 rounded-2xl shrink-0" />
+              <div className="space-y-2 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-48 sm:w-64 rounded-md" />
+                  <Skeleton className="h-5 w-16 rounded-md" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-4 w-32 rounded-md" />
+                  <Skeleton className="h-4 w-40 rounded-md" />
+                  <Skeleton className="h-4 w-28 rounded-md" />
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <Skeleton className="h-5 w-24 rounded-md" />
+                  <Skeleton className="h-5 w-32 rounded-md" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Skeleton className="h-9 w-28 rounded-lg" />
+              <Skeleton className="h-9 w-32 rounded-lg" />
+            </div>
+          </div>
+        </Card>
+
+        {/* 2-Column Content Grid Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6 space-y-4">
+            <Skeleton className="h-5 w-48 rounded-md" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                  <Skeleton className="h-3 w-20 rounded-md" />
+                  <Skeleton className="h-5 w-3/4 rounded-md" />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6 space-y-4">
+            <Skeleton className="h-5 w-44 rounded-md" />
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-6 w-24 rounded-md" />
+              ))}
+            </div>
+            <div className="space-y-2 pt-2">
+              <Skeleton className="h-4 w-32 rounded-md" />
+              <Skeleton className="h-14 w-full rounded-xl" />
+            </div>
+          </Card>
         </div>
       </div>
     )
@@ -160,9 +226,9 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
   const isRejected = application.status === "Rejected"
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-text">
-      {/* ── Top Navigation & Breadcrumb ────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <DashboardContainer className="pb-12">
+      {/* ── Top Bar with Status & Navigation ───────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-4 px-4 sm:px-0">
         <div className="flex items-center gap-2">
           <Link
             href="/admin/applications"
@@ -209,7 +275,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
       </div>
 
       {/* ── Main Applicant Header Card ─────────────────────────────────────── */}
-      <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6">
+      <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-6 my-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
             <div className="size-14 sm:size-16 rounded-2xl bg-gradient-to-tr from-[#002752] to-[#003875] text-white flex items-center justify-center font-black text-xl sm:text-2xl shadow-sm shrink-0">
@@ -272,7 +338,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
         {/* Left Column (2 spans): Credentials, Statement, Expertise, CV */}
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Academic Profile & Institutional Affiliation */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-5">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-5">
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-3 flex items-center justify-between">
               <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
                 <GraduationCap className="size-5 text-[#002752] dark:text-sky-300" />
@@ -353,7 +419,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </Card>
 
           {/* Card: Bioethics Domains & Expertise */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <Award className="size-5 text-amber-500" />
               <span>Certified Ethics Review Expertise</span>
@@ -371,7 +437,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </Card>
 
           {/* Card: Formal Statement of Interest */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <Briefcase className="size-5 text-[#198754]" />
               <span>Statement of Motivation & Regulatory Bioethics Experience</span>
@@ -382,7 +448,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </Card>
 
           {/* Card: Curriculum Vitae & Certification Dossier */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 sm:p-6 space-y-4">
             <h2 className="text-base sm:text-lg font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <FileText className="size-5 text-slate-500" />
               <span>Applicant Curriculum Vitae Dossier</span>
@@ -423,7 +489,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
         {/* Right Column (1 span): Deliberation Console & Checklist */}
         <div className="space-y-6">
           {/* Deliberation & Adjudication Console */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-sm p-5 sm:p-6 space-y-5">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-sm p-5 sm:p-6 space-y-5">
             <div className="border-b border-slate-200/80 dark:border-slate-800 pb-3">
               <h2 className="text-base sm:text-lg font-black text-[#002752] dark:text-white uppercase tracking-tight">
                 Secretariat Adjudication
@@ -543,7 +609,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </Card>
 
           {/* Institutional Compliance Checklist */}
-          <Card className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 space-y-4">
+          <Card className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs p-5 space-y-4">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider">
               Accreditation Compliance Criteria
             </h3>
@@ -568,6 +634,6 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

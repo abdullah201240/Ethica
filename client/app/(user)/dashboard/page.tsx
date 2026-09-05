@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getStoredProtocols, type Protocol } from "@/lib/protocols-store"
@@ -242,7 +243,7 @@ export default function UserDashboardPage() {
   )
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <DashboardContainer>
       {/* Centralized Institutional Metric Counters Grid */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -305,7 +306,7 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Institutional Support & Integrity Banner */}
-      <div className="p-4 sm:p-6 rounded-2xl border border-[#198754]/30 bg-[#198754]/5 dark:bg-[#198754]/10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-[#198754]/30 bg-[#198754]/5 dark:bg-[#198754]/10 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="size-10 rounded-xl bg-[#198754] text-white flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="size-6" />
@@ -329,7 +330,7 @@ export default function UserDashboardPage() {
       </div>
 
       {/* ── Section: Clearance Certificates Showcase ──────────────────────── */}
-      <div id="certificates" className="space-y-4">
+      <div id="certificates" className="space-y-4 px-3 sm:px-0">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
@@ -413,7 +414,7 @@ export default function UserDashboardPage() {
       </div>
 
       {/* ── Section: Fast-Track Eligibility Checker ────────────────────────── */}
-      <div id="eligibility" className="space-y-4">
+      <div id="eligibility" className="space-y-4 px-3 sm:px-0">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight flex items-center gap-2">
@@ -531,6 +532,6 @@ export default function UserDashboardPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

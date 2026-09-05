@@ -14,6 +14,8 @@ import {
   ChevronDown,
 } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { DASHBOARD_LAYOUT_PADDING } from "./dashboard-container"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
@@ -346,7 +348,7 @@ export function DashboardShell({
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
 
         {/* ── TOP HEADER BAR ────────────────────────────────────── */}
-        <header className="sticky top-0 z-30 w-full h-[60px] flex items-center px-4 sm:px-5 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
+        <header className="sticky top-0 z-30 w-full h-[56px] flex items-center px-3 sm:px-4 md:px-5 gap-2.5 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
 
           {/* Left: Mobile toggle + collapsed-desktop expand + breadcrumb */}
           <div className="flex items-center gap-2 shrink-0">
@@ -455,12 +457,12 @@ export function DashboardShell({
         </header>
 
         {/* ── MAIN VIEW AREA ──────────────────────────────────────── */}
-        <main className="flex-1 w-full p-4 sm:p-6 md:p-8 max-w-full overflow-x-hidden">
+        <main className={cn("flex-1 w-full max-w-full overflow-x-hidden", DASHBOARD_LAYOUT_PADDING)}>
           {children}
         </main>
 
         {/* ── FOOTER ─────────────────────────────────────────────── */}
-        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 dark:text-slate-500">
+        <footer className="w-full bg-white/60 dark:bg-[#0C1E34]/60 backdrop-blur-md border-t border-border/50 px-3 sm:px-4 md:px-5 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 dark:text-slate-500">
           <div className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-slate-600 dark:text-slate-300">

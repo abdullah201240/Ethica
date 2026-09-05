@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Card,
   CardHeader,
@@ -141,6 +142,10 @@ export interface DataTableProps<T> {
   showPageSize?: boolean
   /** Total count label or badge in header */
   totalCountBadge?: React.ReactNode
+  /** Whether the table is in a loading state */
+  isLoading?: boolean
+  /** Number of skeleton rows to display when isLoading is true (default: 5) */
+  skeletonRowCount?: number
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -169,6 +174,8 @@ export function DataTable<T extends object>({
   showPagination = true,
   showPageSize = true,
   totalCountBadge,
+  isLoading = false,
+  skeletonRowCount = 5,
 }: DataTableProps<T>) {
   // ── State ──────────────────────────────────────────────────────────────────
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -347,7 +354,7 @@ export function DataTable<T extends object>({
   return (
     <Card
       className={cn(
-        "w-full rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs py-0 gap-0",
+        "w-full rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs py-0 gap-0",
         className
       )}
     >
@@ -637,7 +644,42 @@ export function DataTable<T extends object>({
 
           {/* Table Body using UI TableBody, TableRow & TableCell */}
           <TableBody className="divide-y divide-slate-200/70 dark:divide-slate-800">
-            {paginatedRows.length > 0 ? (
+            {isLoading ? (
+              Array.from({ length: skeletonRowCount }).map((_, rIdx) => (
+                <TableRow
+                  key={`skeleton-row-${rIdx}`}
+                  className="border-b border-slate-200/60 dark:border-slate-800/80"
+                >
+                  {columns.map((col, cIdx) => (
+                    <TableCell
+                      key={`skeleton-cell-${rIdx}-${col.id ?? String(col.accessorKey ?? cIdx)}`}
+                      className={cn(
+                        "px-4 py-4 align-middle",
+                        col.align === "center"
+                          ? "text-center"
+                          : col.align === "right"
+                          ? "text-right"
+                          : "text-left",
+                        col.className
+                      )}
+                    >
+                      <Skeleton
+                        className={cn(
+                          "h-4 rounded-md",
+                          cIdx === 0
+                            ? "w-3/4"
+                            : cIdx === 1
+                            ? "w-1/2"
+                            : cIdx === columns.length - 1
+                            ? "w-16 ml-auto"
+                            : "w-2/3"
+                        )}
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : paginatedRows.length > 0 ? (
               paginatedRows.map((row, rowIdx) => (
                 <TableRow
                   key={
@@ -840,6 +882,108 @@ export function DataTable<T extends object>({
               </PaginationContent>
             </Pagination>
           )}
+        </div>
+      )}
+    </Card>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Standalone DataTable Skeleton (For full-page router loaders)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface DataTableSkeletonProps {
+  columnCount?: number
+  rowCount?: number
+  showHeader?: boolean
+  showToolbar?: boolean
+  showPagination?: boolean
+  className?: string
+}
+
+export function DataTableSkeleton({
+  columnCount = 5,
+  rowCount = 5,
+  showHeader = true,
+  showToolbar = true,
+  showPagination = true,
+  className,
+}: DataTableSkeletonProps) {
+  return (
+    <Card
+      className={cn(
+        "w-full rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs py-0 gap-0",
+        className
+      )}
+    >
+      {showHeader && (
+        <CardHeader className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-48 rounded-md" />
+            <Skeleton className="h-4 w-72 rounded-md" />
+          </div>
+          <Skeleton className="h-9 w-28 rounded-md" />
+        </CardHeader>
+      )}
+
+      {showToolbar && (
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 border-b border-slate-200/75 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <Skeleton className="h-9 w-full sm:w-72 rounded-md" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-24 rounded-md" />
+            <Skeleton className="h-8 w-28 rounded-md" />
+          </div>
+        </div>
+      )}
+
+      <div className="w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/85 dark:border-slate-800">
+              {Array.from({ length: columnCount }).map((_, idx) => (
+                <TableHead key={idx} className="px-4 py-3">
+                  <Skeleton className="h-4 w-20 rounded-md" />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-slate-200/70 dark:divide-slate-800">
+            {Array.from({ length: rowCount }).map((_, rIdx) => (
+              <TableRow
+                key={rIdx}
+                className="border-b border-slate-200/60 dark:border-slate-800/80"
+              >
+                {Array.from({ length: columnCount }).map((_, cIdx) => (
+                  <TableCell key={cIdx} className="px-4 py-4">
+                    <Skeleton
+                      className={cn(
+                        "h-4 rounded-md",
+                        cIdx === 0
+                          ? "w-3/4"
+                          : cIdx === 1
+                          ? "w-1/2"
+                          : cIdx === columnCount - 1
+                          ? "w-16 ml-auto"
+                          : "w-2/3"
+                      )}
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {showPagination && (
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 border-t border-slate-200/75 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <Skeleton className="h-4 w-44 rounded-md" />
+          <div className="flex items-center gap-1.5">
+            <Skeleton className="size-8 rounded-lg" />
+            <Skeleton className="size-8 rounded-lg" />
+            <Skeleton className="size-8 rounded-lg" />
+            <Skeleton className="size-8 rounded-lg" />
+          </div>
         </div>
       )}
     </Card>

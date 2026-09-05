@@ -20,6 +20,18 @@ import {
   type CreateReviewerApplicationInput,
   type SyncApprovedReviewerInput,
 } from "@/lib/schemas"
+import {
+  initialProtocols,
+  type Protocol,
+} from "@/lib/protocols-store"
+import {
+  initialCategories,
+} from "@/lib/categories-store"
+import {
+  type ResearchCategory,
+  type CreateResearchCategoryInput,
+  type UpdateResearchCategoryInput,
+} from "@/lib/schemas"
 
 export interface InvestigatorProfile {
   id: string
@@ -57,11 +69,12 @@ interface EthicaServerStore {
   applications: ReviewerApplication[]
   users: PlatformUser[]
   investigatorProfile: InvestigatorProfile
+  protocols: Protocol[]
+  categories: ResearchCategory[]
 }
 
 // Persist store on globalThis to survive Next.js HMR in development
 declare global {
-  // eslint-disable-next-line no-var
   var __ethicaServerDb: EthicaServerStore | undefined
 }
 
@@ -73,6 +86,8 @@ function getStore(): EthicaServerStore {
       applications: [...initialReviewerApplications],
       users: [...initialPlatformUsers],
       investigatorProfile: { ...initialInvestigatorProfile },
+      protocols: [...initialProtocols],
+      categories: [...initialCategories],
     }
   }
   return globalThis.__ethicaServerDb
@@ -359,6 +374,145 @@ export const serverDb = {
         ...data,
       }
       return { ...store.investigatorProfile }
+    },
+  },
+
+  // ── Protocols & Clearance Submissions ──────────────────────────────────────
+  protocols: {
+    getAll: (): Protocol[] => {
+      return [...getStore().protocols]
+    },
+    getById: (id: string): Protocol | undefined => {
+      return getStore().protocols.find((p) => p.id === id)
+    },
+    create: (data: Partial<Protocol>): Protocol => {
+      const store = getStore()
+      const randomSuffix = Math.floor(100 + Math.random() * 900)
+      const id = data.id || `ETH-2026-${randomSuffix}`
+      const now = new Date()
+      const submissionDate =
+        data.submissionDate ||
+        now.toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        })
+
+      const newProtocol: Protocol = {
+        id,
+        title: data.title?.trim() || "Untitled Research Protocol",
+        department: data.department?.trim() || "Department of Public Health",
+        board: data.board?.trim() || "Biomedical IRB",
+        status: data.status || "Under Committee Review",
+        statusColor: data.statusColor || "amber",
+        risk: data.risk || "Minimal Risk",
+        riskColor: data.riskColor || "blue",
+        submissionDate,
+        daysInReview: data.daysInReview ?? 0,
+        hasCertificate: data.hasCertificate ?? false,
+        feeAmountBdt: data.feeAmountBdt,
+        paymentMethod: data.paymentMethod,
+        transactionId: data.transactionId,
+        abstract: data.abstract,
+      }
+
+      store.protocols = [newProtocol, ...store.protocols]
+      return newProtocol
+    },
+    update: (id: string, updates: Partial<Omit<Protocol, "id">>): Protocol | undefined => {
+      const store = getStore()
+      let updated: Protocol | undefined
+      store.protocols = store.protocols.map((p) => {
+        if (p.id === id) {
+          updated = { ...p, ...updates }
+          return updated
+        }
+        return p
+      })
+      return updated
+    },
+    delete: (id: string): boolean => {
+      const store = getStore()
+      const initialLength = store.protocols.length
+      store.protocols = store.protocols.filter((p) => p.id !== id)
+      return store.protocols.length < initialLength
+    },
+  },
+
+  // ── Research Categories & BDT Pricing ──────────────────────────────────────
+  categories: {
+    getAll: (filters?: { board?: string; status?: string; risk?: string }): ResearchCategory[] => {
+      let list = [...getStore().categories]
+      if (filters?.board && filters.board !== "all") {
+        list = list.filter((c) => c.board === filters.board)
+      }
+      if (filters?.status && filters.status !== "all") {
+        list = list.filter((c) => c.status === filters.status)
+      }
+      if (filters?.risk && filters.risk !== "all") {
+        list = list.filter((c) => c.riskDefault === filters.risk)
+      }
+      return list
+    },
+    getById: (id: string): ResearchCategory | undefined => {
+      return getStore().categories.find((c) => c.id === id)
+    },
+    create: (data: CreateResearchCategoryInput): ResearchCategory => {
+      const store = getStore()
+      const boardPrefix =
+        data.board === "Biomedical IRB"
+          ? "BIO"
+          : data.board === "Social & Behavioral Board"
+          ? "SOC"
+          : "AI"
+      const randomSuffix = Math.floor(100 + Math.random() * 900)
+      const today = new Date().toISOString().split("T")[0]
+
+      const newCategory: ResearchCategory = {
+        ...data,
+        id: `CAT-${boardPrefix}-${randomSuffix}`,
+        code: data.code.toUpperCase().trim(),
+        createdAt: today,
+        updatedAt: today,
+      }
+
+      store.categories = [newCategory, ...store.categories]
+      return newCategory
+    },
+    update: (
+      id: string,
+      updates: UpdateResearchCategoryInput
+    ): ResearchCategory | undefined => {
+      const store = getStore()
+      let updated: ResearchCategory | undefined
+      const today = new Date().toISOString().split("T")[0]
+
+      store.categories = store.categories.map((c) => {
+        if (c.id === id) {
+          updated = {
+            ...c,
+            ...updates,
+            code: updates.code ? updates.code.toUpperCase().trim() : c.code,
+            updatedAt: today,
+          }
+          return updated
+        }
+        return c
+      })
+      return updated
+    },
+    delete: (id: string): boolean => {
+      const store = getStore()
+      const initialLength = store.categories.length
+      store.categories = store.categories.filter((c) => c.id !== id)
+      return store.categories.length < initialLength
+    },
+    toggleStatus: (id: string): ResearchCategory | undefined => {
+      const store = getStore()
+      const target = store.categories.find((c) => c.id === id)
+      if (!target) return undefined
+      const nextStatus = target.status === "Active" ? "Inactive" : "Active"
+      return serverDb.categories.update(id, { status: nextStatus })
     },
   },
 }

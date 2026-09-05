@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export type KpiColorVariant =
   | "navy"
@@ -55,6 +56,54 @@ export interface KpiCardProps extends React.HTMLAttributes<HTMLDivElement> {
     label?: string
   }
   badge?: React.ReactNode
+  isLoading?: boolean
+}
+
+export function KpiCardSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      data-slot="kpi-card-skeleton"
+      className={cn(
+        "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-2.5 shadow-xs select-none",
+        className
+      )}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <Skeleton className="h-3.5 w-24 rounded" />
+        <Skeleton className="size-4 rounded-full" />
+      </div>
+      <Skeleton className="h-8 w-28 rounded-md" />
+      <Skeleton className="h-3 w-36 rounded" />
+    </div>
+  )
+}
+
+export function KpiGridSkeleton({
+  columns = 4,
+  count = 4,
+  className,
+}: {
+  columns?: 2 | 3 | 4
+  count?: number
+  className?: string
+}) {
+  const colClass =
+    columns === 2
+      ? "grid-cols-1 sm:grid-cols-2"
+      : columns === 3
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      : "grid-cols-2 lg:grid-cols-4"
+
+  return (
+    <div
+      data-slot="kpi-grid-skeleton"
+      className={cn("grid gap-3 sm:gap-4 w-full px-3 sm:px-0", colClass, className)}
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <KpiCardSkeleton key={i} />
+      ))}
+    </div>
+  )
 }
 
 export function KpiCard({
@@ -66,9 +115,14 @@ export function KpiCard({
   color = "navy",
   trend,
   badge,
+  isLoading = false,
   className,
   ...props
 }: KpiCardProps) {
+  if (isLoading) {
+    return <KpiCardSkeleton className={className} />
+  }
+
   const colorStyle = colorStyles[color] || colorStyles.navy
 
   return (
@@ -143,7 +197,7 @@ export function KpiGrid({
   return (
     <div
       data-slot="kpi-grid"
-      className={cn("grid gap-3 sm:gap-4 w-full", colClass, className)}
+      className={cn("grid gap-3 sm:gap-4 w-full px-3 sm:px-0", colClass, className)}
       {...props}
     >
       {children}

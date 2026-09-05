@@ -28,6 +28,7 @@ import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { toast } from "@/components/ui/sonner"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { createAdminMemberSchema } from "@/lib/schemas"
 import {
   Dialog,
@@ -407,7 +408,7 @@ export default function AdminDashboardPage() {
   )
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <DashboardContainer>
       {/* Centralized Institutional Metrics Grid */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -441,7 +442,7 @@ export default function AdminDashboardPage() {
       </KpiGrid>
 
       {/* Cryptographic Audit Trail Section */}
-      <div className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="audit">
+      <div className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="audit">
         
         <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -864,6 +865,6 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-    </div>
+    </DashboardContainer>
   )
 }

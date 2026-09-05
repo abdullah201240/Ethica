@@ -27,6 +27,33 @@ export const CONSENT_TYPES = [
   "Exempt / De-identified Waiver",
 ] as const
 
+export const CONSENT_PROCEDURES = [
+  {
+    type: "Written Informed Consent (Bangla & English)",
+    badge: "Standard Adult",
+    description:
+      "Bilateral signed consent document in Bangla and English. Required for interventional, clinical, and high-engagement studies.",
+  },
+  {
+    type: "Verbal / Audio Recorded Consent",
+    badge: "Witness Required",
+    description:
+      "Witnessed audio or verbal attestation for non-literate participants, crisis situations, or telephonic survey protocols.",
+  },
+  {
+    type: "Assent Form (Pediatric / Minors)",
+    badge: "Minors (Ages 7–17)",
+    description:
+      "Simplified pediatric assent protocol alongside mandatory signed legal parent or guardian co-consent documentation.",
+  },
+  {
+    type: "Exempt / De-identified Waiver",
+    badge: "Archival / Secondary",
+    description:
+      "Formal ethics waiver for secondary research using anonymized patient records, archival datasets, or banked biospecimens.",
+  },
+] as const
+
 export const PAYMENT_METHODS = [
   "bkash",
   "nagad",
@@ -110,9 +137,11 @@ export const step2ProtocolMethodologySchema = z.object({
   riskTier: z.enum(RISK_TIERS, {
     message: "Please assess the human subject risk tier",
   }),
-  consentType: z.enum(CONSENT_TYPES, {
-    message: "Please select an informed consent procedure",
-  }),
+  consentType: z
+    .string()
+    .min(2, "Please select an informed consent procedure")
+    .max(250, "Informed consent description is too long")
+    .trim(),
   dataConfidentiality: z
     .string()
     .min(15, "Confidentiality and data protection statement is required")

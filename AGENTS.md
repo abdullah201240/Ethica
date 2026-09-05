@@ -198,6 +198,7 @@ All validation schemas must be defined and maintained in dedicated domain files 
 - **Institutional Governance & Administration:** [`admin-member.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/admin-member.schema.ts) (`createAdminMemberSchema`, `updateAdminMemberSchema`, `adminMemberSchema`)
 - **Platform Directory & RBAC:** [`user.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/user.schema.ts) (`createPlatformUserSchema`, `updatePlatformUserSchema`, `platformUserSchema`)
 - **Administrative Profiles & Security:** [`profile.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/profile.schema.ts) (`adminContactSchema`)
+- **Research Permissions & Protocol Clearance:** [`protocol-application.schema.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/protocol-application.schema.ts) (`step1ProtocolGeneralSchema`, `step2ProtocolMethodologySchema`, `step3ProtocolDocumentsSchema`, `step4ProtocolPaymentSchema`, `fullProtocolApplicationSchema`, `CONSENT_PROCEDURES`, `FEE_TIERS`)
 - **Barrel Export:** All schemas and inferred TypeScript types must be re-exported through [`index.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/schemas/index.ts).
 
 ### 15.2 Prohibition of Loose Ad-Hoc Validation & Raw Attributes
@@ -210,10 +211,10 @@ All validation schemas must be defined and maintained in dedicated domain files 
 - **Reactive Clearing:** Active field error states must automatically clear as soon as the user edits the field or clicks an automated demo fill action.
 
 ### 15.4 Step-Gated Multi-Step Navigation
-For multi-step wizards (such as [`/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/apply/page.tsx)), intermediate step navigation buttons ("Continue", "Next Step") MUST validate only the active step's schema using `safeParse()`. Navigation to the subsequent step is strictly blocked until the current step satisfies all schema constraints.
+For multi-step wizards (such as [`/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/apply/page.tsx) and [`/dashboard/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/apply/page.tsx)), intermediate step navigation buttons ("Continue", "Next Step") MUST validate only the active step's schema using `safeParse()`. Navigation to the subsequent step is strictly blocked until the current step satisfies all schema constraints.
 
 ### 15.5 Data Layer Deserialization Guards
-All client API adapters and memory stores (such as `client/lib/admin-roster.ts`, `client/lib/reviewer-roster.ts`, `client/lib/reviewer-applications.ts`, and `client/lib/users-directory.ts`) must guard all incoming server data with `z.array(schema).safeParse()` or `schema.safeParse()`. If remote or cached data fails schema verification or is corrupted, fallback gracefully to initial institutional seeds without application crashes.
+All client API adapters and memory stores (such as `client/lib/admin-roster.ts`, `client/lib/reviewer-roster.ts`, `client/lib/reviewer-applications.ts`, `client/lib/users-directory.ts`, and `client/lib/protocols-store.ts`) must guard all incoming server data with `z.array(schema).safeParse()` or `schema.safeParse()`. If remote or cached data fails schema verification or is corrupted, fallback gracefully to initial institutional seeds without application crashes.
 
 ---
 
@@ -221,7 +222,7 @@ All client API adapters and memory stores (such as `client/lib/admin-roster.ts`,
 The Ethica platform strictly forbids `localStorage` and `sessionStorage` for storing business data, entities, user profiles, rosters, or protocol state. The system is architected as an API-first platform ready for production backend integration:
 
 ### 16.1 Strict Prohibition of Browser LocalStorage
-- **Zero `localStorage.getItem` / `localStorage.setItem`:** Developers and agents must **NEVER** use browser `localStorage` or `sessionStorage` to persist or retrieve domain records (applications, reviewers, admins, users, profiles, etc.).
+- **Zero `localStorage.getItem` / `localStorage.setItem`:** Developers and agents must **NEVER** use browser `localStorage` or `sessionStorage` to persist or retrieve domain records (applications, reviewers, admins, users, profiles, protocols, etc.).
 - **Theme Preference Exception:** Only the client-side theme utility (`next-themes` via `ThemeProvider`) may persist the user's workspace theme mode. All domain data MUST flow through the API layer.
 
 ### 16.2 Centralized Server Route Handlers (`app/api/*`)
@@ -231,6 +232,7 @@ All backend data operations are handled by Next.js App Router REST Route Handler
 - **Reviewer Intake Applications:** [`/api/reviewers/applications`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/applications/route.ts), [`/api/reviewers/applications/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/reviewers/applications/%5Bid%5D/route.ts)
 - **Platform User Directory:** [`/api/users`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/users/route.ts), [`/api/users/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/users/%5Bid%5D/route.ts)
 - **Investigator Profile:** [`/api/investigator/profile`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/investigator/profile/route.ts)
+- **Research Protocols & Clearances:** [`/api/protocols`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/protocols/route.ts), [`/api/protocols/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/protocols/%5Bid%5D/route.ts)
 
 ### 16.3 Standardized JSON Response Envelopes
 Every API Route Handler returns a consistent institutional JSON envelope:
@@ -240,8 +242,107 @@ Every API Route Handler returns a consistent institutional JSON envelope:
 ### 16.4 Typed Client API Service Layer (`lib/api/*`)
 All frontend components and store modules communicate with the server through strongly-typed API client services in [`client/lib/api/`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/):
 - **Core Fetcher:** [`client.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/client.ts) (`apiFetch<T>`, `ApiError`)
-- **Domain Services:** `adminMembersApi`, `reviewerRosterApi`, `reviewerApplicationsApi`, `usersDirectoryApi`, `investigatorProfileApi`
+- **Domain Services:** `adminMembersApi`, `reviewerRosterApi`, `reviewerApplicationsApi`, `usersDirectoryApi`, `investigatorProfileApi`, `protocolsApi`
 - **Barrel Export:** All API services and types must be exported via [`lib/api/index.ts`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/index.ts).
+
+---
+
+## 17. Mandatory Research Permissions & Ethical Clearance Protocol Application Standard
+All ethical clearance applications submitted by investigators across Daffodil International University must follow the standardized protocol clearance workflow located at [`/dashboard/apply`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/apply/page.tsx):
+
+### 17.1 5-Step Application Wizard Architecture
+1. **Step 1: Protocol Scope & Governance Board:**
+   - Full scientific title, department, estimated duration (months), field study location, co-investigator credentials.
+   - Interactive board selection (`Biomedical IRB`, `Social & Behavioral Board`, `AI & Data Ethics Board`).
+   - Study methodology classification (`Clinical Trial`, `Epidemiological`, `Social Survey`, `AI Analytics`, `Genomics`).
+2. **Step 2: Scientific Methodology & Ethics Risk Assessment:**
+   - Executive abstract and objectives (min 30 characters).
+   - Target participant cohort size.
+   - **Informed Consent Architecture:** Strictly compose interactive cards from `CONSENT_PROCEDURES` (`Written Informed Consent`, `Verbal/Audio Recorded`, `Assent Form (Minors)`, `Exempt/De-identified Waiver`). Never use unstyled freeform inputs.
+   - Human subject exposure risk tier (`Exempt - Fast Track`, `Minimal Risk`, `Greater Than Minimal`).
+   - Participant confidentiality and cryptographic data protection statement.
+3. **Step 3: Protocol Dossier & Document Attachments:**
+   - Mandatory Research Protocol Proposal PDF upload.
+   - Mandatory Participant Informed Consent Form (ICF) PDF upload.
+   - Optional survey instruments and investigator CV/certification uploads.
+4. **Step 4: Institutional Review Processing Fee in Bangladeshi Taka (BDT ৳):**
+   - **Mandatory Currency Standard:** All fees, charges, and vouchers must be strictly calculated and displayed in **BDT (৳)**.
+   - **Tiered Fee Schedule:**
+     - Student / Graduate Thesis: **৳ 3,500 BDT**
+     - Faculty / Institutional Research: **৳ 7,500 BDT**
+     - Funded Clinical Trial / Full Quorum: **৳ 20,000 BDT**
+     - Sponsored / Multi-Center Trial: **৳ 45,000 BDT**
+   - **Optional Expedited Fast-Track Surcharge:** **+ ৳ 5,000 BDT** (Guaranteed docket placement within 72 hours).
+   - **Local Bangladeshi Payment Gateways:** Support for **bKash**, **Nagad**, **Rocket**, **Bank Challan**, and **Cards** with step-by-step account guidance and Transaction ID (`TrxID`) verification.
+5. **Step 5: Review & Digital Attestation / Submission:**
+   - Complete dossier summary review docket displaying all protocol attributes and verified payment receipt.
+   - WMA Declaration of Helsinki compliance certification.
+   - Generates permanent reference (`ETH-2026-XXX`), seals submission, and automatically synchronizes with the user dashboard protocol table.
+
+---
+
+## 18. Investigator Profile & Avatar Upload Standard
+The investigator profile located at [`/dashboard/profile`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/profile/page.tsx) must strictly adhere to the following rules:
+- **Direct Photo Upload:** Support local image selection with instant avatar preview and removal controls.
+- **Prohibition of KPI Cards:** Developers and agents must **NEVER** render KPI cards or metric counters (`KpiCard`, `KpiGrid`) on the investigator profile page. The profile page is strictly dedicated to personal identity, credentials, contact information, and cryptographic seals.
+- **API-First Persistence:** All profile updates must persist through [`/api/investigator/profile`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/api/investigator/profile/route.ts) and [`investigatorProfileApi`](file:///Users/abdullahalsakib/Documents/Ethica/client/lib/api/investigator-profile.api.ts).
+- **Strict UI Primitive Composition:** Always compose from `@/components/ui/` primitives (`Button`, `Input`, `Textarea`, `Badge`). Never use raw `<button>` or `<input>` tags.
+
+---
+
+## 19. Mobile-First Seamless Edge Border Standard
+To prevent visual clutter, nested border friction, and cramped horizontal whitespace on mobile screens (`<640px`):
+- **Card and Table Containers:** Apply responsive borders: `rounded-none sm:rounded-2xl border-y sm:border border-border/75` (or `border-slate-200/85 dark:border-slate-800`).
+- **Edge-to-Edge Mobile Display:** On phone viewports, allow containers to span full viewport width seamlessly with responsive internal padding (`px-3 sm:px-4 md:px-5 lg:px-6`).
+- **Zero Horizontal Overflow:** Ensure all badges, tables, toolbars, and action buttons wrap gracefully (`flex-wrap`, `break-words`, `overflow-x-auto`).
+
+---
+
+## 20. Mandatory Institutional Skeleton Loading Architecture & Route Streaming Standard
+All application workspaces, data tables, metric grids, dynamic entity dossiers, and multi-step wizards across the Ethica platform MUST strictly implement calibrated skeleton loading states.
+
+### 20.1 Strict Prohibition of Raw Spinners & Generic "Loading..." Text
+- **Zero Raw Spinners:** Developers and agents must **NEVER** render bare circular spinners (e.g. `<div className="size-8 animate-spin rounded-full border-2..." />`) or plain text indicators (`<p>Loading...</p>`) for primary page layouts, tables, or detail records.
+- **Mandatory Skeleton Primitive:** Always import and compose from `@/components/ui/skeleton` (`Skeleton`). All skeletons must strictly use institutional tokens: `animate-pulse rounded-md bg-slate-200/80 dark:bg-slate-800/80`.
+
+### 20.2 Unified DataTable Loading Support
+Tabular data views must support smooth skeleton rendering via:
+1. **In-Component Loading Prop (`isLoading`):**
+   - The centralized `DataTable` component accepts `isLoading?: boolean` and `skeletonRowCount?: number` (defaults to 5).
+   - When `isLoading` is true, it renders animated skeleton rows inside `<TableBody>` conforming to column count, text alignment, and proportional widths (`w-3/4`, `w-1/2`, `w-16 ml-auto`).
+2. **Standalone Table Skeleton (`DataTableSkeleton`):**
+   - For full-page loaders where column definitions or datasets are not yet loaded, import and compose `DataTableSkeleton` from `@/components/ui/data-table`. Supports `columnCount`, `rowCount`, `showHeader`, `showToolbar`, and `showPagination` props.
+
+### 20.3 Centralized KPI Metrics Loading Standard
+Metric counters must support institutional skeleton states via:
+- `KpiCard` accepts `isLoading?: boolean`.
+- Centralized `KpiCardSkeleton` and `KpiGridSkeleton` exported directly from `@/components/ui/kpi-card`.
+
+### 20.4 Next.js App Router Route Streaming (`loading.tsx`)
+Every workspace route, dynamic dossier page, and multi-step wizard MUST have a dedicated `loading.tsx` file that faithfully mirrors the target page layout:
+- **Investigator Workspace:**
+  - Dashboard: [`/(user)/dashboard/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/loading.tsx)
+  - Research Permissions Application: [`/(user)/dashboard/apply/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/apply/loading.tsx)
+  - Investigator Profile: [`/(user)/dashboard/profile/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/profile/loading.tsx)
+- **Admin Governance Console:**
+  - Admin Root & Dashboard: [`/admin/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/loading.tsx)
+  - Reviewer Dossier: [`/admin/roster/[id]/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/roster/%5Bid%5D/loading.tsx)
+  - Reviewer Application: [`/admin/applications/[id]/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/applications/%5Bid%5D/loading.tsx)
+  - Admin Personnel Dossier: [`/admin/admins/[id]/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/admins/%5Bid%5D/loading.tsx)
+  - Platform User Dossier: [`/admin/users/[id]/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/users/%5Bid%5D/loading.tsx)
+- **Reviewer Chamber:**
+  - Deliberation Chamber: [`/reviewer/loading.tsx`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/reviewer/loading.tsx)
+
+---
+
+## 21. Research Category & Institutional BDT Fee Management Standard
+The administration and governance of research categories, ethics review boards, and processing fee schedules must strictly adhere to the following architecture:
+- **Mandatory Currency Standard (BDT ৳):** All fees, expedited add-ons, and pricing summaries MUST be calculated and displayed in **Bangladeshi Taka (BDT ৳)**.
+- **Centralized Management Console:** Dedicated management dashboard located at [`/admin/categories`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/categories/page.tsx) utilizing the centralized `DataTable` standard with faceted board and status filters.
+- **Dedicated Dynamic Entity Inspection (`[id]`):** Dedicated dynamic dossier route at [`/admin/categories/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/categories/%5Bid%5D/page.tsx) per Rule 13, presenting full fee schedule context, operational criteria, and status toggles.
+- **Full CRUD Support:** Complete creation, reading, editing, status toggling, and deletion capabilities backed by Zod runtime validation (`researchCategorySchema`, `createResearchCategorySchema`, `updateResearchCategorySchema`), server in-memory database (`serverDb.categories`), and REST API endpoints (`/api/categories`, `/api/categories/[id]`, `/api/categories/[id]/toggle`).
+
+
 
 
 

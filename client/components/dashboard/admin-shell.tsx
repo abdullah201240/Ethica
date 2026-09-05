@@ -9,6 +9,7 @@ import {
   User,
   ShieldCheck,
   Contact,
+  Layers,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
@@ -17,6 +18,11 @@ const adminNavItems: NavItem[] = [
     label: "Governance Overview",
     href: "/admin/dashboard",
     icon: Sliders,
+  },
+  {
+    label: "Research Categories",
+    href: "/admin/categories",
+    icon: Layers,
   },
   {
     label: "All Users",

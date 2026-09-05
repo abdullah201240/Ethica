@@ -20,6 +20,7 @@ import {
   type DataTableFilter,
 } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "@/components/ui/sonner"
@@ -406,7 +407,7 @@ function AdminRosterContent() {
   )
 
   return (
-    <div className="space-y-6 select-text w-full max-w-full overflow-x-hidden">
+    <DashboardContainer>
       {/* ── KPI Grid ───────────────────────────────────────────────────────── */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -501,7 +502,7 @@ function AdminRosterContent() {
           }
         />
       </div>
-    </div>
+    </DashboardContainer>
   )
 }
 

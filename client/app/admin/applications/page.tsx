@@ -18,6 +18,7 @@ import {
   type DataTableFilter,
 } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "@/components/ui/sonner"
@@ -360,7 +361,7 @@ export default function AdminReviewerApplicationsPage() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <DashboardContainer>
       {/* Centralized Institutional KPI Metrics Grid */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -430,6 +431,6 @@ export default function AdminReviewerApplicationsPage() {
           }
         />
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

@@ -22,6 +22,7 @@ import {
   type DataTableFilter,
 } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -538,7 +539,7 @@ export default function AdminListPage() {
   ]
 
   return (
-    <div className="space-y-6 w-full max-w-full overflow-x-hidden">
+    <DashboardContainer>
       {/* KPI Cards Header (Rule 11) */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -950,6 +951,6 @@ export default function AdminListPage() {
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </DashboardContainer>
   )
 }

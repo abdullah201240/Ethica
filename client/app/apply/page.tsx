@@ -18,7 +18,7 @@ import {
   Lock,
   Sparkles,
 } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { useForm, type Path } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -99,10 +99,10 @@ export default function ApplyAsReviewerPage() {
       email: "",
       phone: "",
       institution: "",
-      degree: "" as any,
+      degree: "" as FullApplicationInput["degree"],
       department: "",
-      position: "" as any,
-      yearsExperience: "" as any,
+      position: "" as FullApplicationInput["position"],
+      yearsExperience: "" as FullApplicationInput["yearsExperience"],
       orcid: "",
       expertise: [],
       statement: "",
@@ -153,7 +153,7 @@ export default function ApplyAsReviewerPage() {
       })
       if (!res.success) {
         for (const issue of res.error.issues) {
-          setError(issue.path[0] as any, { message: issue.message })
+          setError(issue.path[0] as Path<FullApplicationInput>, { message: issue.message })
         }
         return
       }
@@ -167,7 +167,7 @@ export default function ApplyAsReviewerPage() {
       })
       if (!res.success) {
         for (const issue of res.error.issues) {
-          setError(issue.path[0] as any, { message: issue.message })
+          setError(issue.path[0] as Path<FullApplicationInput>, { message: issue.message })
         }
         return
       }
@@ -179,7 +179,7 @@ export default function ApplyAsReviewerPage() {
       })
       if (!res.success) {
         for (const issue of res.error.issues) {
-          setError(issue.path[0] as any, { message: issue.message })
+          setError(issue.path[0] as Path<FullApplicationInput>, { message: issue.message })
         }
         return
       }
@@ -202,7 +202,7 @@ export default function ApplyAsReviewerPage() {
 
     if (!fullRes.success) {
       for (const issue of fullRes.error.issues) {
-        setError(issue.path[0] as any, { message: issue.message })
+        setError(issue.path[0] as Path<FullApplicationInput>, { message: issue.message })
       }
       if (issueHasField(fullRes.error.issues, ["fullName", "email", "phone", "institution"])) {
         setCurrentStep(1)
@@ -551,7 +551,7 @@ export default function ApplyAsReviewerPage() {
                         <Select
                           value={String(formValues[field.name] ?? "")}
                           onValueChange={(val) => {
-                            setValue(field.name as any, val, { shouldValidate: true })
+                            setValue(field.name as Path<FullApplicationInput>, val ?? "", { shouldValidate: true })
                             clearErrors(field.name)
                           }}
                         >

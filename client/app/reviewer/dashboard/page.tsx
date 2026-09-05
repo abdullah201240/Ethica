@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { toast } from "@/components/ui/sonner"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -93,7 +94,7 @@ export default function ReviewerDashboardPage() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <DashboardContainer>
       {/* Centralized Review Metrics Counters */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -127,7 +128,7 @@ export default function ReviewerDashboardPage() {
       </KpiGrid>
 
       {/* Deliberation Queue Section (Consensus & Triage) */}
-      <div id="consensus" className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden">
+      <div id="consensus" className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden">
         
         <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div id="triage">
@@ -346,7 +347,7 @@ export default function ReviewerDashboardPage() {
       </div>
 
       {/* Next Scheduled IRB Meeting Card (Calendar / Quorum) */}
-      <div className="p-4 sm:p-6 rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] flex flex-col md:flex-row items-center justify-between gap-4" id="calendar">
+      <div className="p-4 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] flex flex-col md:flex-row items-center justify-between gap-4" id="calendar">
         <div className="flex items-center gap-3.5" id="convene">
           <div className="size-10 rounded-xl bg-[#002752] text-[#E0C23C] flex items-center justify-center shrink-0">
             <Calendar className="size-5" />
@@ -454,6 +455,6 @@ export default function ReviewerDashboardPage() {
         </div>
       </div>
 
-    </div>
+    </DashboardContainer>
   )
 }

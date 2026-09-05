@@ -33,6 +33,7 @@ import {
   type ColumnDef,
   type DataTableFilter,
 } from "@/components/ui/data-table"
+import { DashboardContainer, DashboardCard } from "@/components/dashboard/dashboard-container"
 
 interface AdminSessionLog {
   id: string
@@ -338,13 +339,13 @@ export default function AdminProfilePage() {
   )
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-text">
+    <DashboardContainer>
       {/* ── Main Two-Column Profile & Credential Cards ──────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Academic & Institutional Identity (2 Cols on lg) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Identity & Office Card */}
-          <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 space-y-6 shadow-xs">
+          <DashboardCard className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800 pb-5">
               <div className="flex items-center gap-4">
                 <div className="size-16 rounded-2xl bg-gradient-to-br from-[#002752] to-[#003875] text-white flex items-center justify-center font-black text-2xl shadow-sm ring-4 ring-[#002752]/10 dark:ring-white/10 shrink-0">
@@ -508,10 +509,10 @@ export default function AdminProfilePage() {
                 </div>
               </div>
             )}
-          </div>
+          </DashboardCard>
 
           {/* Committee Oversight Delegations Card */}
-          <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 space-y-4 shadow-xs">
+          <DashboardCard className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-[#002752] dark:text-white">
@@ -565,13 +566,13 @@ export default function AdminProfilePage() {
                 </div>
               ))}
             </div>
-          </div>
+          </DashboardCard>
         </div>
 
         {/* Right Column: Cryptographic HSM Authority & Security (1 Col on lg) */}
         <div className="space-y-6">
           {/* Cryptographic Key & Root Authority Card */}
-          <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 space-y-5 shadow-xs">
+          <DashboardCard className="space-y-5">
             <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
                 <KeyRound className="size-4 text-[#198754]" />
@@ -637,10 +638,10 @@ export default function AdminProfilePage() {
                 </span>
               </div>
             </div>
-          </div>
+          </DashboardCard>
 
           {/* Governance & Notification Preferences */}
-          <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 space-y-4 shadow-xs">
+          <DashboardCard className="space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#002752] dark:text-white border-b border-slate-200/80 dark:border-slate-800 pb-3">
               Secretariat Notification Dispatch
             </h3>
@@ -696,7 +697,7 @@ export default function AdminProfilePage() {
                 </div>
               ))}
             </div>
-          </div>
+          </DashboardCard>
         </div>
       </div>
 
@@ -718,6 +719,6 @@ export default function AdminProfilePage() {
           }}
         />
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

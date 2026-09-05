@@ -58,6 +58,7 @@ import {
   type ColumnDef,
   type DataTableFilter,
 } from "@/components/ui/data-table"
+import { DashboardContainer, DashboardCard } from "@/components/dashboard/dashboard-container"
 import {
   userAvatarFileSchema,
   userAvatarUrlSchema,
@@ -555,13 +556,13 @@ export default function InvestigatorProfilePage() {
   )
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-text">
+    <DashboardContainer>
       {/* ── Main Two-Column Profile & Credentials ─────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2-Columns: Primary Identity & Contact ─────────────────────── */}
         <div className="lg:col-span-2 space-y-6">
           {/* Identity & Profile Picture Card */}
-          <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-6 space-y-6 shadow-xs">
+          <DashboardCard className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 border-b border-border/70 pb-6">
               <div className="flex items-center gap-5">
                 {/* Avatar with Status Ring and Quick Edit Trigger */}
@@ -1147,13 +1148,13 @@ export default function InvestigatorProfilePage() {
                 </div>
               </div>
             )}
-          </div>
+          </DashboardCard>
         </div>
 
         {/* Right 1-Column: Accreditations & Cryptographic Seals ───────────── */}
         <div className="space-y-6">
           {/* Institutional Ethics Accreditations */}
-          <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-6 space-y-4 shadow-xs">
+          <DashboardCard className="space-y-4">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <Award className="size-4 text-[#E0C23C]" />
               Ethics Certifications & Training
@@ -1196,10 +1197,10 @@ export default function InvestigatorProfilePage() {
                 </p>
               </div>
             </div>
-          </div>
+          </DashboardCard>
 
           {/* Cryptographic Signature & PKI Seal */}
-          <div className="rounded-xl sm:rounded-2xl border border-border/75 bg-card p-6 space-y-4 shadow-xs">
+          <DashboardCard className="space-y-4">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <ShieldCheck className="size-4 text-[#198754]" />
               FIPS 140-3 Cryptographic Seal
@@ -1239,7 +1240,7 @@ export default function InvestigatorProfilePage() {
                 )}
               </Button>
             </div>
-          </div>
+          </DashboardCard>
         </div>
       </div>
 
@@ -1256,6 +1257,6 @@ export default function InvestigatorProfilePage() {
           initialPageSize={5}
         />
       </div>
-    </div>
+    </DashboardContainer>
   )
 }

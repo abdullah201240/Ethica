@@ -1,4 +1,4 @@
-import { UserShell } from "./user-shell"
+import { UserShell } from "@/components/dashboard/user-shell"
 
 export default function UserLayout({
   children,

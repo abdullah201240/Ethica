@@ -245,5 +245,36 @@ export function addProtocol(newProtocol: Omit<Protocol, "id" | "submissionDate" 
 
   const updated = [protocol, ...current]
   saveStoredProtocols(updated)
+
+  // Asynchronously synchronize with server API (Zero LocalStorage)
+  if (typeof window !== "undefined") {
+    fetch("/api/protocols", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(protocol),
+    }).catch(() => {
+      // Resilient fallback: preserved in cachedProtocols
+    })
+  }
+
   return protocol
+}
+
+export async function syncProtocolsFromServer(): Promise<Protocol[]> {
+  try {
+    const res = await fetch("/api/protocols")
+    if (res.ok) {
+      const json = await res.json()
+      if (json.success && Array.isArray(json.data)) {
+        cachedProtocols = json.data
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("ethica:protocols-updated"))
+        }
+        return json.data
+      }
+    }
+  } catch {
+    // Fallback gracefully to in-memory cachedProtocols
+  }
+  return cachedProtocols
 }

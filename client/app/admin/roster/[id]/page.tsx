@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
@@ -148,9 +149,9 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
       .toUpperCase() || "RV"
 
   return (
-    <div className="space-y-6 select-text w-full max-w-full overflow-x-hidden pb-12">
+    <DashboardContainer className="pb-12">
       {/* ── Top Navigation & Breadcrumbs ───────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 px-4 sm:px-0">
         <Link
           href="/admin/roster"
           className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#002752] dark:text-slate-400 dark:hover:text-white transition-colors"
@@ -185,7 +186,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
       </div>
 
       {/* ── Header Dossier Card ────────────────────────────────────────────── */}
-      <Card className="p-5 sm:p-6 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
+      <Card className="p-5 sm:p-6 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
             <div className="size-16 sm:size-20 rounded-2xl bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-black text-xl sm:text-2xl shrink-0 border border-[#002752]/20">
@@ -379,7 +380,7 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
         {/* Left Column (2 Cols wide on large screen) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Institutional & Contact Coordinates */}
-          <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
+          <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Building2 className="size-4 text-[#002752] dark:text-sky-400" />
               <span>Academic & Institutional Coordinates</span>
@@ -490,8 +491,8 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
 
         {/* Right Column (1 Col wide) */}
         <div className="space-y-6">
-          {/* Card: Committee Board Standing */}
-          <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
+          {/* Card: Research Specializations */}
+          <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Scale className="size-4 text-[#002752] dark:text-sky-400" />
               <span>IRB Committee Standing</span>
@@ -528,8 +529,8 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
             </div>
           </Card>
 
-          {/* Card: Cryptographic Seal & Security */}
-          <Card className="p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
+          {/* Card: FIPS SHA-256 Digital Signature Seal */}
+          <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
             <h3 className="text-sm font-bold text-[#002752] dark:text-white uppercase tracking-wider flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>Cryptographic Seal & PKI</span>
@@ -568,6 +569,6 @@ export default function ReviewerDossierDetailPage({ params }: PageProps) {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardContainer>
   )
 }
