@@ -597,7 +597,7 @@ export default function InvestigatorProfilePage() {
                     />
 
                     {/* ── Profile Picture Upload Slide-over Sheet (Two Options) ──────── */}
-                    <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                    <SheetContent side="right" size="default" className="p-6">
                       <SheetHeader className="p-0 pb-3">
                         <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
                           <ImageIcon className="size-5 text-secondary" />

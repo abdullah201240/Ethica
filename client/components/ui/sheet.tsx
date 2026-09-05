@@ -36,14 +36,29 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   )
 }
 
+export const SHEET_SIZES = {
+  xs: "w-full max-w-[85vw] sm:max-w-xs", // ~320px
+  sm: "w-full max-w-[85vw] sm:max-w-sm", // ~384px - compact
+  default: "w-full max-w-[85vw] sm:max-w-sm md:max-w-md", // ~384px - 448px (Rule 3)
+  md: "w-full max-w-[85vw] sm:max-w-sm md:max-w-md", // ~384px - 448px
+  lg: "w-full max-w-[90vw] sm:max-w-md md:max-w-lg", // ~448px - 512px
+  xl: "w-full max-w-[90vw] sm:max-w-lg md:max-w-xl", // ~512px - 576px
+  "2xl": "w-full max-w-[95vw] sm:max-w-xl md:max-w-2xl", // ~576px - 672px
+  full: "w-full max-w-[calc(100vw-1.5rem)] sm:max-w-3xl",
+} as const
+
+export type SheetSize = keyof typeof SHEET_SIZES
+
 function SheetContent({
   className,
   children,
   side = "right",
+  size = "default",
   showCloseButton = true,
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left"
+  size?: SheetSize
   showCloseButton?: boolean
 }) {
   return (
@@ -52,12 +67,14 @@ function SheetContent({
       <SheetPrimitive.Popup
         data-slot="sheet-content"
         data-side={side}
+        data-size={size}
         className={cn(
           "fixed z-50 flex flex-col gap-4 bg-popover bg-clip-padding text-sm text-popover-foreground shadow-md transition duration-200 ease-in-out data-ending-style:opacity-0 data-starting-style:opacity-0 overflow-y-auto",
           "data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:max-h-[85dvh] data-[side=bottom]:border-t data-[side=bottom]:border-border/80 data-[side=bottom]:data-ending-style:translate-y-[2.5rem] data-[side=bottom]:data-starting-style:translate-y-[2.5rem]",
-          "data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-full data-[side=left]:max-w-[85vw] data-[side=left]:border-r data-[side=left]:border-border/80 data-[side=left]:data-ending-style:translate-x-[-2.5rem] data-[side=left]:data-starting-style:translate-x-[-2.5rem] sm:max-w-sm md:max-w-md",
-          "data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-full data-[side=right]:max-w-[90vw] data-[side=right]:border-l data-[side=right]:border-border/80 data-[side=right]:data-ending-style:translate-x-[2.5rem] data-[side=right]:data-starting-style:translate-x-[2.5rem] sm:max-w-md md:max-w-lg",
+          "data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-full data-[side=left]:border-r data-[side=left]:border-border/80 data-[side=left]:data-ending-style:translate-x-[-2.5rem] data-[side=left]:data-starting-style:translate-x-[-2.5rem]",
+          "data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-full data-[side=right]:border-l data-[side=right]:border-border/80 data-[side=right]:data-ending-style:translate-x-[2.5rem] data-[side=right]:data-starting-style:translate-x-[2.5rem]",
           "data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:border-border/80 data-[side=top]:data-ending-style:translate-y-[-2.5rem] data-[side=top]:data-starting-style:translate-y-[-2.5rem]",
+          (side === "left" || side === "right") && SHEET_SIZES[size],
           className
         )}
         {...props}

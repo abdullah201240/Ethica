@@ -559,7 +559,7 @@ export default function AdminCategoriesPage() {
 
       {/* ── Sheet: Create New Research Category ─────────────────────────────── */}
       <Sheet open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
+        <SheetContent side="right" size="default" className="p-6">
           <form onSubmit={handleCreateSubmit} className="flex flex-col h-full" noValidate>
             <SheetHeader className="p-0 pb-3">
               <div className="flex items-center justify-between gap-2">
@@ -832,7 +832,7 @@ export default function AdminCategoriesPage() {
 
       {/* ── Sheet: Edit Research Category & BDT Price ──────────────────────── */}
       <Sheet open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
+        <SheetContent side="right" size="default" className="p-6">
           {categoryToEdit && (
             <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
               <SheetHeader className="p-0 pb-3">

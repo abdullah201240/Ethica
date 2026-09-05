@@ -474,7 +474,7 @@ export default function AdminDashboardPage() {
                     <span>Add Administrator</span>
                   </Button>
                 } />
-              <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+              <SheetContent side="right" size="default" className="p-6">
                 <SheetHeader className="p-0 pb-3">
                   <SheetTitle className="text-card-title text-primary dark:text-white">
                     Appoint Institutional Administrator

@@ -489,7 +489,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
       {/* ── Sheet: Edit Research Category & BDT Price ──────────────────────── */}
       <Sheet open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <SheetContent side="right" className="sm:max-w-xl md:max-w-2xl w-full p-6">
+        <SheetContent side="right" size="default" className="p-6">
           <form onSubmit={handleEditSubmit} className="flex flex-col h-full" noValidate>
             <SheetHeader className="p-0 pb-3">
               <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">

@@ -253,7 +253,7 @@ export default function AdminListPage() {
       cell: ({ row }) => (
         <Link
           href={`/admin/admins/${encodeURIComponent(row.id)}`}
-          className="font-mono text-base font-bold text-foreground hover:text-primary dark:hover:text-sky-400 hover:underline select-text inline-flex items-center gap-1"
+          className="font-mono text-body font-bold text-foreground hover:text-primary dark:hover:text-sky-400 hover:underline select-text inline-flex items-center gap-1"
         >
           {row.id}
         </Link>
@@ -278,7 +278,7 @@ export default function AdminListPage() {
           <div className="flex items-center gap-3">
             <Link
               href={`/admin/admins/${encodeURIComponent(row.id)}`}
-              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text hover:ring-2 hover:ring-[#002752]/30 transition-all"
+              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center font-bold text-body shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text hover:ring-2 hover:ring-[#002752]/30 transition-all"
             >
               {initials}
             </Link>
@@ -286,7 +286,7 @@ export default function AdminListPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href={`/admin/admins/${encodeURIComponent(row.id)}`}
-                  className="text-base font-bold text-foreground truncate select-text hover:text-primary dark:hover:text-sky-400 hover:underline"
+                  className="text-micro font-bold text-foreground truncate select-text hover:text-primary dark:hover:text-sky-400 hover:underline"
                 >
                   {row.name}
                 </Link>
@@ -299,7 +299,7 @@ export default function AdminListPage() {
                   </Badge>
                 )}
               </div>
-              <div className="text-base text-muted-foreground truncate flex items-center gap-2 select-text">
+              <div className="text-micro text-muted-foreground truncate flex items-center gap-2 select-text">
                 <Mail className="size-3 text-slate-400 shrink-0" />
                 <span>{row.email}</span>
               </div>
@@ -324,12 +324,12 @@ export default function AdminListPage() {
 
         return (
           <div className="space-y-1">
-            <div className="text-base font-bold text-foreground select-text">
+            <div className="text-micro font-bold text-foreground select-text">
               {row.role}
             </div>
             <Badge
               variant="outline"
-              className={`text-base font-semibold border ${
+              className={`text-micro font-semibold border ${
                 accessBadgeStyles[row.accessLevel] || accessBadgeStyles["System Admin"]
               }`}
             >
@@ -345,7 +345,7 @@ export default function AdminListPage() {
       header: "Department / Directorate",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-base text-slate-600 dark:text-slate-300 truncate max-w-56 block select-text">
+        <span className="text-micro text-slate-600 dark:text-slate-300 truncate max-w-56 block select-text">
           {row.department}
         </span>
       ),
@@ -356,7 +356,7 @@ export default function AdminListPage() {
       header: "Workflows / Oversight",
       sortable: true,
       cell: ({ row }) => (
-        <span className="text-base font-mono font-bold text-slate-700 dark:text-slate-300 select-text">
+        <span className="text-micro font-mono font-bold text-slate-700 dark:text-slate-300 select-text">
           {row.protocols} cases
         </span>
       ),
@@ -367,7 +367,7 @@ export default function AdminListPage() {
       header: "Last Active",
       sortable: true,
       cell: ({ row }) => (
-        <div className="flex items-center gap-1.5 text-base text-muted-foreground select-text">
+        <div className="flex items-center gap-1.5 text-body text-muted-foreground select-text">
           <Clock className="size-3 text-slate-400 shrink-0" />
           <span>{row.lastActive}</span>
         </div>
@@ -394,7 +394,7 @@ export default function AdminListPage() {
               }
             />
             <span className={cn(
-              "text-base font-bold select-text",
+              "text-micro font-bold select-text",
               isActive
                 ? "text-emerald-700 dark:text-emerald-400"
                 : "text-rose-600 dark:text-rose-400"
@@ -417,7 +417,7 @@ export default function AdminListPage() {
             <Button
               type="button"
               variant="default"
-              className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
+              className="h-9 px-3.5 text-body font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
               title="View Security Dossier"
             >
               <Eye className="size-4" />
@@ -430,7 +430,7 @@ export default function AdminListPage() {
             type="button"
             variant="outline"
             onClick={() => handleOpenEdit(row)}
-            className="h-9 px-3.5 text-base font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1.5 cursor-pointer"
+            className="h-9 px-3.5 text-body font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1.5 cursor-pointer"
             title="Edit Administrator Credentials"
           >
             <Lock className="size-4 text-slate-500 dark:text-slate-400" />
@@ -512,14 +512,14 @@ export default function AdminListPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/users"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-base transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-body transition-colors shrink-0"
               >
                 <Users className="size-3.5 mr-1.5 text-primary dark:text-sky-400" />
                 <span>All Users</span>
               </Link>
               <Link
                 href="/admin/roster"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-base transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground/85 font-semibold text-body transition-colors shrink-0"
               >
                 <Users className="size-3.5 mr-1.5 text-primary dark:text-sky-400" />
                 <span>Reviewer Roster</span>
@@ -530,24 +530,24 @@ export default function AdminListPage() {
                 <SheetTrigger render={
                   <Button
                     type="button"
-                    className="inline-flex items-center h-8 px-3.5 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-base rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
+                    className="inline-flex items-center h-8 px-3.5 bg-[#002752] hover:bg-[#001c3d] !text-white font-bold text-body rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
                   >
                     <UserPlus className="size-3.5 mr-1.5" />
                     <span>Appoint System Admin</span>
                   </Button>
                 } />
-                <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                <SheetContent side="right" size="default" className="p-6">
                   <SheetHeader className="p-0 pb-3">
-                    <SheetTitle className="text-base font-bold text-primary dark:text-white">
+                    <SheetTitle className="text-body font-bold text-primary dark:text-white">
                       Appoint Institutional System Administrator
                     </SheetTitle>
-                    <SheetDescription className="text-base text-muted-foreground">
+                    <SheetDescription className="text-micro text-muted-foreground">
                       Register a new institutional officer with privileged access to the Ethica governance engine.
                     </SheetDescription>
                   </SheetHeader>
 
                   {formError && (
-                    <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-base flex items-center gap-2">
+                    <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-body flex items-center gap-2">
                       <AlertTriangle className="size-4 shrink-0 text-rose-600" />
                       <span>{formError}</span>
                     </div>
@@ -555,20 +555,20 @@ export default function AdminListPage() {
 
                   <form onSubmit={handleCreateAdmin} className="space-y-4 py-2">
                     <div className="space-y-1.5">
-                      <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                         Full Name & Academic Title <span className="text-rose-500">*</span>
                       </label>
                       <Input
                         value={newAdmin.name}
                         onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })}
                         placeholder="e.g. Dr. Tanvir Ahmed, Ph.D."
-                        className="h-8 text-base"
+                        className="h-8 text-micro"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                           Institutional Email <span className="text-rose-500">*</span>
                         </label>
                         <Input
@@ -576,38 +576,38 @@ export default function AdminListPage() {
                           value={newAdmin.email}
                           onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
                           placeholder="e.g. tanvir.ethics@diu.edu.bd"
-                          className="h-8 text-base"
+                          className="h-8 text-micro"
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                           Official Contact Phone
                         </label>
                         <Input
                           value={newAdmin.phone}
                           onChange={(e) => setNewAdmin({ ...newAdmin, phone: e.target.value })}
                           placeholder="e.g. +880 1713-000000"
-                          className="h-8 text-base"
+                          className="h-8 text-micro"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                           Administrative Designation <span className="text-rose-500">*</span>
                         </label>
                         <Input
                           value={newAdmin.role}
                           onChange={(e) => setNewAdmin({ ...newAdmin, role: e.target.value })}
                           placeholder="e.g. Secretariat Triage Officer"
-                          className="h-8 text-base"
+                          className="h-8 text-micro"
                         />
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                        <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                           Access Privilege Group
                         </label>
                         <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -626,7 +626,7 @@ export default function AdminListPage() {
                               variant={newAdmin.accessLevel === lvl ? "default" : "outline"}
                               size="sm"
                               onClick={() => setNewAdmin({ ...newAdmin, accessLevel: lvl })}
-                              className={`h-6 px-2 text-base font-semibold rounded ${
+                              className={`h-6 px-2 text-body font-semibold rounded ${
                                 newAdmin.accessLevel === lvl
                                   ? "bg-[#002752] text-white"
                                   : "text-slate-600 dark:text-slate-300"
@@ -640,19 +640,19 @@ export default function AdminListPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                         Department / Institutional Unit <span className="text-rose-500">*</span>
                       </label>
                       <Input
                         value={newAdmin.department}
                         onChange={(e) => setNewAdmin({ ...newAdmin, department: e.target.value })}
                         placeholder="e.g. Research Compliance Secretariat"
-                        className="h-8 text-base"
+                        className="h-8 text-micro"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                         Initial Account Status
                       </label>
                       <div className="flex gap-2">
@@ -661,7 +661,7 @@ export default function AdminListPage() {
                           variant={newAdmin.status === "Active" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setNewAdmin({ ...newAdmin, status: "Active" })}
-                          className={`h-7 px-3 text-base font-bold ${
+                          className={`h-7 px-3 text-body font-bold ${
                             newAdmin.status === "Active"
                               ? "bg-emerald-600 text-white"
                               : "text-slate-600"
@@ -674,7 +674,7 @@ export default function AdminListPage() {
                           variant={newAdmin.status === "Inactive" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setNewAdmin({ ...newAdmin, status: "Inactive" })}
-                          className={`h-7 px-3 text-base font-bold ${
+                          className={`h-7 px-3 text-body font-bold ${
                             newAdmin.status === "Inactive"
                               ? "bg-amber-600 text-white"
                               : "text-slate-600"
@@ -687,7 +687,7 @@ export default function AdminListPage() {
 
                     {/* Permissions Multi-select */}
                     <div className="space-y-1.5">
-                      <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                      <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                         Assigned Administrative Privileges
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
@@ -701,7 +701,7 @@ export default function AdminListPage() {
                                   setNewAdmin({ ...newAdmin, permissions: list })
                                 )
                               }
-                              className={`flex items-center gap-2 p-1.5 rounded cursor-pointer text-base font-medium transition-colors ${
+                              className={`flex items-center gap-2 p-1.5 rounded cursor-pointer text-body font-medium transition-colors ${
                                 isSelected
                                   ? "bg-[#002752]/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 font-bold"
                                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -725,13 +725,13 @@ export default function AdminListPage() {
 
                     <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
                       <SheetClose render={
-                        <Button type="button" variant="outline" className="h-8 text-base font-semibold">
+                        <Button type="button" variant="outline" className="h-8 text-body font-semibold">
                           Cancel
                         </Button>
                       } />
                       <Button
                         type="submit"
-                        className="h-8 text-base font-bold bg-[#002752] hover:bg-[#001c3d] text-white"
+                        className="h-8 text-body font-bold bg-[#002752] hover:bg-[#001c3d] !text-white"
                       >
                         Appoint Administrator
                       </Button>
@@ -752,66 +752,66 @@ export default function AdminListPage() {
             if (!open) setSelectedAdminForEdit(null)
           }}
         >
-          <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+          <SheetContent side="right" size="default" className="p-6">
             <SheetHeader className="p-0 pb-3">
-              <SheetTitle className="text-base font-bold text-primary dark:text-white">
+              <SheetTitle className="text-body font-bold text-primary dark:text-white">
                 Edit Administrator Credentials: {selectedAdminForEdit.name}
               </SheetTitle>
-              <SheetDescription className="text-base text-muted-foreground">
+              <SheetDescription className="text-micro text-muted-foreground">
                 Update designation, access privileges, and departmental assignment.
               </SheetDescription>
             </SheetHeader>
 
             <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
               <div className="space-y-1.5">
-                <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Full Name
                 </label>
                 <Input
                   value={editForm.name}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="h-8 text-base"
+                  className="h-8 text-micro"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                     Institutional Email
                   </label>
                   <Input
                     value={editForm.email}
                     onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                    className="h-8 text-base"
+                    className="h-8 text-micro"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                     Phone
                   </label>
                   <Input
                     value={editForm.phone}
                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    className="h-8 text-base"
+                    className="h-8 text-micro"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                     Administrative Role
                   </label>
                   <Input
                     value={editForm.role}
                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                    className="h-8 text-base"
+                    className="h-8 text-micro"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                     Access Level
                   </label>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -830,7 +830,7 @@ export default function AdminListPage() {
                         variant={editForm.accessLevel === lvl ? "default" : "outline"}
                         size="sm"
                         onClick={() => setEditForm({ ...editForm, accessLevel: lvl })}
-                        className={`h-6 px-2 text-base font-semibold rounded ${
+                        className={`h-6 px-2 text-body font-semibold rounded ${
                           editForm.accessLevel === lvl
                             ? "bg-[#002752] text-white"
                             : "text-slate-600 dark:text-slate-300"
@@ -844,25 +844,25 @@ export default function AdminListPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-base font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Department
                 </label>
                 <Input
                   value={editForm.department}
                   onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-                  className="h-8 text-base"
+                  className="h-8 text-micro"
                 />
               </div>
 
               <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
                 <SheetClose render={
-                  <Button type="button" variant="outline" className="h-8 text-base font-semibold">
+                  <Button type="button" variant="outline" className="h-8 text-body font-semibold">
                     Cancel
                   </Button>
                 } />
                 <Button
                   type="submit"
-                  className="h-8 text-base font-bold bg-[#002752] hover:bg-[#001c3d] text-white"
+                  className="h-8 text-body font-bold bg-[#002752] hover:bg-[#001c3d] !text-white"
                 >
                   Save Changes
                 </Button>
@@ -885,13 +885,13 @@ export default function AdminListPage() {
                 ? "Suspend Administrator Account"
                 : "Restore Administrator Account"}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-base text-slate-600 dark:text-slate-400">
+            <AlertDialogDescription className="text-body text-slate-600 dark:text-slate-400">
               {pendingToggleAdmin?.status === "Active" ? (
                 <>
                   You are about to <span className="font-bold text-rose-600">suspend</span> the account of{" "}
                   <span className="font-bold text-slate-800 dark:text-white">{pendingToggleAdmin?.name}</span>.
                   <br />
-                  <span className="text-base mt-1 block text-slate-500">
+                  <span className="text-body mt-1 block text-slate-500">
                     All governance permissions, signing privileges, and platform access will be paused immediately.
                   </span>
                 </>
@@ -900,7 +900,7 @@ export default function AdminListPage() {
                   You are about to <span className="font-bold text-emerald-600">restore</span> the account of{" "}
                   <span className="font-bold text-slate-800 dark:text-white">{pendingToggleAdmin?.name}</span>.
                   <br />
-                  <span className="text-base mt-1 block text-slate-500">
+                  <span className="text-body mt-1 block text-slate-500">
                     Full governance authority and platform access will be reinstated.
                   </span>
                 </>
@@ -909,14 +909,14 @@ export default function AdminListPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel render={
-              <Button variant="outline" className="h-8 text-base font-semibold">
+              <Button variant="outline" className="h-8 text-body font-semibold">
                 Cancel
               </Button>
             } />
             <AlertDialogAction
               render={
                 <Button
-                  className={`h-8 text-base font-bold text-white ${
+                  className={`h-8 text-body font-bold !text-white ${
                     pendingToggleAdmin?.status === "Active"
                       ? "bg-rose-600 hover:bg-rose-700"
                       : "bg-emerald-600 hover:bg-emerald-700"

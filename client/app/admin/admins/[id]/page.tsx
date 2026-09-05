@@ -216,7 +216,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               type="button"
               variant="outline"
               size="sm"
-              className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-slate-200 dark:border-slate-800"
+              className="h-8 gap-1.5 text-body-sm font-semibold rounded-lg border-slate-200 dark:border-slate-800"
             >
               <Users className="size-3.5 text-primary dark:text-sky-400" />
               <span>All Users</span>
@@ -227,7 +227,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
             variant="outline"
             size="sm"
             onClick={handleOpenEdit}
-            className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-slate-200 dark:border-slate-800"
+            className="h-8 gap-1.5 text-body-sm font-semibold rounded-lg border-slate-200 dark:border-slate-800"
           >
             <Lock className="size-3.5" />
             <span>Edit Credentials</span>
@@ -257,14 +257,14 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 )}
                 <Badge
                   variant="outline"
-                  className={`text-xs font-semibold border ${
+                  className={`text-micro font-semibold border ${
                     accessBadgeStyles[admin.accessLevel] || accessBadgeStyles["System Admin"]
                   }`}
                 >
                   {admin.accessLevel}
                 </Badge>
                 <Badge
-                  className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${
+                  className={`text-micro font-bold px-2.5 py-0.5 rounded-md ${
                     isActive
                       ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
                       : "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30"
@@ -274,7 +274,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 </Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-slate-600 dark:text-slate-300">
+              <div className="flex flex-wrap items-center gap-y-1 gap-x-4 text-body-sm text-slate-600 dark:text-slate-300">
                 <div className="flex items-center gap-1.5 font-medium">
                   <Building2 className="size-3.5 text-slate-400 shrink-0" />
                   <span>
@@ -285,7 +285,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                   <Calendar className="size-3.5 text-slate-400 shrink-0" />
                   <span>Appointed {admin.addedAt}</span>
                 </div>
-                <div className="font-mono text-xs font-bold text-primary dark:text-sky-300">
+                <div className="font-mono text-body-sm font-bold text-primary dark:text-sky-300">
                   {admin.id}
                 </div>
               </div>
@@ -322,7 +322,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
                 }
               />
               <span className={cn(
-                "text-base font-bold select-text",
+                "text-body-sm font-bold select-text",
                 isActive ? "text-emerald-700 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
               )}>
                 {isActive ? "Active" : "Suspended"}
@@ -366,15 +366,15 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Institutional Coordinates & Role Scope */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Building2 className="size-4 text-primary dark:text-sky-400" />
               <span>Administrative Profile & Directorate Coordinates</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-body-sm">
               <div className="space-y-1 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-400 block font-medium">Department / Directorate</span>
-                <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
+                <span className="text-slate-400 block font-medium text-micro">Department / Directorate</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-body-sm block">
                   {admin.department}
                 </span>
                 <span className="text-muted-foreground block mt-0.5">
@@ -383,8 +383,8 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               </div>
 
               <div className="space-y-1 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-400 block font-medium">Governance Designation</span>
-                <span className="font-bold text-slate-800 dark:text-slate-100 text-sm block">
+                <span className="text-slate-400 block font-medium text-micro">Governance Designation</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100 text-body-sm block">
                   {admin.role}
                 </span>
                 <span className="text-muted-foreground block mt-0.5">
@@ -393,10 +393,10 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               </div>
 
               <div className="space-y-1 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-400 block font-medium">Official Contact Email</span>
+                <span className="text-slate-400 block font-medium text-micro">Official Contact Email</span>
                 <a
                   href={`mailto:${admin.email}`}
-                  className="font-bold text-primary dark:text-sky-300 text-xs block truncate hover:underline flex items-center gap-1.5"
+                  className="font-bold text-primary dark:text-sky-300 text-body-sm block truncate hover:underline flex items-center gap-1.5"
                 >
                   <Mail className="size-3.5 text-slate-400 shrink-0" />
                   <span>{admin.email}</span>
@@ -404,8 +404,8 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               </div>
 
               <div className="space-y-1 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-slate-400 block font-medium">Official Contact Phone</span>
-                <div className="font-bold text-slate-800 dark:text-slate-100 text-xs flex items-center gap-1.5">
+                <span className="text-slate-400 block font-medium text-micro">Official Contact Phone</span>
+                <div className="font-bold text-slate-800 dark:text-slate-100 text-body-sm flex items-center gap-1.5">
                   <Phone className="size-3.5 text-slate-400 shrink-0" />
                   <span>{admin.phone || "+880 1713-000000"}</span>
                 </div>
@@ -415,11 +415,11 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
           {/* Card: Granted Administrative Privileges */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>Granted Administrative Privileges & RBAC Authorizations</span>
             </h3>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Cryptographically signed capabilities authorized by the Institutional Compliance Secretariat:
             </p>
 
@@ -427,7 +427,7 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
               {(admin.permissions || []).map((perm) => (
                 <div
                   key={perm}
-                  className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 text-xs text-foreground"
+                  className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 text-body-sm text-foreground"
                 >
                   <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span className="font-medium">{perm}</span>
@@ -441,12 +441,12 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Hardware Security Module (HSM) Token */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Fingerprint className="size-4 text-primary dark:text-sky-400" />
               <span>HSM Token & PKI Credentials</span>
             </h3>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Hardware Security Module public key token for signing governance decisions and audit certificates.
             </p>
 
@@ -480,26 +480,26 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
           {/* Card: Security Authority & Cryptographic Signing */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Award className="size-4 text-primary dark:text-sky-400" />
               <span>Oversight Scope</span>
             </h3>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 text-body-sm">
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-muted-foreground">Total Protocols</span>
+                <span className="text-muted-foreground text-micro">Total Protocols</span>
                 <span className="font-bold text-foreground">
                   {admin.protocols} cases
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-muted-foreground">Security Clearance</span>
+                <span className="text-muted-foreground text-micro">Security Clearance</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   FIPS 140-3 L3
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800">
-                <span className="text-muted-foreground">Governance Term</span>
+                <span className="text-muted-foreground text-micro">Governance Term</span>
                 <span className="font-semibold text-slate-700 dark:text-slate-300">
                   Permanent Appointee
                 </span>
@@ -511,66 +511,66 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
       {/* ── Edit Admin Credentials Slide-over Sheet ─────────────────────────── */}
       <Sheet open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+        <SheetContent side="right" size="default" className="p-6">
           <SheetHeader className="p-0 pb-3">
-            <SheetTitle className="text-base font-bold text-primary dark:text-white">
+            <SheetTitle className="text-body-sm font-bold text-primary dark:text-white">
               Edit Administrator Credentials: {admin.name}
             </SheetTitle>
-            <SheetDescription className="text-xs text-muted-foreground">
+            <SheetDescription className="text-body-sm text-muted-foreground">
               Update designation, access privileges, and departmental assignment.
             </SheetDescription>
           </SheetHeader>
 
           <form onSubmit={handleSaveEdit} className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                 Full Name
               </label>
               <Input
                 value={editForm.name}
                 onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                className="h-8 text-xs"
+                className="h-8 text-body-sm"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Institutional Email
                 </label>
                 <Input
                   value={editForm.email}
                   onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                  className="h-8 text-xs"
+                  className="h-8 text-body-sm"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Phone
                 </label>
                 <Input
                   value={editForm.phone}
                   onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                  className="h-8 text-xs"
+                  className="h-8 text-body-sm"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Administrative Role
                 </label>
                 <Input
                   value={editForm.role}
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                  className="h-8 text-xs"
+                  className="h-8 text-body-sm"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                   Access Level
                 </label>
                 <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -603,25 +603,25 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-micro font-bold text-slate-700 dark:text-slate-300">
                 Department
               </label>
               <Input
                 value={editForm.department}
                 onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-                className="h-8 text-xs"
+                className="h-8 text-body-sm"
               />
             </div>
 
             <SheetFooter className="p-0 pt-4 flex-row justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80">
               <SheetClose render={
-                <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
+                <Button type="button" variant="outline" className="h-8 text-body-sm font-semibold">
                   Cancel
                 </Button>
               } />
               <Button
                 type="submit"
-                className="h-8 text-xs font-bold bg-[#002752] hover:bg-[#001c3d] text-white"
+                className="h-8 text-body-sm font-bold bg-[#002752] hover:bg-[#001c3d] !text-white"
               >
                 Save Changes
               </Button>
