@@ -131,6 +131,27 @@ In `@base-ui/react/menu`, the `<Menu.GroupLabel>` primitive (wrapped by `<Dropdo
 - Always nest `<DropdownMenuLabel>` inside `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`.
 - **Never** render `<DropdownMenuLabel>` directly inside `<DropdownMenuContent>`, as this causes the fatal runtime error: `Base UI: MenuGroupContext is missing. Menu group parts must be used within <Menu.Group> or <Menu.RadioGroup>.`
 
+---
+
+## 10. Prohibition of Redundant Workspace Greeting/Hero Banners
+- **No Redundant Header Banners:** Never include redundant, heavy hero banner containers (e.g., cards with pill badges, large greeting titles like "Reviewer Onboarding & Accreditation" or "IRB Committee Secretariat • Accreditation Chamber", and descriptive subtitles) inside application workspace and dashboard pages.
+- **Direct-to-Content Workflow:** Workspace pages must present their core functional components immediately at the top of the viewport (e.g., KPI metric counters grid, action toolbars, and centralized `DataTable`).
+- **Leverage In-Component Headers:** Context and section descriptions must be conveyed directly via the centralized `DataTable` title and description props or compact toolbar actions, rather than standalone decorative banner boxes.
+
+---
+
+## 11. Mandatory Centralized KPI Card Standard (`KpiCard` & `KpiGrid`)
+All metric counters, statistical indicators, and executive KPI summaries across the platform MUST strictly use the centralized component located at [`@/components/ui/kpi-card`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/kpi-card.tsx):
+- **Centralized Primitives:** Always import and compose `KpiCard` and `KpiGrid` from `@/components/ui/kpi-card`.
+- **Prohibition of Raw Metric Divs:** Developers and agents must NEVER write ad-hoc metric card `<div>` containers with custom border or text classes.
+- **Uniform Institutional Styling:**
+  - Outer card: `rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 shadow-xs transition-shadow hover:shadow-sm select-text`.
+  - Impactful bold typography: `text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight tabular-nums select-text`.
+  - Structured semantic colors: `navy` (`#002752`), `green` (`#198754`), `amber`, `rose`, `sky`, `gold` (`#E0C23C`).
+  - Responsive grid layout: `<KpiGrid columns={4}>` adapts automatically from mobile (2 columns) to desktop (4 columns).
+
+
+
 
 
 

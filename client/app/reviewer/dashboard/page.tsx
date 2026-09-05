@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 
 const deliberationProtocols = [
   {
@@ -116,62 +117,37 @@ export default function ReviewerDashboardPage() {
         />
       </div>
 
-      {/* Review Metrics Counters */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Pending Deliberation</span>
-            <Clock className="size-4 text-rose-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400">
-            5
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            2 protocols need quorum tie-break
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Quorum Participation</span>
-            <Vote className="size-4 text-[#198754]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#198754]">
-            96.4%
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Institutional target: &gt;90%
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Expedited Approvals</span>
-            <CheckCircle2 className="size-4 text-emerald-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#002752] dark:text-white">
-            28
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Avg turnaround: 3.2 days
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Consensus Reached</span>
-            <Scale className="size-4 text-[#E0C23C]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#E0C23C]">
-            41
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Zero appeals lodged this term
-          </span>
-        </div>
-
-      </div>
+      {/* Centralized Review Metrics Counters */}
+      <KpiGrid columns={4}>
+        <KpiCard
+          label="Pending Deliberation"
+          value={5}
+          description="2 protocols need quorum tie-break"
+          icon={Clock}
+          color="rose"
+        />
+        <KpiCard
+          label="Quorum Participation"
+          value="96.4%"
+          description="Institutional target: >90%"
+          icon={Vote}
+          color="green"
+        />
+        <KpiCard
+          label="Expedited Approvals"
+          value={28}
+          description="Avg turnaround: 3.2 days"
+          icon={CheckCircle2}
+          color="navy"
+        />
+        <KpiCard
+          label="Consensus Reached"
+          value={41}
+          description="Zero appeals lodged this term"
+          icon={Scale}
+          color="gold"
+        />
+      </KpiGrid>
 
       {/* Deliberation Queue Section */}
       <div className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden">

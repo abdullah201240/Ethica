@@ -60,5 +60,15 @@ All UI components and features must adhere strictly to these rules:
 8. **Base UI DropdownMenuLabel Rule:**
    - `<DropdownMenuLabel>` must always be nested within `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`.
 
+9. **Prohibition of Redundant Workspace Greeting/Hero Banners:**
+   - Never include redundant hero banners (e.g., cards with pill badges, large greeting titles like "Reviewer Onboarding & Accreditation" or "IRB Committee Secretariat • Accreditation Chamber", and descriptive subtitles) inside application workspace and dashboard pages.
+   - Present core functional components (KPI metrics cards, action toolbars, and centralized `DataTable`) directly at the top of the viewport.
+
+10. **Mandatory Centralized KPI Card Standard (`KpiCard` & `KpiGrid`):**
+    - All statistical metrics and KPI counters must use `@/components/ui/kpi-card` (`KpiCard`, `KpiGrid`).
+    - Never write raw ad-hoc metric card `<div>` containers.
+
+
+
 
 

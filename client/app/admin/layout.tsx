@@ -9,6 +9,8 @@ import {
   ShieldCheck,
   Settings,
   Download,
+  ClipboardCheck,
+  User,
 } from "lucide-react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
@@ -18,6 +20,12 @@ const adminNavItems: NavItem[] = [
     label: "Governance Overview",
     href: "/admin/dashboard",
     icon: Sliders,
+  },
+  {
+    label: "Reviewer Applications",
+    href: "/admin/applications",
+    icon: ClipboardCheck,
+    badge: "Pending Intake",
   },
   {
     label: "Institutional Roster",
@@ -35,6 +43,11 @@ const adminNavItems: NavItem[] = [
     label: "Certificate Authority",
     href: "/admin/dashboard#authority",
     icon: ShieldCheck,
+  },
+  {
+    label: "Secretariat Profile",
+    href: "/admin/profile",
+    icon: User,
   },
   {
     label: "Policy Engine Config",
@@ -74,6 +87,7 @@ export default function AdminLayout({
         }}
         navItems={adminNavItems}
         loginRoute="/admin/login"
+        profileHref="/admin/profile"
         actionButton={{
           label: "Export Ledger",
           icon: Download,

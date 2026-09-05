@@ -17,6 +17,7 @@ import {
   Calendar,
 } from "lucide-react"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
+import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { Button } from "@/components/ui/button"
 
 interface Protocol {
@@ -432,60 +433,37 @@ export default function UserDashboardPage() {
         />
       </div>
 
-      {/* Metric Counters Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Total Submissions</span>
-            <FileText className="size-4 text-slate-400" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#002752] dark:text-white">
-            16
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Across 4 research programs
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>In Active Review</span>
-            <Clock className="size-4 text-amber-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400">
-            3
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Avg review velocity: 4.8 days
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Clearance Granted</span>
-            <CheckCircle2 className="size-4 text-[#198754]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#198754]">
-            12
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Cryptographically sealed certificates
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Revisions Due</span>
-            <AlertCircle className="size-4 text-rose-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400">
-            1
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Deadline in 8 calendar days
-          </span>
-        </div>
-      </div>
+      {/* Centralized Institutional Metric Counters Grid */}
+      <KpiGrid columns={4}>
+        <KpiCard
+          label="Total Submissions"
+          value={16}
+          description="Across 4 research programs"
+          icon={FileText}
+          color="navy"
+        />
+        <KpiCard
+          label="In Active Review"
+          value={3}
+          description="Avg review velocity: 4.8 days"
+          icon={Clock}
+          color="amber"
+        />
+        <KpiCard
+          label="Clearance Granted"
+          value={12}
+          description="Cryptographically sealed certificates"
+          icon={CheckCircle2}
+          color="green"
+        />
+        <KpiCard
+          label="Revisions Due"
+          value={1}
+          description="Deadline in 8 calendar days"
+          icon={AlertCircle}
+          color="rose"
+        />
+      </KpiGrid>
 
       {/* Unified Institutional DataTable Section */}
       <div id="protocols" className="w-full">

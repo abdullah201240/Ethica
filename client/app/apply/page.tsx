@@ -17,6 +17,7 @@ import {
   Clock,
   Lock,
 } from "lucide-react"
+import { addReviewerApplication } from "@/lib/reviewer-applications"
 
 const EXPERTISE_AREAS = [
   "Biomedical & Clinical Research",
@@ -76,7 +77,25 @@ export default function ApplyAsReviewerPage() {
 
   const handleNext = () => { if (currentStep < 4) setCurrentStep((s) => s + 1) }
   const handleBack = () => { if (currentStep > 1) setCurrentStep((s) => s - 1) }
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true) }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const expYears = parseInt(form.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
+    addReviewerApplication({
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone || "+880 1700-000000",
+      institution: form.institution,
+      department: form.department,
+      position: form.position || "Research Faculty",
+      degree: form.degree || "PhD / Doctorate",
+      yearsExperience: expYears,
+      orcid: form.orcid || "0000-0000-0000-0000",
+      expertise: selectedExpertise.length > 0 ? selectedExpertise : ["Biomedical & Clinical Research"],
+      statement: form.statement,
+      cvFileName: form.cvFileName || "Curriculum_Vitae.pdf",
+    })
+    setSubmitted(true)
+  }
 
   // ── Success screen ───────────────────────────────────────────────────────────
   if (submitted) {
@@ -134,6 +153,13 @@ export default function ApplyAsReviewerPage() {
               >
                 <ArrowLeft className="size-4" />
                 Return to Home
+              </Link>
+              <Link
+                href="/admin/applications"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-lg border border-[#002752]/30 bg-[#002752]/5 text-[#002752] text-sm font-semibold hover:bg-[#002752]/10 transition-colors"
+              >
+                View in Admin Queue
+                <ChevronRight className="size-4" />
               </Link>
               <Link
                 href="/reviewer/login"

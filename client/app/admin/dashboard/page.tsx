@@ -16,6 +16,7 @@ import {
   Search,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 
 const auditLedgerLogs = [
   {
@@ -145,62 +146,37 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      {/* Institutional Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Total Institution Protocols</span>
-            <Building2 className="size-4 text-slate-400" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#002752] dark:text-white">
-            248
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Across 14 academic faculties
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Clearance Compliance</span>
-            <CheckCircle2 className="size-4 text-[#198754]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#198754]">
-            100%
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            Zero unresolved ethical non-conformities
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Cryptographic Seals</span>
-            <Lock className="size-4 text-amber-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400">
-            184
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            SHA-256 certificate hashes verified
-          </span>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Mean Review Velocity</span>
-            <ArrowUpRight className="size-4 text-sky-500" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-sky-600 dark:text-sky-400">
-            5.2 Days
-          </div>
-          <span className="text-[0.65rem] text-slate-500 dark:text-slate-400 block">
-            72% acceleration vs manual paper IRB
-          </span>
-        </div>
-
-      </div>
+      {/* Centralized Institutional Metrics Grid */}
+      <KpiGrid columns={4}>
+        <KpiCard
+          label="Total Institution Protocols"
+          value={248}
+          description="Across 14 academic faculties"
+          icon={Building2}
+          color="navy"
+        />
+        <KpiCard
+          label="Clearance Compliance"
+          value="100%"
+          description="Zero unresolved ethical non-conformities"
+          icon={CheckCircle2}
+          color="green"
+        />
+        <KpiCard
+          label="Cryptographic Seals"
+          value={184}
+          description="SHA-256 certificate hashes verified"
+          icon={Lock}
+          color="amber"
+        />
+        <KpiCard
+          label="Mean Review Velocity"
+          value="5.2 Days"
+          description="72% acceleration vs manual paper IRB"
+          icon={ArrowUpRight}
+          color="sky"
+        />
+      </KpiGrid>
 
       {/* Cryptographic Audit Trail Section */}
       <div className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="audit">

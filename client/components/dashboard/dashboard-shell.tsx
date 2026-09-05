@@ -48,6 +48,7 @@ export interface DashboardShellProps {
     onClick?: () => void
     href?: string
   }
+  profileHref?: string
   children: React.ReactNode
 }
 
@@ -59,6 +60,7 @@ export function DashboardShell({
   navItems,
   loginRoute,
   actionButton,
+  profileHref,
   children,
 }: DashboardShellProps) {
   const pathname = usePathname()
@@ -298,22 +300,44 @@ export function DashboardShell({
           {!collapsed && (
             <>
               <div className="mx-0.5 my-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
-              <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer">
-                <div
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+              {profileHref ? (
+                <Link
+                  href={profileHref}
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer group"
                 >
-                  {user.avatarInitials}
+                  <div
+                    className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                  >
+                    {user.avatarInitials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 group-hover:text-[#002752] dark:group-hover:text-sky-300 transition-colors truncate">
+                      {user.name}
+                    </span>
+                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                      {user.title}
+                    </span>
+                  </div>
+                  <ChevronRight className="size-3.5 text-slate-300 dark:text-slate-600 group-hover:text-slate-500 shrink-0" />
+                </Link>
+              ) : (
+                <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer">
+                  <div
+                    className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                  >
+                    {user.avatarInitials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate">
+                      {user.name}
+                    </span>
+                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                      {user.email}
+                    </span>
+                  </div>
+                  <ChevronDown className="size-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
                 </div>
-                <div className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate">
-                    {user.name}
-                  </span>
-                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                    {user.email}
-                  </span>
-                </div>
-                <ChevronDown className="size-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
-              </div>
+              )}
             </>
           )}
         </div>
@@ -407,27 +431,49 @@ export function DashboardShell({
             <div className="w-px h-5 bg-border/75 hidden sm:block mx-0.5" />
 
             {/* User profile pill */}
-            <Button
-              type="button"
-              variant="ghost"
-              className="flex items-center gap-2 pl-0.5 pr-2 py-1 h-auto rounded-lg"
-              aria-label="Profile menu"
-            >
-              <div
-                className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+            {profileHref ? (
+              <Link
+                href={profileHref}
+                className="flex items-center gap-2 pl-0.5 pr-2 py-1 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.05] transition-colors"
+                aria-label="Profile"
               >
-                {user.avatarInitials}
-              </div>
-              <div className="hidden xl:block text-left leading-tight">
-                <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">
-                  {user.name}
-                </span>
-                <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[110px]">
-                  {user.title}
-                </span>
-              </div>
-              <ChevronDown className="hidden xl:block size-3.5 text-slate-300 dark:text-slate-600" />
-            </Button>
+                <div
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                >
+                  {user.avatarInitials}
+                </div>
+                <div className="hidden xl:block text-left leading-tight">
+                  <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">
+                    {user.name}
+                  </span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[110px]">
+                    {user.title}
+                  </span>
+                </div>
+              </Link>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                className="flex items-center gap-2 pl-0.5 pr-2 py-1 h-auto rounded-lg"
+                aria-label="Profile menu"
+              >
+                <div
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${accentGradient} text-white text-[11px] font-bold shadow-sm`}
+                >
+                  {user.avatarInitials}
+                </div>
+                <div className="hidden xl:block text-left leading-tight">
+                  <span className="block text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate max-w-[110px]">
+                    {user.name}
+                  </span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[110px]">
+                    {user.title}
+                  </span>
+                </div>
+                <ChevronDown className="hidden xl:block size-3.5 text-slate-300 dark:text-slate-600" />
+              </Button>
+            )}
           </div>
         </header>
 
