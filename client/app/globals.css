@@ -149,7 +149,7 @@
 }
 
 @layer base {
-  *:not(input) {
+  * {
     @apply border-border;
   }
   body {
@@ -160,12 +160,20 @@
   }
 }
 
-/* Prevent black focus border on all inputs */
+/* Lock input border color on hover/focus to prevent black border */
+[data-slot="input"],
+input {
+  outline: none !important;
+}
+[data-slot="input"]:hover,
+input:hover,
+[data-slot="input"]:focus,
 input:focus,
+[data-slot="input"]:focus-visible,
 input:focus-visible {
+  border-color: var(--border) !important;
   outline: none !important;
   box-shadow: none !important;
-  border-color: var(--border) !important;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
