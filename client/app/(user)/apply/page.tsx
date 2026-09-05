@@ -379,14 +379,14 @@ export default function ApplyForResearchPermissionPage() {
           <div className="space-y-2">
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-xs font-bold uppercase tracking-wider py-1 px-3"
+              className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-body-sm font-bold uppercase tracking-wider py-1 px-3"
             >
               Application Submitted & Review Docket Queued
             </Badge>
-            <h1 className="text-2xl sm:text-4xl font-black text-primary dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-black text-primary dark:text-white tracking-tight">
               Ethical Clearance Protocol Registered
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
+            <p className="text-body-sm sm:text-body text-muted-foreground max-w-xl mx-auto">
               Your research protocol has been officially submitted to the{" "}
               <strong className="text-foreground">{step1.board}</strong> Secretariat. An
               institutional clearance ledger entry has been cryptographically sealed.
@@ -394,7 +394,7 @@ export default function ApplyForResearchPermissionPage() {
           </div>
 
           {/* Institutional Submission Dossier Summary Card */}
-          <div className="rounded-xl border border-border/75 bg-muted/30 p-5 text-left space-y-4 text-xs font-medium">
+          <div className="rounded-xl border border-border/75 bg-muted/30 p-5 text-left space-y-4 text-body-sm font-medium">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-3">
               <div>
                 <span className="text-micro text-muted-foreground block uppercase tracking-wider font-bold">
@@ -429,7 +429,7 @@ export default function ApplyForResearchPermissionPage() {
                 <span className="text-muted-foreground block text-micro">
                   Institutional Fee Paid (Bangladeshi Taka):
                 </span>
-                <span className="font-bold text-secondary text-sm block">
+                <span className="font-bold text-secondary text-body block">
                   ৳ {totalFeeBdt.toLocaleString()} BDT ({paymentMethod.toUpperCase()})
                 </span>
               </div>
@@ -455,7 +455,7 @@ export default function ApplyForResearchPermissionPage() {
                 toast.info("ID Copied", { description: "Protocol ID copied to clipboard." })
                 setTimeout(() => setCopiedTrx(false), 2000)
               }}
-              className="h-10 px-5 text-xs font-bold rounded-md w-full sm:w-auto"
+              className="h-10 px-5 text-body-sm font-bold rounded-md w-full sm:w-auto"
             >
               {copiedTrx ? (
                 <>
@@ -478,7 +478,7 @@ export default function ApplyForResearchPermissionPage() {
                   description: `Official BDT fee payment receipt token for ${generatedProtocolId} exported as PDF.`,
                 })
               }}
-              className="h-10 px-5 text-xs font-bold rounded-md w-full sm:w-auto text-primary dark:text-sky-300"
+              className="h-10 px-5 text-body-sm font-bold rounded-md w-full sm:w-auto text-primary dark:text-sky-300"
             >
               <Download className="size-3.5 mr-2" />
               Download BDT Fee Receipt
@@ -487,7 +487,7 @@ export default function ApplyForResearchPermissionPage() {
             <Button
               type="button"
               onClick={() => router.push("/dashboard")}
-              className="h-10 px-6 text-xs font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md w-full sm:w-auto"
+              className="h-10 px-6 text-body-sm font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md w-full sm:w-auto"
             >
               View Protocol Docket
             </Button>
@@ -520,7 +520,7 @@ export default function ApplyForResearchPermissionPage() {
                   }`}
                 >
                   <div
-                    className={`size-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                    className={`size-7 rounded-full flex items-center justify-center text-body-sm font-bold transition-all ${
                       isActive
                         ? "bg-[#002752] dark:bg-white text-white dark:text-primary shadow-xs"
                         : isDone
@@ -531,7 +531,7 @@ export default function ApplyForResearchPermissionPage() {
                     {isDone ? <Check className="size-3.5" /> : s.step}
                   </div>
                   <div className="hidden md:block text-left leading-tight">
-                    <span className="text-xs font-bold flex items-center gap-1.5">
+                    <span className="text-body-sm font-bold flex items-center gap-1.5">
                       <Icon className="size-3.5 shrink-0" />
                       {s.label}
                     </span>
@@ -558,7 +558,7 @@ export default function ApplyForResearchPermissionPage() {
 
       {/* ── Quick Demo Autofill Helper Banner ────────────────────────────── */}
       <div className="w-full p-3.5 sm:p-4 rounded-none sm:rounded-xl border-y sm:border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-900 dark:text-emerald-300 font-medium">
+        <div className="flex items-center gap-2.5 text-body-sm sm:text-body text-emerald-900 dark:text-emerald-300 font-medium">
           <Sparkles className="size-4 text-secondary shrink-0" />
           <span>Testing ethics clearance intake? Populate verified protocol metadata & BDT payment credentials:</span>
         </div>
@@ -566,7 +566,7 @@ export default function ApplyForResearchPermissionPage() {
           type="button"
           size="sm"
           onClick={handleAutofillDemoProtocol}
-          className="h-8 text-xs font-bold px-3.5 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
+          className="h-8 text-body-sm font-bold px-3.5 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
         >
           <Sparkles className="size-3 mr-1.5" />
           Autofill Sample Protocol
@@ -579,10 +579,10 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 1 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                 Step 1: Protocol Scope & Ethics Governance Board
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              <p className="text-body-sm sm:text-body text-muted-foreground mt-1">
                 Provide the full scientific title, academic discipline, and target ethics review board.
               </p>
             </div>
@@ -590,7 +590,7 @@ export default function ApplyForResearchPermissionPage() {
             <div className="space-y-4">
               {/* Protocol Title */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center justify-between">
+                <label className="text-body-sm font-bold text-foreground flex items-center justify-between">
                   <span>Full Scientific Protocol Title *</span>
                   <span className="text-micro text-muted-foreground">Min 5 characters</span>
                 </label>
@@ -598,7 +598,7 @@ export default function ApplyForResearchPermissionPage() {
                   value={step1.title}
                   onChange={(e) => setStep1((p) => ({ ...p, title: e.target.value }))}
                   placeholder="e.g. Randomized Evaluation of Point-of-Care Maternal Biomarker Surveillance..."
-                  className={`h-10 text-xs ${stepErrors.title ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
+                  className={`h-10 text-body-sm ${stepErrors.title ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.title && (
                   <p className="text-micro text-rose-600 font-semibold">{stepErrors.title}</p>
@@ -608,13 +608,13 @@ export default function ApplyForResearchPermissionPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Department */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">
+                  <label className="text-body-sm font-bold text-foreground">
                     Academic Department / Faculty *
                   </label>
                   <Input
                     value={step1.department}
                     onChange={(e) => setStep1((p) => ({ ...p, department: e.target.value }))}
-                    className={`h-10 text-xs ${stepErrors.department ? "border-rose-500" : ""}`}
+                    className={`h-10 text-body-sm ${stepErrors.department ? "border-rose-500" : ""}`}
                   />
                   {stepErrors.department && (
                     <p className="text-micro text-rose-600 font-semibold">{stepErrors.department}</p>
@@ -623,7 +623,7 @@ export default function ApplyForResearchPermissionPage() {
 
                 {/* Duration */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">
+                  <label className="text-body-sm font-bold text-foreground">
                     Estimated Study Duration (Months) *
                   </label>
                   <Input
@@ -634,14 +634,14 @@ export default function ApplyForResearchPermissionPage() {
                     onChange={(e) =>
                       setStep1((p) => ({ ...p, durationMonths: Number(e.target.value) || 1 }))
                     }
-                    className="h-10 text-xs font-mono"
+                    className="h-10 text-body-sm font-mono"
                   />
                 </div>
               </div>
 
               {/* Ethics Board Selection (Cards) */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Select Governing Institutional Review Board (IRB) *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -669,7 +669,7 @@ export default function ApplyForResearchPermissionPage() {
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1.5 w-full">
-                          <strong className="text-xs font-bold text-foreground">{b}</strong>
+                          <strong className="text-body-sm font-bold text-foreground">{b}</strong>
                           {isSelected && <CheckCircle2 className="size-4 text-secondary" />}
                         </div>
                         <p className="text-micro text-muted-foreground leading-snug">
@@ -687,7 +687,7 @@ export default function ApplyForResearchPermissionPage() {
 
               {/* Study Type Selector */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Study Methodology Classification *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
@@ -698,7 +698,7 @@ export default function ApplyForResearchPermissionPage() {
                       variant={step1.studyType === t ? "default" : "outline"}
                       size="sm"
                       onClick={() => setStep1((p) => ({ ...p, studyType: t }))}
-                      className={`h-auto py-2.5 px-3 justify-start text-xs font-bold rounded-lg border-border/75 ${
+                      className={`h-auto py-2.5 px-3 justify-start text-body-sm font-bold rounded-lg border-border/75 ${
                         step1.studyType === t ? "bg-[#002752] text-white" : ""
                       }`}
                     >
@@ -710,26 +710,26 @@ export default function ApplyForResearchPermissionPage() {
 
               {/* Field Sites */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Study Location & Field Investigation Sites *
                 </label>
                 <Input
                   value={step1.studyLocation}
                   onChange={(e) => setStep1((p) => ({ ...p, studyLocation: e.target.value }))}
                   placeholder="e.g. Daffodil Smart City Ashulia, Savar Upazila Health Complex"
-                  className="h-10 text-xs"
+                  className="h-10 text-body-sm"
                 />
               </div>
 
               {/* Co-Investigators */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Co-Investigators & Collaborating Institutions
                 </label>
                 <Input
                   value={step1.coInvestigators}
                   onChange={(e) => setStep1((p) => ({ ...p, coInvestigators: e.target.value }))}
-                  className="h-10 text-xs"
+                  className="h-10 text-body-sm"
                 />
               </div>
             </div>
@@ -740,10 +740,10 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 2 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                 Step 2: Scientific Methodology & Ethics Risk Assessment
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              <p className="text-body-sm sm:text-body text-muted-foreground mt-1">
                 Classify human subject exposure risk tier, target cohort size, and confidentiality protocols.
               </p>
             </div>
@@ -751,7 +751,7 @@ export default function ApplyForResearchPermissionPage() {
             <div className="space-y-4">
               {/* Executive Abstract */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center justify-between">
+                <label className="text-body-sm font-bold text-foreground flex items-center justify-between">
                   <span>Executive Abstract & Clinical / Social Objectives *</span>
                   <span className="text-micro text-muted-foreground">Min 30 characters</span>
                 </label>
@@ -759,7 +759,7 @@ export default function ApplyForResearchPermissionPage() {
                   value={step2.abstract}
                   onChange={(e) => setStep2((p) => ({ ...p, abstract: e.target.value }))}
                   placeholder="Summarize research objectives, methodology, participant intervention, and expected ethical safeguards..."
-                  className={`min-h-28 text-xs ${stepErrors.abstract ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
+                  className={`min-h-28 text-body-sm ${stepErrors.abstract ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.abstract && (
                   <p className="text-micro text-rose-600 font-semibold">{stepErrors.abstract}</p>
@@ -768,7 +768,7 @@ export default function ApplyForResearchPermissionPage() {
 
               {/* Target Sample Size */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground flex items-center justify-between">
+                <label className="text-body-sm font-bold text-foreground flex items-center justify-between">
                   <span>Target Participant Cohort Size *</span>
                   <span className="text-micro text-muted-foreground">Statistical sample cohort</span>
                 </label>
@@ -786,7 +786,7 @@ export default function ApplyForResearchPermissionPage() {
                       })
                     }
                   }}
-                  className={`h-10 text-xs font-mono ${stepErrors.targetSampleSize ? "border-rose-500" : ""}`}
+                  className={`h-10 text-body-sm font-mono ${stepErrors.targetSampleSize ? "border-rose-500" : ""}`}
                 />
                 {stepErrors.targetSampleSize && (
                   <p className="text-micro text-rose-600 font-semibold">{stepErrors.targetSampleSize}</p>
@@ -796,7 +796,7 @@ export default function ApplyForResearchPermissionPage() {
               {/* Informed Consent Architecture & Procedure Cards */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-foreground">
+                  <label className="text-body-sm font-bold text-foreground">
                     Informed Consent Architecture & Procedure *
                   </label>
                   <span className="text-micro text-muted-foreground">
@@ -828,7 +828,7 @@ export default function ApplyForResearchPermissionPage() {
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1.5 w-full">
-                          <strong className="text-xs font-bold text-foreground">{cp.type}</strong>
+                          <strong className="text-body-sm font-bold text-foreground">{cp.type}</strong>
                           {isSelected ? (
                             <CheckCircle2 className="size-4 text-secondary shrink-0 ml-2" />
                           ) : (
@@ -851,7 +851,7 @@ export default function ApplyForResearchPermissionPage() {
 
               {/* Risk Tier Selection (Crucial Ethics Standard) */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Human Subject Exposure Risk Tier *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -883,7 +883,7 @@ export default function ApplyForResearchPermissionPage() {
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1.5 w-full">
-                          <strong className="text-xs font-bold text-foreground">{tier}</strong>
+                          <strong className="text-body-sm font-bold text-foreground">{tier}</strong>
                           {isSelected && <CheckCircle2 className="size-4 text-secondary" />}
                         </div>
                         <p className="text-micro text-muted-foreground leading-snug">
@@ -904,7 +904,7 @@ export default function ApplyForResearchPermissionPage() {
 
               {/* Confidentiality Statement */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Participant Confidentiality & Data Protection Safeguards *
                 </label>
                 <Textarea
@@ -919,7 +919,7 @@ export default function ApplyForResearchPermissionPage() {
                       })
                     }
                   }}
-                  className={`min-h-20 text-xs ${stepErrors.dataConfidentiality ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
+                  className={`min-h-20 text-body-sm ${stepErrors.dataConfidentiality ? "border-rose-500 ring-1 ring-rose-500/20" : ""}`}
                 />
                 {stepErrors.dataConfidentiality && (
                   <p className="text-micro text-rose-600 font-semibold">{stepErrors.dataConfidentiality}</p>
@@ -933,10 +933,10 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 3 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                 Step 3: Protocol Dossier & Document Attachments
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              <p className="text-body-sm sm:text-body text-muted-foreground mt-1">
                 Upload your research protocol document, informed consent forms, and investigator credentials.
               </p>
             </div>
@@ -953,7 +953,7 @@ export default function ApplyForResearchPermissionPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileText className="size-5 text-primary dark:text-sky-400" />
-                    <strong className="text-xs font-bold text-foreground">
+                    <strong className="text-body-sm font-bold text-foreground">
                       Research Protocol Proposal *
                     </strong>
                   </div>
@@ -978,7 +978,7 @@ export default function ApplyForResearchPermissionPage() {
 
                 {step3.protocolProposalName ? (
                   <div className="p-2 rounded-md bg-white dark:bg-[#0C1E34] border border-border/75 flex items-center justify-between">
-                    <span className="font-mono text-xs text-foreground truncate max-w-[200px]">
+                    <span className="font-mono text-body-sm text-foreground truncate max-w-[200px]">
                       {step3.protocolProposalName}
                     </span>
                     <Button
@@ -997,7 +997,7 @@ export default function ApplyForResearchPermissionPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => proposalInputRef.current?.click()}
-                    className="w-full h-8 text-xs font-bold rounded-md"
+                    className="w-full h-8 text-body-sm font-bold rounded-md"
                   >
                     <Upload className="size-3.5 mr-1.5" />
                     Browse Proposal PDF
@@ -1019,7 +1019,7 @@ export default function ApplyForResearchPermissionPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileCheck2 className="size-5 text-secondary" />
-                    <strong className="text-xs font-bold text-foreground">
+                    <strong className="text-body-sm font-bold text-foreground">
                       Informed Consent Form (ICF) *
                     </strong>
                   </div>
@@ -1044,7 +1044,7 @@ export default function ApplyForResearchPermissionPage() {
 
                 {step3.consentFormName ? (
                   <div className="p-2 rounded-md bg-white dark:bg-[#0C1E34] border border-border/75 flex items-center justify-between">
-                    <span className="font-mono text-xs text-foreground truncate max-w-[200px]">
+                    <span className="font-mono text-body-sm text-foreground truncate max-w-[200px]">
                       {step3.consentFormName}
                     </span>
                     <Button
@@ -1063,7 +1063,7 @@ export default function ApplyForResearchPermissionPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => consentInputRef.current?.click()}
-                    className="w-full h-8 text-xs font-bold rounded-md"
+                    className="w-full h-8 text-body-sm font-bold rounded-md"
                   >
                     <Upload className="size-3.5 mr-1.5" />
                     Browse Consent PDF
@@ -1077,10 +1077,10 @@ export default function ApplyForResearchPermissionPage() {
               {/* Document 3: Questionnaire / Survey Instrument (Optional) */}
               <div className="p-4 rounded-xl border border-dashed border-border/90 bg-muted/20 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-foreground">
+                  <span className="text-body-sm font-bold text-foreground">
                     Data Collection Tools / Survey Instruments
                   </span>
-                  <Badge variant="secondary" className="text-micro">
+                  <Badge variant="outline" className="text-micro font-bold text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50">
                     Optional
                   </Badge>
                 </div>
@@ -1098,7 +1098,7 @@ export default function ApplyForResearchPermissionPage() {
 
                 {step3.dataToolsName ? (
                   <div className="p-2 rounded-md bg-white dark:bg-[#0C1E34] border border-border/75 flex items-center justify-between">
-                    <span className="font-mono text-xs text-foreground truncate">
+                    <span className="font-mono text-body-sm text-foreground truncate">
                       {step3.dataToolsName}
                     </span>
                     <Button
@@ -1117,7 +1117,7 @@ export default function ApplyForResearchPermissionPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => toolsInputRef.current?.click()}
-                    className="w-full h-8 text-xs font-bold rounded-md"
+                    className="w-full h-8 text-body-sm font-bold rounded-md"
                   >
                     <Upload className="size-3.5 mr-1.5" />
                     Attach Questionnaire
@@ -1128,10 +1128,10 @@ export default function ApplyForResearchPermissionPage() {
               {/* Document 4: Investigator CV & Ethics Training (Optional) */}
               <div className="p-4 rounded-xl border border-dashed border-border/90 bg-muted/20 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-foreground">
+                  <span className="text-body-sm font-bold text-foreground">
                     Investigator CV & CITI / GCP Certification
                   </span>
-                  <Badge variant="secondary" className="text-micro">
+                  <Badge variant="outline" className="text-micro font-bold text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50">
                     Optional
                   </Badge>
                 </div>
@@ -1149,7 +1149,7 @@ export default function ApplyForResearchPermissionPage() {
 
                 {step3.investigatorCvName ? (
                   <div className="p-2 rounded-md bg-white dark:bg-[#0C1E34] border border-border/75 flex items-center justify-between">
-                    <span className="font-mono text-xs text-foreground truncate">
+                    <span className="font-mono text-body-sm text-foreground truncate">
                       {step3.investigatorCvName}
                     </span>
                     <Button
@@ -1168,7 +1168,7 @@ export default function ApplyForResearchPermissionPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => cvInputRef.current?.click()}
-                    className="w-full h-8 text-xs font-bold rounded-md"
+                    className="w-full h-8 text-body-sm font-bold rounded-md"
                   >
                     <Upload className="size-3.5 mr-1.5" />
                     Attach CV / Certificate
@@ -1185,16 +1185,16 @@ export default function ApplyForResearchPermissionPage() {
             <div className="border-b border-border/70 pb-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
+                  <h2 className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                     Step 4: Institutional Review Processing Fee in BDT (Bangladeshi Taka ৳)
                   </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                  <p className="text-body-sm sm:text-body text-muted-foreground mt-1">
                     Institutional ethics processing fees are charged in BDT (৳) under Daffodil International University IRB regulations.
                   </p>
                 </div>
                 <Badge
                   variant="outline"
-                  className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-xs font-mono font-bold"
+                  className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-body-sm font-mono font-bold"
                 >
                   Currency: BDT (৳)
                 </Badge>
@@ -1203,7 +1203,7 @@ export default function ApplyForResearchPermissionPage() {
 
             {/* Fee Tiers Selection */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground">
+              <label className="text-body-sm font-bold text-foreground">
                 Select Research Protocol Fee Category *
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1226,8 +1226,8 @@ export default function ApplyForResearchPermissionPage() {
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1 w-full">
-                        <strong className="text-xs font-bold text-foreground">{tier.label}</strong>
-                        <span className="font-mono text-sm font-black text-secondary">
+                        <strong className="text-body-sm font-bold text-foreground">{tier.label}</strong>
+                        <span className="font-mono text-body font-black text-secondary">
                           ৳ {tier.amountBdt.toLocaleString()} BDT
                         </span>
                       </div>
@@ -1249,7 +1249,7 @@ export default function ApplyForResearchPermissionPage() {
             {/* Fast-Track Expedited Review Toggle */}
             <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 flex items-center justify-between gap-4">
               <div className="space-y-0.5">
-                <strong className="text-xs font-bold text-amber-800 dark:text-amber-300 block">
+                <strong className="text-body-sm font-bold text-amber-800 dark:text-amber-300 block">
                   Optional Expedited Fast-Track Triage (+ ৳ {EXPEDITED_SURCHARGE_BDT.toLocaleString()} BDT)
                 </strong>
                 <p className="text-micro text-muted-foreground">
@@ -1264,7 +1264,7 @@ export default function ApplyForResearchPermissionPage() {
                   setIsExpedited(!isExpedited)
                   setPaymentVerified(false)
                 }}
-                className={`h-8 px-3.5 text-xs font-bold rounded-md ${
+                className={`h-8 px-3.5 text-body-sm font-bold rounded-md ${
                   isExpedited ? "bg-amber-600 hover:bg-amber-700 text-white" : ""
                 }`}
               >
@@ -1279,7 +1279,7 @@ export default function ApplyForResearchPermissionPage() {
                   Total Institutional Charge Payable:
                 </span>
                 <span className="text-2xl sm:text-3xl font-black text-primary dark:text-white tabular-nums">
-                  ৳ {totalFeeBdt.toLocaleString()} <span className="text-sm font-bold text-muted-foreground">BDT</span>
+                  ৳ {totalFeeBdt.toLocaleString()} <span className="text-body font-bold text-muted-foreground">BDT</span>
                 </span>
               </div>
               <div className="text-right text-micro text-muted-foreground space-y-0.5">
@@ -1291,7 +1291,7 @@ export default function ApplyForResearchPermissionPage() {
 
             {/* Payment Method Selector (Bangladeshi Ecosystem) */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground">
+              <label className="text-body-sm font-bold text-foreground">
                 Select Bangladeshi Payment Method *
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
@@ -1318,7 +1318,7 @@ export default function ApplyForResearchPermissionPage() {
                           : "border-border/75 bg-muted/20 hover:bg-muted/40"
                       }`}
                     >
-                      <span className="font-bold text-xs text-foreground block">{pm.label}</span>
+                      <span className="font-bold text-body-sm text-foreground block">{pm.label}</span>
                       <span className="text-micro text-muted-foreground block">{pm.type}</span>
                     </Button>
                   )
@@ -1327,7 +1327,7 @@ export default function ApplyForResearchPermissionPage() {
             </div>
 
             {/* Step-by-Step Payment Instructions */}
-            <div className="p-4 rounded-xl border border-border/75 bg-muted/30 space-y-2 text-xs">
+            <div className="p-4 rounded-xl border border-border/75 bg-muted/30 space-y-2 text-body-sm">
               <span className="font-bold text-foreground block">
                 Payment Instructions for {paymentMethod === "bkash" ? "bKash Merchant Pay" : paymentMethod === "nagad" ? "Nagad Merchant" : paymentMethod === "rocket" ? "Rocket DBBL" : paymentMethod === "bank_transfer" ? "Bank Challan" : "Card Payment"}:
               </span>
@@ -1374,7 +1374,7 @@ export default function ApplyForResearchPermissionPage() {
             {/* Payment Input Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Sender Mobile / Bank Account Number *
                 </label>
                 <Input
@@ -1384,7 +1384,7 @@ export default function ApplyForResearchPermissionPage() {
                     setPaymentVerified(false)
                   }}
                   placeholder="e.g. 01711223344"
-                  className={`h-10 text-xs font-mono ${stepErrors.senderNumber ? "border-rose-500" : ""}`}
+                  className={`h-10 text-body-sm font-mono ${stepErrors.senderNumber ? "border-rose-500" : ""}`}
                 />
                 {stepErrors.senderNumber && (
                   <p className="text-micro text-rose-600 font-semibold">{stepErrors.senderNumber}</p>
@@ -1392,7 +1392,7 @@ export default function ApplyForResearchPermissionPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">
+                <label className="text-body-sm font-bold text-foreground">
                   Transaction ID (TrxID) / Bank Challan No *
                 </label>
                 <div className="flex gap-2">
@@ -1403,14 +1403,14 @@ export default function ApplyForResearchPermissionPage() {
                       setPaymentVerified(false)
                     }}
                     placeholder="e.g. 9K2M4L7P01"
-                    className={`h-10 text-xs font-mono uppercase ${stepErrors.transactionId ? "border-rose-500" : ""}`}
+                    className={`h-10 text-body-sm font-mono uppercase ${stepErrors.transactionId ? "border-rose-500" : ""}`}
                   />
                   <Button
                     type="button"
                     variant={paymentVerified ? "secondary" : "outline"}
                     onClick={handleVerifyPayment}
                     disabled={isVerifyingPayment || paymentVerified}
-                    className="h-10 px-4 text-xs font-bold shrink-0 rounded-md"
+                    className="h-10 px-4 text-body-sm font-bold shrink-0 rounded-md"
                   >
                     {isVerifyingPayment ? (
                       "Verifying..."
@@ -1438,7 +1438,7 @@ export default function ApplyForResearchPermissionPage() {
                     <Check className="size-4" />
                   </div>
                   <div>
-                    <strong className="text-xs font-bold text-emerald-800 dark:text-emerald-300 block">
+                    <strong className="text-body-sm font-bold text-emerald-800 dark:text-emerald-300 block">
                       Institutional Fee Payment Confirmed
                     </strong>
                     <span className="text-micro text-muted-foreground font-mono">
@@ -1452,7 +1452,7 @@ export default function ApplyForResearchPermissionPage() {
               </div>
             )}
             {stepErrors.paymentVerified && (
-              <p className="text-xs text-rose-600 font-semibold">{stepErrors.paymentVerified}</p>
+              <p className="text-body-sm text-rose-600 font-semibold">{stepErrors.paymentVerified}</p>
             )}
           </div>
         )}
@@ -1461,20 +1461,20 @@ export default function ApplyForResearchPermissionPage() {
         {currentStep === 5 && (
           <div className="space-y-6">
             <div className="border-b border-border/70 pb-4">
-              <h2 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight">
                 Step 5: Attestation & Digital Protocol Submission
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              <p className="text-body-sm sm:text-body text-muted-foreground mt-1">
                 Review your research protocol dossier, verify institutional details, and complete the digital submission.
               </p>
             </div>
 
             {/* Dossier Review Summary */}
-            <div className="rounded-xl border border-border/75 bg-muted/20 p-5 space-y-4 text-xs">
+            <div className="rounded-xl border border-border/75 bg-muted/20 p-5 space-y-4 text-body-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2 space-y-1">
                   <span className="text-muted-foreground block text-micro">Protocol Title:</span>
-                  <strong className="text-foreground text-sm block">{step1.title}</strong>
+                  <strong className="text-foreground text-body block">{step1.title}</strong>
                 </div>
 
                 <div>
@@ -1529,7 +1529,7 @@ export default function ApplyForResearchPermissionPage() {
                 <div className="sm:col-span-2 border-t border-border/60 pt-3 flex items-center justify-between">
                   <div>
                     <span className="text-muted-foreground block text-micro">Verified BDT Fee Payment:</span>
-                    <span className="font-bold text-secondary text-sm">
+                    <span className="font-bold text-secondary text-body">
                       ৳ {totalFeeBdt.toLocaleString()} BDT ({paymentMethod.toUpperCase()} • TrxID: {transactionId})
                     </span>
                   </div>
@@ -1548,7 +1548,7 @@ export default function ApplyForResearchPermissionPage() {
                   onCheckedChange={(val) => setAgreeHelsinki(Boolean(val))}
                   className="mt-0.5"
                 />
-                <div className="text-xs leading-relaxed space-y-1">
+                <div className="text-body-sm leading-relaxed space-y-1">
                   <strong className="text-foreground block font-bold">
                     Institutional Code of Conduct & WMA Declaration of Helsinki Certification *
                   </strong>
@@ -1571,7 +1571,7 @@ export default function ApplyForResearchPermissionPage() {
               variant="outline"
               size="sm"
               onClick={handleBack}
-              className="h-9 px-4 text-xs font-bold rounded-md"
+              className="h-9 px-4 text-body-sm font-bold rounded-md"
             >
               <ArrowLeft className="size-3.5 mr-1.5" />
               Previous Step
@@ -1582,7 +1582,7 @@ export default function ApplyForResearchPermissionPage() {
               variant="ghost"
               size="sm"
               onClick={() => router.push("/dashboard")}
-              className="h-9 px-4 text-xs font-semibold"
+              className="h-9 px-4 text-body-sm font-semibold"
             >
               Cancel
             </Button>
@@ -1593,7 +1593,7 @@ export default function ApplyForResearchPermissionPage() {
               type="button"
               size="sm"
               onClick={handleNext}
-              className="h-9 px-5 text-xs font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
+              className="h-9 px-5 text-body-sm font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
             >
               Next Step
               <ArrowRight className="size-3.5 ml-1.5" />
@@ -1604,7 +1604,7 @@ export default function ApplyForResearchPermissionPage() {
               size="sm"
               onClick={handleSubmitProtocol}
               disabled={!agreeHelsinki}
-              className="h-9 px-6 text-xs font-bold bg-[#198754] hover:bg-[#157347] text-white rounded-md shadow-xs"
+              className="h-9 px-6 text-body-sm font-bold bg-[#198754] hover:bg-[#157347] text-white rounded-md shadow-xs"
             >
               <Send className="size-3.5 mr-1.5" />
               Submit Protocol for Review
