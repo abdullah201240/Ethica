@@ -295,3 +295,9 @@ export function toggleAdminMemberStatus(id: string): AdminMember | undefined {
   const nextStatus = target.status === "Active" ? "Inactive" : "Active"
   return updateAdminMemberStatus(id, nextStatus)
 }
+
+export function getAdminMemberById(id: string): AdminMember | undefined {
+  const current = getStoredAdminMembers()
+  return current.find((m) => m.id === id)
+}
+

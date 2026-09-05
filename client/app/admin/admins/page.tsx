@@ -10,14 +10,11 @@ import {
   Eye,
   KeyRound,
   Mail,
-  Phone,
-  Building2,
   Lock,
   Users,
   CheckCircle2,
   AlertTriangle,
   Clock,
-  Fingerprint,
 } from "lucide-react"
 import {
   DataTable,
@@ -85,7 +82,6 @@ export default function AdminListPage() {
 
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false)
-  const [selectedAdminForDossier, setSelectedAdminForDossier] = React.useState<AdminMember | null>(null)
   const [selectedAdminForEdit, setSelectedAdminForEdit] = React.useState<AdminMember | null>(null)
   const [formError, setFormError] = React.useState<string | null>(null)
 
@@ -245,9 +241,12 @@ export default function AdminListPage() {
       header: "Admin ID",
       sortable: true,
       cell: ({ row }) => (
-        <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200 select-text">
+        <Link
+          href={`/admin/admins/${encodeURIComponent(row.id)}`}
+          className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-[#002752] dark:hover:text-sky-400 hover:underline select-text inline-flex items-center gap-1"
+        >
           {row.id}
-        </span>
+        </Link>
       ),
     },
     {
@@ -267,14 +266,20 @@ export default function AdminListPage() {
 
         return (
           <div className="flex items-center gap-3">
-            <div className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-xs shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text">
+            <Link
+              href={`/admin/admins/${encodeURIComponent(row.id)}`}
+              className="size-9 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-xs shrink-0 border border-[#002752]/15 dark:border-sky-500/20 select-text hover:ring-2 hover:ring-[#002752]/30 transition-all"
+            >
               {initials}
-            </div>
+            </Link>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-900 dark:text-white truncate select-text">
+                <Link
+                  href={`/admin/admins/${encodeURIComponent(row.id)}`}
+                  className="text-sm font-bold text-slate-900 dark:text-white truncate select-text hover:text-[#002752] dark:hover:text-sky-400 hover:underline"
+                >
                   {row.name}
-                </span>
+                </Link>
                 {row.accessLevel === "Super Admin" && (
                   <Badge
                     variant="outline"
@@ -381,18 +386,19 @@ export default function AdminListPage() {
       header: "Governance Actions",
       cell: ({ row }) => (
         <div className="flex items-center justify-end gap-1.5">
-          {/* View Details / Security Dossier */}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setSelectedAdminForDossier(row)}
-            className="h-7 px-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-            title="View Security Dossier"
-          >
-            <Eye className="size-3.5 mr-1 text-[#002752] dark:text-sky-400" />
-            <span>Dossier</span>
-          </Button>
+          {/* View Details / Security Dossier Dynamic Page Link */}
+          <Link href={`/admin/admins/${encodeURIComponent(row.id)}`}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              title="View Security Dossier"
+            >
+              <Eye className="size-3.5 mr-1 text-[#002752] dark:text-sky-400" />
+              <span>Dossier</span>
+            </Button>
+          </Link>
 
           {/* Edit Admin */}
           <Button
@@ -813,116 +819,6 @@ export default function AdminListPage() {
           }
         />
       </div>
-
-      {/* Security Dossier Modal */}
-      {selectedAdminForDossier && (
-        <Dialog
-          open={!!selectedAdminForDossier}
-          onOpenChange={(open) => {
-            if (!open) setSelectedAdminForDossier(null)
-          }}
-        >
-          <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-            <DialogHeader>
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="size-5 text-[#002752] dark:text-sky-400" />
-                  <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
-                    Administrator Security Dossier
-                  </DialogTitle>
-                </div>
-                <Badge
-                  variant="outline"
-                  className={`text-xs font-semibold ${
-                    selectedAdminForDossier.status === "Active"
-                      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
-                      : "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30"
-                  }`}
-                >
-                  {selectedAdminForDossier.status}
-                </Badge>
-              </div>
-              <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
-                Official RBAC credentials, cryptographic authority, and active oversight summary.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4 py-2 text-xs">
-              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 space-y-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                      {selectedAdminForDossier.name}
-                    </h4>
-                    <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                      {selectedAdminForDossier.role}
-                    </p>
-                  </div>
-                  <Badge variant="outline" className="font-mono text-[10px] bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/30">
-                    {selectedAdminForDossier.accessLevel}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="size-3.5 text-slate-400 shrink-0" />
-                    <span className="truncate">{selectedAdminForDossier.department}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="size-3.5 text-slate-400 shrink-0" />
-                    <span className="truncate">{selectedAdminForDossier.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="size-3.5 text-slate-400 shrink-0" />
-                    <span>{selectedAdminForDossier.phone || "+880 1713-000000"}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="size-3.5 text-slate-400 shrink-0" />
-                    <span>Last active: {selectedAdminForDossier.lastActive}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cryptographic Key & Fingerprint */}
-              <div className="p-3 rounded-lg bg-[#002752]/5 dark:bg-sky-950/20 border border-[#002752]/15 dark:border-sky-800/30 space-y-1.5">
-                <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200">
-                  <Fingerprint className="size-4 text-[#002752] dark:text-sky-400" />
-                  <span>Institutional Hardware Token & PKI Seal</span>
-                </div>
-                <div className="font-mono text-[10.5px] bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 break-all select-text">
-                  SHA256:{selectedAdminForDossier.id.replace(/-/g, "")}9f8b7c6d5e4a3b2c1d0e9f8a7b6c5d4e
-                </div>
-              </div>
-
-              {/* Granted Permissions */}
-              <div className="space-y-1.5">
-                <h5 className="font-bold text-slate-800 dark:text-slate-200">
-                  Granted Administrative Privileges
-                </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {(selectedAdminForDossier.permissions || []).map((p) => (
-                    <div
-                      key={p}
-                      className="flex items-center gap-2 p-1.5 rounded bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300"
-                    >
-                      <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      <span className="truncate">{p}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <DialogClose render={
-                <Button type="button" variant="outline" className="h-8 text-xs font-semibold">
-                  Close Dossier
-                </Button>
-              } />
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
 
       {/* Edit Admin Modal */}
       {selectedAdminForEdit && (
