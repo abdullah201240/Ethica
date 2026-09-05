@@ -256,17 +256,16 @@ function AdminRosterContent() {
           const nextStatus = isActive ? "Inactive" : "Active"
 
           return (
-            <div className="flex items-center justify-end gap-1.5">
+            <div className="flex items-center justify-end gap-2">
               {/* Direct Navigation to Dedicated Dynamic Page (Rule 13) */}
               <Link href={`/admin/roster/${encodeURIComponent(reviewer.id)}`}>
                 <Button
                   type="button"
-                  variant="outline"
-                  size="sm"
-                  className="h-7 px-2 text-base font-semibold rounded-md border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  variant="default"
+                  className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
                   title="View Complete Reviewer Dossier on Dedicated Page"
                 >
-                  <Eye className="size-3.5 mr-1 text-primary dark:text-sky-400" />
+                  <Eye className="size-4" />
                   <span>View Dossier</span>
                 </Button>
               </Link>
@@ -276,21 +275,20 @@ function AdminRosterContent() {
                   <Button
                     type="button"
                     variant={isActive ? "outline" : "default"}
-                    size="sm"
-                    className={`h-7 px-2.5 text-base font-bold rounded-md transition-colors cursor-pointer ${
+                    className={`h-9 px-3.5 text-base font-bold rounded-lg shadow-xs gap-1.5 transition-colors cursor-pointer ${
                       isActive
-                        ? "text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
-                        : "bg-[#198754] hover:bg-[#146c43] text-white"
+                        ? "border border-amber-300 dark:border-amber-700 bg-amber-50/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 hover:bg-amber-100"
+                        : "bg-secondary hover:bg-secondary/90 text-white"
                     }`}
                   >
                     {isActive ? (
                       <>
-                        <UserX className="size-3 mr-1 text-amber-600 dark:text-amber-400" />
+                        <UserX className="size-4 text-amber-600 dark:text-amber-400" />
                         <span>Deactivate</span>
                       </>
                     ) : (
                       <>
-                        <UserCheck className="size-3 mr-1 text-white" />
+                        <UserCheck className="size-4 text-white" />
                         <span>Activate</span>
                       </>
                     )}

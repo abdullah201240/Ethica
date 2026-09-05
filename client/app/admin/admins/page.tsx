@@ -61,6 +61,7 @@ import {
   updateAdminMember,
   toggleAdminMemberStatus,
 } from "@/lib/admin-roster"
+import { cn } from "@/lib/utils"
 
 const AVAILABLE_PERMISSIONS = [
   "Root Governance Authority",
@@ -377,37 +378,49 @@ export default function AdminListPage() {
       accessorKey: "status",
       header: "Account Status",
       sortable: true,
+      headerClassName: "w-48",
       cell: ({ row }) => {
         const isActive = row.status === "Active"
         return (
-          <Switch
-            size="sm"
-            checked={isActive}
-            onCheckedChange={() => setPendingToggleAdmin(row)}
-            aria-label={`Toggle status for ${row.name}`}
-            className={isActive
-              ? "data-checked:bg-emerald-500 data-checked:border-emerald-600"
-              : "data-unchecked:bg-rose-400 dark:data-unchecked:bg-rose-600"
-            }
-          />
+          <div className="flex items-center gap-3">
+            <Switch
+              size="lg"
+              checked={isActive}
+              onCheckedChange={() => setPendingToggleAdmin(row)}
+              aria-label={`Toggle status for ${row.name}`}
+              className={isActive
+                ? "data-checked:bg-emerald-600 data-checked:border-emerald-700 shadow-xs"
+                : "data-unchecked:bg-rose-500 dark:data-unchecked:bg-rose-600 shadow-xs"
+              }
+            />
+            <span className={cn(
+              "text-base font-bold select-text",
+              isActive
+                ? "text-emerald-700 dark:text-emerald-400"
+                : "text-rose-600 dark:text-rose-400"
+            )}>
+              {isActive ? "Active" : "Suspended"}
+            </span>
+          </div>
         )
       },
     },
     {
       id: "actions",
       header: "Governance Actions",
+      headerClassName: "w-48 text-right",
+      align: "right",
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-1.5">
+        <div className="flex items-center justify-end gap-2">
           {/* View Details / Security Dossier Dynamic Page Link */}
           <Link href={`/admin/admins/${encodeURIComponent(row.id)}`}>
             <Button
               type="button"
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              variant="default"
+              className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
               title="View Security Dossier"
             >
-              <Eye className="size-3.5 mr-1 text-primary dark:text-sky-400" />
+              <Eye className="size-4" />
               <span>Dossier</span>
             </Button>
           </Link>
@@ -415,13 +428,12 @@ export default function AdminListPage() {
           {/* Edit Admin */}
           <Button
             type="button"
-            variant="ghost"
-            size="sm"
+            variant="outline"
             onClick={() => handleOpenEdit(row)}
-            className="h-7 px-2 text-base font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="h-9 px-3.5 text-base font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1.5 cursor-pointer"
             title="Edit Administrator Credentials"
           >
-            <Lock className="size-3.5 mr-1 text-slate-500" />
+            <Lock className="size-4 text-slate-500 dark:text-slate-400" />
             <span>Edit</span>
           </Button>
         </div>

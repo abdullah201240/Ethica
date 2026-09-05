@@ -191,17 +191,17 @@ export function DashboardShell({
       <aside
         className={`fixed lg:sticky top-0 left-0 z-50 h-screen shrink-0 flex flex-col bg-white dark:bg-[#0C1E34] border-r border-border/75 transition-all duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"
-        } ${collapsed ? "w-16" : "w-72"}`}
+        } ${collapsed ? "w-14" : "w-64"}`}
       >
         {/* ── Brand header ───────────────────────────────────────── */}
-        <div className={`px-3 ${collapsed ? "pt-4 pb-2" : "pt-4 pb-3"}`}>
+        <div className={`px-2.5 ${collapsed ? "pt-3 pb-1.5" : "pt-3 pb-2"}`}>
           {collapsed ? (
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
               <Link href="/" className="group" title="Ethica Institutional Portal">
                 <div
-                  className={`flex size-10 items-center justify-center rounded-xl bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
+                  className={`flex size-8 items-center justify-center rounded-lg bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
                 >
-                  <ShieldCheck className="size-5" />
+                  <ShieldCheck className="size-4" />
                 </div>
               </Link>
               <Button
@@ -209,7 +209,7 @@ export function DashboardShell({
                 variant="ghost"
                 size="icon-xs"
                 onClick={() => setCollapsed(false)}
-                className="hidden lg:flex size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-primary dark:hover:text-sky-300"
+                className="hidden lg:flex size-7 rounded-md hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-primary dark:hover:text-sky-300"
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
@@ -217,18 +217,18 @@ export function DashboardShell({
               </Button>
             </div>
           ) : (
-            <div className="flex items-center justify-between h-11">
-              <Link href="/" className="flex items-center gap-3 group min-w-0">
+            <div className="flex items-center justify-between h-9">
+              <Link href="/" className="flex items-center gap-2.5 group min-w-0">
                 <div
-                  className={`flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-tr ${accentGradient} text-white shadow-sm transition-all duration-200 group-hover:scale-105`}
                 >
-                  <ShieldCheck className="size-5" />
+                  <ShieldCheck className="size-4" />
                 </div>
                 <div className="min-w-0 leading-none">
-                  <span className="block text-lg sm:text-xl font-black tracking-tight text-primary dark:text-white">
+                  <span className="block text-base sm:text-lg font-black tracking-tight text-primary dark:text-white">
                     ETHICA
                   </span>
-                  <span className="block text-body-sm text-muted-foreground uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
+                  <span className="block text-micro text-muted-foreground uppercase tracking-wider mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
                     {roleBadge ? `${roleBadge} • ` : ""}{roleTitle}
                   </span>
                 </div>
@@ -238,7 +238,7 @@ export function DashboardShell({
                 variant="ghost"
                 size="icon-xs"
                 onClick={() => setCollapsed(true)}
-                className="hidden lg:flex size-8 shrink-0 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
+                className="hidden lg:flex size-7 shrink-0 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 aria-label="Collapse sidebar"
                 title="Collapse sidebar"
               >
@@ -249,15 +249,15 @@ export function DashboardShell({
         </div>
 
         {/* ── Divider ────────────────────────────────────────────── */}
-        <div className="mx-3 mb-2 h-px bg-slate-100 dark:bg-white/[0.06] shrink-0" />
+        <div className="mx-2.5 mb-1.5 h-px bg-slate-100 dark:bg-white/[0.06] shrink-0" />
 
         {/* ── Navigation ─────────────────────────────────────────── */}
-        <nav className="flex-1 overflow-y-auto px-2.5 py-1 space-y-0.5 min-h-0">
+        <nav className="flex-1 overflow-y-auto px-2 py-1 space-y-0.5 min-h-0">
           {groupKeys.map((group, gi) => (
-            <div key={group} className={gi > 0 && !collapsed ? "pt-3" : ""}>
+            <div key={group} className={gi > 0 && !collapsed ? "pt-2" : ""}>
               {!collapsed && group !== "_main" && (
-                <div className="px-2.5 pb-1.5 pt-1">
-                  <span className="text-body-sm font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
+                <div className="px-2 pb-1 pt-0.5">
+                  <span className="text-micro font-bold uppercase tracking-wider text-slate-400/80 dark:text-slate-500">
                     {group}
                   </span>
                 </div>
@@ -270,12 +270,12 @@ export function DashboardShell({
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
                     title={collapsed ? item.label : undefined}
-                    className={`group relative flex items-center rounded-lg text-nav-item transition-all duration-150 ${
+                    className={`group relative flex items-center rounded-md text-nav-item transition-all duration-150 ${
                       collapsed
-                        ? `justify-center size-10 mx-auto my-0.5 ${
+                        ? `justify-center size-8 mx-auto my-0.5 ${
                             isActive ? activeCollapsedBg : "text-muted-foreground hover:bg-slate-50 dark:hover:bg-white/[0.05] hover:text-foreground dark:hover:text-white"
                           }`
-                        : `gap-3 px-3.5 py-2.5 w-full ${
+                        : `gap-2.5 px-3 py-1.5 w-full ${
                             isActive
                               ? activeNavBg
                               : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white"
@@ -283,7 +283,7 @@ export function DashboardShell({
                     }`}
                   >
                     <item.icon
-                      className={`shrink-0 size-4.5 ${
+                      className={`shrink-0 size-4 ${
                         isActive && !collapsed
                           ? activeNavIconClass
                           : isActive && collapsed
@@ -302,8 +302,8 @@ export function DashboardShell({
         </nav>
 
         {/* ── Bottom utilities ───────────────────────── */}
-        <div className="px-2.5 pb-3 pt-2 shrink-0">
-          <div className="mx-0.5 mb-2 h-px bg-slate-100 dark:bg-white/[0.06]" />
+        <div className="px-2 pb-2 pt-1.5 shrink-0">
+          <div className="mx-0.5 mb-1.5 h-px bg-slate-100 dark:bg-white/[0.06]" />
 
           <AlertDialog>
             <AlertDialogTrigger render={
@@ -311,11 +311,11 @@ export function DashboardShell({
                 type="button"
                 variant="ghost"
                 title={collapsed ? "Sign Out" : undefined}
-                className={`group flex items-center rounded-lg text-nav-item text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 cursor-pointer ${
-                  collapsed ? "justify-center size-10 mx-auto mt-0.5 p-0" : "gap-3 px-3.5 py-2.5 w-full justify-start h-auto"
+                className={`group flex items-center rounded-md text-nav-item text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-300 transition-all duration-150 cursor-pointer ${
+                  collapsed ? "justify-center size-8 mx-auto mt-0.5 p-0" : "gap-2.5 px-3 py-1.5 w-full justify-start h-auto"
                 }`}
               >
-                <LogOut className="size-4.5 shrink-0" />
+                <LogOut className="size-4 shrink-0" />
                 {!collapsed && <span className="flex-1 truncate text-left">Sign Out Session</span>}
               </Button>
             } />
@@ -350,7 +350,7 @@ export function DashboardShell({
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
 
         {/* ── TOP HEADER BAR ────────────────────────────────────── */}
-        <header className="sticky top-0 z-30 w-full h-16 flex items-center px-5 sm:px-8 md:px-10 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
+        <header className="sticky top-0 z-30 w-full h-14 flex items-center px-4 sm:px-8 md:px-10 gap-3 bg-white/90 dark:bg-[#0C1E34]/90 backdrop-blur-md border-b border-border/60">
 
           {/* Left: Mobile toggle + collapsed-desktop expand + breadcrumb */}
           <div className="flex items-center gap-2 shrink-0">
@@ -359,7 +359,7 @@ export function DashboardShell({
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex lg:hidden size-9 text-muted-foreground"
+              className="flex lg:hidden size-8 text-muted-foreground"
               aria-label="Toggle Sidebar"
             >
               {sidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -380,10 +380,10 @@ export function DashboardShell({
               type="button"
               variant="ghost"
               size="icon"
-              className="relative flex size-9 text-muted-foreground"
+              className="relative flex size-8 text-muted-foreground"
               aria-label="Notifications"
             >
-              <Bell className="size-5" />
+              <Bell className="size-4" />
               <span className="absolute top-2 right-2 size-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0C1E34]" />
             </Button>
 

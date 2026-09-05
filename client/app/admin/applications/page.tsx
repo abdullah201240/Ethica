@@ -216,26 +216,36 @@ export default function AdminReviewerApplicationsPage() {
         align: "right",
         headerClassName: "w-48",
         cell: ({ row }) => (
-          <div className="inline-flex items-center gap-1.5 justify-end">
+          <div className="inline-flex items-center gap-2 justify-end">
             <Link
               href={`/admin/applications/${row.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-primary dark:text-sky-300 shadow-2xs transition-colors cursor-pointer"
-              title="Inspect Full Applicant Dossier in New Tab"
             >
-              <Eye className="size-3.5" />
-              <span>Inspect</span>
+              <Button
+                type="button"
+                variant="default"
+                className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 cursor-pointer"
+                title="Inspect Full Applicant Dossier in New Tab"
+              >
+                <Eye className="size-4" />
+                <span>Inspect</span>
+              </Button>
             </Link>
 
             {row.status === "Approved" && (
               <Link
                 href={`/admin/roster?search=${encodeURIComponent(row.fullName)}`}
-                className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-emerald-300/80 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-950/40 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 transition-colors"
-                title="View in Accredited Reviewer Roster"
               >
-                <Users className="size-3.5" />
-                <span className="hidden xl:inline">In Roster</span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-9 px-3.5 text-base font-bold rounded-lg border border-emerald-400/80 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 shadow-xs gap-1.5 cursor-pointer"
+                  title="View in Accredited Reviewer Roster"
+                >
+                  <Users className="size-4" />
+                  <span className="hidden xl:inline">In Roster</span>
+                </Button>
               </Link>
             )}
 
@@ -244,11 +254,10 @@ export default function AdminReviewerApplicationsPage() {
                 <AlertDialogTrigger render={
                   <Button
                     type="button"
-                    size="sm"
-                    className="h-8 px-2.5 text-base font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white shadow-2xs cursor-pointer"
+                    className="h-9 px-3.5 text-base font-bold rounded-lg bg-secondary hover:bg-secondary/90 text-white shadow-xs gap-1.5 cursor-pointer"
                     title="Approve Reviewer Accreditation"
                   >
-                    <CheckCircle2 className="size-3.5" />
+                    <CheckCircle2 className="size-4" />
                     <span className="hidden xl:inline">Approve</span>
                   </Button>
                 } />

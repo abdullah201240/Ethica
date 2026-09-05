@@ -55,6 +55,7 @@ import {
   type AdminMember,
   initialAdminMembers,
 } from "@/lib/admin-roster"
+import { cn } from "@/lib/utils"
 
 const auditLedgerLogs = [
   {
@@ -285,16 +286,26 @@ export default function AdminDashboardPage() {
         id: "actions",
         header: "Manage Access",
         align: "right",
-        headerClassName: "w-36",
+        headerClassName: "w-48 text-right",
         cell: ({ row }) => {
           const isActive = row.status === "Active"
           return (
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end gap-3">
+              <span className={cn(
+                "text-base font-bold select-text",
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-slate-500"
+              )}>
+                {isActive ? "Active" : "Inactive"}
+              </span>
               <Switch
-                size="sm"
+                size="lg"
                 checked={isActive}
                 onCheckedChange={() => handleToggleStatus(row.id, row.name)}
                 aria-label={`Toggle status for ${row.name}`}
+                className={isActive
+                  ? "data-checked:bg-emerald-600 shadow-xs"
+                  : "data-unchecked:bg-slate-400 dark:data-unchecked:bg-slate-600 shadow-xs"
+                }
               />
             </div>
           )
@@ -366,19 +377,19 @@ export default function AdminDashboardPage() {
       {/* Cryptographic Audit Trail Section */}
       <div className="rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="audit">
         
-        <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-section-heading text-primary dark:text-white uppercase tracking-tight flex items-center gap-2">
               <ScrollText className="size-5 text-secondary" />
               Cryptographic Audit Trail (SHA-256 Ledger)
             </h2>
-            <p className="text-body text-muted-foreground font-medium">
+            <p className="text-body-sm text-muted-foreground font-medium mt-1">
               Every protocol triage, reviewer deliberation, consensus vote, and certificate issuance is immutably timestamped
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20 self-start sm:self-auto">
-            <Database className="size-3.5" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20 self-start sm:self-auto">
+            <Database className="size-3" />
             <span>FIPS 140-3 HSM Root of Trust</span>
           </span>
         </div>
@@ -388,18 +399,18 @@ export default function AdminDashboardPage() {
           {auditLedgerLogs.map((log) => (
             <div
               key={log.txId}
-              className="p-4 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+              className="p-3 sm:p-4 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-3"
             >
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-micro font-bold px-2 py-0.5 rounded bg-muted text-foreground/85">
+              <div className="space-y-1 flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="font-mono text-micro font-bold px-1.5 py-0.5 rounded bg-muted text-foreground/85">
                     {log.txId}
                   </span>
-                  <span className="font-mono text-table-cell font-bold px-2 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
+                  <span className="font-mono text-micro font-bold px-1.5 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
                     {log.protocol}
                   </span>
-                  <span className="text-table-cell font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="size-3.5" />
+                  <span className="text-micro font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="size-3" />
                     {log.status}
                   </span>
                   <span className="text-micro text-muted-foreground">
@@ -407,11 +418,11 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
-                <h3 className="text-table-cell font-bold text-foreground">
+                <h3 className="text-body-sm font-bold text-foreground">
                   {log.action} • <span className="text-muted-foreground font-normal">{log.actor}</span>
                 </h3>
 
-                <div className="font-mono text-micro text-muted-foreground break-all bg-muted p-2 rounded border border-border">
+                <div className="font-mono text-micro text-muted-foreground break-all bg-muted p-1.5 rounded border border-border">
                   <span className="text-slate-400">HASH: </span>
                   {log.hash}
                 </div>
@@ -700,40 +711,40 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-body-sm text-muted-foreground font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-micro text-muted-foreground font-bold uppercase tracking-wider">
               <span>HSM Node Appliance</span>
-              <Key className="size-3.5 text-amber-500" />
+              <Key className="size-3 text-amber-500" />
             </div>
-            <p className="font-mono text-table-cell font-bold text-foreground/85">
+            <p className="font-mono text-body-sm font-bold text-foreground/85">
               ETHICA-HSM-PRIMARY-01
             </p>
-            <p className="text-body text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Ed25519 & SHA-256 digital signature appliance in secure vault.
             </p>
           </Card>
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-body-sm text-muted-foreground font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-micro text-muted-foreground font-bold uppercase tracking-wider">
               <span>Public Key Fingerprint</span>
-              <Lock className="size-3.5 text-sky-500" />
+              <Lock className="size-3 text-sky-500" />
             </div>
-            <p className="font-mono text-table-cell font-bold text-foreground/85 truncate">
+            <p className="font-mono text-body-sm font-bold text-foreground/85 truncate">
               SHA256:7a4f91e8c045b8...92df
             </p>
-            <p className="text-body text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Root institutional anchor published on public transparency ledger.
             </p>
           </Card>
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-body-sm text-muted-foreground font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-micro text-muted-foreground font-bold uppercase tracking-wider">
               <span>Next Key Rotation</span>
-              <CheckCircle2 className="size-3.5 text-emerald-500" />
+              <CheckCircle2 className="size-3 text-emerald-500" />
             </div>
-            <p className="font-mono text-table-cell font-bold text-foreground/85">
+            <p className="font-mono text-body-sm font-bold text-foreground/85">
               In 318 Calendar Days
             </p>
-            <p className="text-body text-muted-foreground">
+            <p className="text-body-sm text-muted-foreground">
               Automated dual-custody key ceremony compliant with ISO 27001.
             </p>
           </Card>
@@ -752,35 +763,35 @@ export default function AdminDashboardPage() {
               Configurable compliance thresholds and automated review workflows
             </p>
           </div>
-          <Badge variant="outline" className="text-micro font-mono text-muted-foreground">
+          <Badge variant="outline" className="text-micro font-mono text-muted-foreground px-2 py-0.5">
             Engine Version 2026.4
           </Badge>
         </div>
 
-        <Card className="p-5 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-body">
-            <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-muted-foreground uppercase font-bold text-body-sm block">IRB Quorum Threshold</span>
-              <strong className="text-table-cell font-black text-foreground block">5 Voting Members</strong>
-              <span className="text-muted-foreground text-body-sm block">Includes at least 1 non-scientific lay member</span>
+        <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-body-sm">
+            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
+              <span className="text-muted-foreground uppercase font-bold text-micro block">IRB Quorum Threshold</span>
+              <strong className="text-body-sm font-black text-foreground block">5 Voting Members</strong>
+              <span className="text-muted-foreground text-micro block">Includes at least 1 non-scientific lay member</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-muted-foreground uppercase font-bold text-body-sm block">Fast-Track Turnaround Target</span>
-              <strong className="text-table-cell font-black text-foreground block">3 Working Days</strong>
-              <span className="text-muted-foreground text-body-sm block">Single designated reviewer triage</span>
+            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
+              <span className="text-muted-foreground uppercase font-bold text-micro block">Fast-Track Turnaround Target</span>
+              <strong className="text-body-sm font-black text-foreground block">3 Working Days</strong>
+              <span className="text-muted-foreground text-micro block">Single designated reviewer triage</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-muted-foreground uppercase font-bold text-body-sm block">Full Committee Cycle</span>
-              <strong className="text-table-cell font-black text-foreground block">14 Calendar Days</strong>
-              <span className="text-muted-foreground text-body-sm block">Consensus or majority quorum vote</span>
+            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
+              <span className="text-muted-foreground uppercase font-bold text-micro block">Full Committee Cycle</span>
+              <strong className="text-body-sm font-black text-foreground block">14 Calendar Days</strong>
+              <span className="text-muted-foreground text-micro block">Consensus or majority quorum vote</span>
             </div>
 
-            <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-muted-foreground uppercase font-bold text-body-sm block">Data Retention Mandate</span>
-              <strong className="text-table-cell font-black text-foreground block">7 Years Post-Closure</strong>
-              <span className="text-muted-foreground text-body-sm block">Encrypted cold archive storage</span>
+            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
+              <span className="text-muted-foreground uppercase font-bold text-micro block">Data Retention Mandate</span>
+              <strong className="text-body-sm font-black text-foreground block">7 Years Post-Closure</strong>
+              <span className="text-muted-foreground text-micro block">Encrypted cold archive storage</span>
             </div>
           </div>
         </Card>

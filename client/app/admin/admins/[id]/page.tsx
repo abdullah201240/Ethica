@@ -47,6 +47,7 @@ import {
   toggleAdminMemberStatus,
   initialAdminMembers,
 } from "@/lib/admin-roster"
+import { cn } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -309,16 +310,22 @@ export default function SystemAdminDossierDetailPage({ params }: PageProps) {
 
           {/* Status Switch */}
           <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               <Switch
+                size="lg"
                 checked={isActive}
                 onCheckedChange={() => handleToggleStatus()}
                 aria-label="Toggle administrator status"
+                className={isActive
+                  ? "data-checked:bg-emerald-600 shadow-xs"
+                  : "data-unchecked:bg-rose-500 shadow-xs"
+                }
               />
-              <span className={`text-xs font-semibold ${
-                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground"
-              }`}>
-                {isActive ? "Active" : "Inactive"}
+              <span className={cn(
+                "text-base font-bold select-text",
+                isActive ? "text-emerald-700 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+              )}>
+                {isActive ? "Active" : "Suspended"}
               </span>
             </div>
           </div>

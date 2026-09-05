@@ -180,13 +180,13 @@
 
   /* Section headings within pages (audit trail, policy engine, etc.) */
   .text-section-heading {
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 900;
     letter-spacing: -0.03em;
     line-height: 1.1;
   }
   @media (min-width: 640px) {
-    .text-section-heading { font-size: var(--text-5xl); }
+    .text-section-heading { font-size: var(--text-3xl); }
   }
 
   /* Card titles and emphasized sub-headers */
@@ -240,7 +240,7 @@
 
   /* Table cell content */
   .text-table-cell {
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     font-weight: 500;
     line-height: 1.5;
   }

@@ -354,13 +354,13 @@ export function DataTable<T extends object>({
   return (
     <Card
       className={cn(
-        "w-full rounded-none sm:rounded-2xl bg-white dark:bg-[#0C1E34] overflow-hidden py-0 gap-0 shadow-none border-0",
+        "w-full rounded-none sm:rounded-none bg-white dark:bg-[#0C1E34] overflow-hidden py-0 gap-0 shadow-none border-0 sm:border-0 border-none sm:border-none border-transparent sm:border-transparent ring-0",
         className
       )}
     >
       {/* ── Optional Title & Description Header using CardHeader ───────────── */}
       {(title || description || totalCountBadge) && (
-        <CardHeader className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <CardHeader className="p-3 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-0 border-none">
           <div className="space-y-2">
             <div className="flex items-center gap-3 flex-wrap">
               {typeof title === "string" ? (
@@ -382,19 +382,19 @@ export function DataTable<T extends object>({
 
       {/* ── Toolbar: Search, Filters, Page Size & Clear ──────────────────────── */}
       {(showSearch || filters.length > 0 || activeFilterCount > 0) && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="p-2.5 sm:p-3 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col lg:flex-row lg:items-center justify-between gap-2 border-0 border-none">
           {/* Left: Search Input & Faceted Filters */}
-          <div className="flex flex-1 flex-wrap items-center gap-2.5 min-w-0">
+          <div className="flex flex-1 flex-wrap items-center gap-2 min-w-0">
             {/* Search Input using UI Input component */}
             {showSearch && (
-              <div className="relative w-full sm:w-72 md:w-80 shrink-0">
+              <div className="relative w-full sm:w-60 md:w-72 shrink-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none z-10" />
                 <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="h-9 pl-9 pr-8 bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-micro sm:text-body-sm"
+                  className="h-8 pl-8 pr-7 bg-white dark:bg-slate-900 border-0 dark:border-0 text-micro"
                   aria-label="Search records"
                 />
                 {searchQuery && (
@@ -430,9 +430,9 @@ export function DataTable<T extends object>({
                           variant="outline"
                           size="sm"
                           className={cn(
-                            "h-9 gap-2 text-micro font-semibold rounded-lg bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 text-foreground/85 hover:bg-slate-50 dark:hover:bg-slate-800",
+                            "h-8 gap-1.5 text-micro font-semibold rounded-md bg-white dark:bg-slate-900 border-0 dark:border-0 text-foreground/85 hover:bg-slate-50 dark:hover:bg-slate-800",
                             isFiltered &&
-                              "border-primary/40 bg-slate-50 dark:bg-slate-800 text-primary font-bold"
+                              "bg-slate-50 dark:bg-slate-800 text-primary font-bold"
                           )}
                           aria-label={`Filter by ${filter.title}`}
                         >
@@ -499,7 +499,7 @@ export function DataTable<T extends object>({
                 <span>Reset</span>
                 <Badge
                   variant="outline"
-                  className="size-4 p-0 rounded-full font-mono text-micro items-center justify-center border-slate-300 dark:border-slate-700"
+                  className="size-4 p-0 rounded-full font-mono text-micro items-center justify-center border-0 dark:border-0"
                 >
                   {activeFilterCount}
                 </Badge>
@@ -520,7 +520,7 @@ export function DataTable<T extends object>({
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="h-8 gap-1.5 px-2.5 text-micro sm:text-body-sm font-bold bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-700/80 rounded-lg text-foreground/85"
+                        className="h-8 gap-1.5 px-2.5 text-micro sm:text-body-sm font-bold bg-white dark:bg-slate-900 border-0 dark:border-0 rounded-md text-foreground/85"
                         aria-label="Select rows per page"
                       >
                         <span>{pageSize}</span>
@@ -558,14 +558,14 @@ export function DataTable<T extends object>({
       {/* ── Table Viewport Container using UI Table Primitives ─────────────── */}
       <div
         className={cn(
-          "w-full selection:bg-secondary/20 selection:text-primary",
+          "w-full selection:bg-secondary/20 selection:text-primary border-0 border-none",
           tableWrapperClassName
         )}
       >
-        <Table className="text-base">
+        <Table className="text-sm border-0 border-none">
           {/* Table Header using UI TableHeader & TableHead */}
-          <TableHeader>
-            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 hover:bg-slate-50/90 dark:hover:bg-slate-900/60 border-b-0">
+          <TableHeader className="border-0 border-none">
+            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 hover:bg-slate-50/90 dark:hover:bg-slate-900/60 border-0 border-b-0 border-none">
               {columns.map((col, idx) => {
                 const colId = col.id ?? String(col.accessorKey ?? idx)
                 const isCurrentSorted = sortColumn === colId
@@ -575,7 +575,7 @@ export function DataTable<T extends object>({
                   <TableHead
                     key={colId}
                     className={cn(
-                      "px-4 py-3.5 text-base font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap select-none h-auto",
+                      "px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap select-none h-auto",
                       col.align === "center"
                         ? "text-center"
                         : col.align === "right"
@@ -591,13 +591,13 @@ export function DataTable<T extends object>({
                         size="xs"
                         onClick={() => handleSort(colId)}
                         className={cn(
-                          "h-auto p-0 hover:bg-transparent text-base font-bold tracking-wider uppercase text-muted-foreground hover:text-primary transition-colors gap-2",
+                          "h-auto p-0 hover:bg-transparent text-xs font-bold tracking-wider uppercase text-muted-foreground hover:text-primary transition-colors gap-1.5",
                           isCurrentSorted &&
                             "text-primary font-black"
                         )}
                         aria-label={`Sort by ${colId}`}
                       >
-                        <span className="text-base font-bold">
+                        <span className="text-xs font-bold">
                           {typeof col.header === "function"
                             ? col.header({
                                 isSorted: currentDirection ?? false,
@@ -607,11 +607,11 @@ export function DataTable<T extends object>({
                         </span>
                         <span className="shrink-0 text-slate-400 transition-colors">
                           {isCurrentSorted && sortDirection === "asc" ? (
-                            <ArrowUp className="size-4 text-primary" />
+                            <ArrowUp className="size-3.5 text-primary" />
                           ) : isCurrentSorted && sortDirection === "desc" ? (
-                            <ArrowDown className="size-4 text-primary" />
+                            <ArrowDown className="size-3.5 text-primary" />
                           ) : (
-                            <ArrowUpDown className="size-3.5 opacity-60 hover:opacity-100" />
+                            <ArrowUpDown className="size-3 opacity-60 hover:opacity-100" />
                           )}
                         </span>
                       </Button>
@@ -621,7 +621,7 @@ export function DataTable<T extends object>({
                         toggleSorting: () => {},
                       })
                     ) : (
-                      <span className="text-base font-bold">{col.header}</span>
+                      <span className="text-xs font-bold">{col.header}</span>
                     )}
                   </TableHead>
                 )
@@ -630,18 +630,18 @@ export function DataTable<T extends object>({
           </TableHeader>
 
           {/* Table Body using UI TableBody, TableRow & TableCell */}
-          <TableBody className="divide-y-0">
+          <TableBody className="divide-y-0 border-0 border-none">
             {isLoading ? (
               Array.from({ length: skeletonRowCount }).map((_, rIdx) => (
                 <TableRow
                   key={`skeleton-row-${rIdx}`}
-                  className="border-b-0"
+                  className="border-0 border-b-0 border-none"
                 >
                   {columns.map((col, cIdx) => (
                     <TableCell
                       key={`skeleton-cell-${rIdx}-${col.id ?? String(col.accessorKey ?? cIdx)}`}
                       className={cn(
-                        "px-4 py-4 align-middle",
+                        "px-3 py-2.5 align-middle",
                         col.align === "center"
                           ? "text-center"
                           : col.align === "right"
@@ -676,7 +676,7 @@ export function DataTable<T extends object>({
                   }
                   onClick={() => onRowClick?.(row)}
                   className={cn(
-                    "group transition-colors border-b-0",
+                    "group transition-colors border-0 border-b-0 border-none",
                     onRowClick && "cursor-pointer",
                     "hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
                   )}
@@ -693,7 +693,7 @@ export function DataTable<T extends object>({
                       <TableCell
                         key={colId}
                         className={cn(
-                          "px-4 py-4 align-middle text-foreground/90 text-base text-table-cell whitespace-normal select-text",
+                          "px-3 py-2.5 align-middle text-foreground/90 text-sm text-table-cell whitespace-normal select-text",
                           col.align === "center"
                             ? "text-center"
                             : col.align === "right"
@@ -709,11 +709,11 @@ export function DataTable<T extends object>({
                             value: cellValue,
                           })
                         ) : cellValue != null ? (
-                          <span className="text-base font-medium select-text">
+                          <span className="text-sm font-medium select-text">
                             {String(cellValue)}
                           </span>
                         ) : (
-                          <span className="text-base text-muted-foreground/60 select-text">
+                          <span className="text-sm text-muted-foreground/60 select-text">
                             —
                           </span>
                         )}
@@ -724,8 +724,8 @@ export function DataTable<T extends object>({
               ))
             ) : (
               /* Empty State using UI TableRow & TableCell */
-              <TableRow>
-                <TableCell colSpan={columns.length} className="py-14 text-center">
+              <TableRow className="border-0 border-b-0 border-none">
+                <TableCell colSpan={columns.length} className="py-14 text-center border-0 border-none">
                   {emptyState ?? (
                     <div className="max-w-sm mx-auto space-y-3 px-4">
                       <div className="size-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto shadow-2xs">
@@ -760,7 +760,7 @@ export function DataTable<T extends object>({
 
       {/* ── Pagination Footer using UI Pagination Component ─────────────────── */}
       {showPagination && totalRows > 0 && (
-        <div className="px-4 py-3 sm:px-6 sm:py-3.5 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col sm:flex-row items-center justify-between gap-2 border-0 border-t-0 border-none">
           {/* Result Counter */}
           <div className="text-micro text-muted-foreground font-medium text-center sm:text-left">
             Showing <strong className="text-foreground tabular-nums">{totalRows > 0 ? startIndex + 1 : 0}</strong> to{" "}
@@ -786,7 +786,7 @@ export function DataTable<T extends object>({
                       if (safeCurrentPage > 1) setCurrentPage(1)
                     }}
                     className={cn(
-                      "size-8 rounded-lg border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
+                      "size-8 rounded-md border-0 dark:border-0 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
                       safeCurrentPage === 1 && "pointer-events-none opacity-40"
                     )}
                     title="First page"
@@ -805,7 +805,7 @@ export function DataTable<T extends object>({
                       if (safeCurrentPage > 1) setCurrentPage(safeCurrentPage - 1)
                     }}
                     className={cn(
-                      "size-8 rounded-lg border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
+                      "size-8 rounded-md border-0 dark:border-0 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
                       safeCurrentPage === 1 && "pointer-events-none opacity-40"
                     )}
                     title="Previous page"
@@ -826,10 +826,10 @@ export function DataTable<T extends object>({
                           setCurrentPage(page)
                         }}
                         className={cn(
-                          "size-8 rounded-lg text-micro font-bold transition-colors",
+                          "size-8 rounded-md text-micro font-bold transition-colors",
                           page === safeCurrentPage
-                            ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-primary"
-                            : "border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                            ? "bg-primary text-white shadow-none dark:bg-sky-500 dark:text-primary"
+                            : "border-0 dark:border-0 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                         )}
                       >
                         {page}
@@ -847,7 +847,7 @@ export function DataTable<T extends object>({
                       if (safeCurrentPage < totalPages) setCurrentPage(safeCurrentPage + 1)
                     }}
                     className={cn(
-                      "size-8 rounded-lg border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
+                      "size-8 rounded-md border-0 dark:border-0 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
                       safeCurrentPage === totalPages && "pointer-events-none opacity-40"
                     )}
                     title="Next page"
@@ -863,7 +863,7 @@ export function DataTable<T extends object>({
                       if (safeCurrentPage < totalPages) setCurrentPage(totalPages)
                     }}
                     className={cn(
-                      "size-8 rounded-lg border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
+                      "size-8 rounded-md border-0 dark:border-0 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors",
                       safeCurrentPage === totalPages && "pointer-events-none opacity-40"
                     )}
                     title="Last page"
@@ -905,7 +905,7 @@ export function DataTableSkeleton({
   return (
     <Card
       className={cn(
-        "w-full rounded-none sm:rounded-2xl border-0 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-none py-0 gap-0",
+        "w-full rounded-none sm:rounded-none border-0 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-none py-0 gap-0",
         className
       )}
     >
@@ -930,12 +930,12 @@ export function DataTableSkeleton({
       )}
 
       <div className="w-full overflow-x-auto">
-        <Table className="text-base">
+        <Table className="text-sm">
           <TableHeader>
             <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b-0">
               {Array.from({ length: columnCount }).map((_, idx) => (
-                <TableHead key={idx} className="px-4 py-3.5">
-                  <Skeleton className="h-5 w-24 rounded-md" />
+                <TableHead key={idx} className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-20 rounded-md" />
                 </TableHead>
               ))}
             </TableRow>
@@ -947,10 +947,10 @@ export function DataTableSkeleton({
                 className="border-b-0"
               >
                 {Array.from({ length: columnCount }).map((_, cIdx) => (
-                  <TableCell key={cIdx} className="px-4 py-4">
+                  <TableCell key={cIdx} className="px-3 py-2.5">
                     <Skeleton
                       className={cn(
-                        "h-5 rounded-md",
+                        "h-4 rounded-md",
                         cIdx === 0
                           ? "w-3/4"
                           : cIdx === 1

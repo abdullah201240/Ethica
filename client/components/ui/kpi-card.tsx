@@ -18,27 +18,27 @@ const colorStyles: Record<
   }
 > = {
   navy: {
-    value: "text-2xl dark:text-white",
+    value: "text-xl sm:text-2xl dark:text-white",
     iconColor: "text-slate-400 dark:text-slate-500",
   },
   green: {
-    value: "text-2xl dark:text-emerald-400",
+    value: "text-xl sm:text-2xl dark:text-emerald-400",
     iconColor: "text-secondary dark:text-emerald-400",
   },
   amber: {
-    value: "text-2xl dark:text-amber-400",
+    value: "text-xl sm:text-2xl dark:text-amber-400",
     iconColor: "text-amber-500 dark:text-amber-400",
   },
   rose: {
-    value: "text-2xl dark:text-rose-400",
+    value: "text-xl sm:text-2xl dark:text-rose-400",
     iconColor: "text-rose-500 dark:text-rose-400",
   },
   sky: {
-    value: "text-2xl dark:text-sky-400",
+    value: "text-xl sm:text-2xl dark:text-sky-400",
     iconColor: "text-sky-500 dark:text-sky-400",
   },
   gold: {
-    value: "text-2xl dark:text-accent",
+    value: "text-xl sm:text-2xl dark:text-accent",
     iconColor: "text-accent dark:text-accent",
   },
 }
@@ -129,18 +129,18 @@ export function KpiCard({
     <div
       data-slot="kpi-card"
       className={cn(
-        "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8 space-y-3 shadow-xs transition-shadow hover:shadow-sm select-text",
+        "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-2 shadow-xs transition-shadow hover:shadow-sm select-text",
         className
       )}
       {...props}
     >
       <div className="flex items-center justify-between gap-2 text-muted-foreground uppercase tracking-widest">
-        <span className="truncate select-text text-sm sm:text-base font-bold">{label}</span>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <span className="truncate select-text text-xs sm:text-sm font-bold">{label}</span>
+        <div className="flex items-center gap-1 shrink-0">
           {badge}
           {Icon && (
             <Icon
-              className={cn("size-6 sm:size-7 shrink-0", colorStyle.iconColor, iconClassName)}
+              className={cn("size-5 sm:size-6 shrink-0", colorStyle.iconColor, iconClassName)}
             />
           )}
         </div>

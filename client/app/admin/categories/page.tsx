@@ -401,54 +401,58 @@ export default function AdminCategoriesPage() {
       {
         id: "actions",
         header: "Actions",
-        headerClassName: "w-36 text-right",
+        headerClassName: "w-56 text-right",
         align: "right",
         cell: ({ row }) => (
-          <div className="flex items-center justify-end gap-1">
+          <div className="flex items-center justify-end gap-2">
             {/* View Dossier Detail Page Link */}
             <Link href={`/admin/categories/${encodeURIComponent(row.id)}`}>
               <Button
                 type="button"
-                variant="ghost"
-                size="icon-xs"
+                variant="default"
+                className="h-8 px-2.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1 cursor-pointer"
                 title="Inspect Category Dossier"
                 aria-label={`View dossier for ${row.name}`}
-                className="text-slate-500 hover:text-primary dark:hover:text-sky-300"
               >
                 <ExternalLink className="size-3.5" />
+                <span>Dossier</span>
               </Button>
             </Link>
 
             {/* Quick Edit Trigger */}
             <Button
               type="button"
-              variant="ghost"
-              size="icon-xs"
+              variant="outline"
               onClick={() => openEditModal(row)}
               title="Edit Category & Fee"
               aria-label={`Edit ${row.name}`}
-              className="text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              className="h-8 px-2.5 text-base font-bold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-xs gap-1 cursor-pointer"
             >
               <Edit2 className="size-3.5" />
+              <span>Edit</span>
             </Button>
 
             {/* Toggle Status Switch */}
             <Switch
-              size="sm"
+              size="lg"
               checked={row.status === "Active"}
               onCheckedChange={() => handleToggleStatus(row.id, row.status, row.name)}
               aria-label={`Toggle status for ${row.name}`}
+              className={row.status === "Active"
+                ? "data-checked:bg-emerald-600 shadow-xs"
+                : "data-unchecked:bg-slate-400 shadow-xs"
+              }
             />
 
             {/* Delete Trigger */}
             <Button
               type="button"
-              variant="ghost"
-              size="icon-xs"
+              variant="outline"
+              size="icon-sm"
               onClick={() => setCategoryToDelete(row)}
               title="Delete Category"
               aria-label={`Delete ${row.name}`}
-              className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+              className="border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 hover:bg-rose-100 hover:text-rose-700 shadow-xs cursor-pointer"
             >
               <Trash2 className="size-3.5" />
             </Button>

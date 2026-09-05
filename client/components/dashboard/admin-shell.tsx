@@ -15,7 +15,7 @@ import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-s
 
 const adminNavItems: NavItem[] = [
   {
-    label: "Governance Overview",
+    label: "Dashboard",
     href: "/admin/dashboard",
     icon: Sliders,
   },

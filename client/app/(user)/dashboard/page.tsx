@@ -18,7 +18,9 @@ import {
   Sparkles,
   BookOpen,
   Check,
+  Eye,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
@@ -162,40 +164,56 @@ export default function UserDashboardPage() {
         id: "actions",
         header: "Actions",
         align: "right",
-        headerClassName: "w-36",
+        headerClassName: "w-48 text-right",
         cell: ({ row }) => (
-          <div className="inline-flex items-center gap-2">
+          <div className="inline-flex items-center gap-2 justify-end">
             {row.hasCertificate ? (
               <Link
                 href="/#certificate"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center h-8 px-2.5 text-micro font-bold bg-secondary hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors cursor-pointer"
-                title="Download Digital Clearance Certificate in New Tab"
               >
-                <Download className="size-3.5" />
-                <span>Certificate</span>
+                <Button
+                  type="button"
+                  variant="default"
+                  className="h-9 px-3.5 text-base font-bold bg-secondary hover:bg-secondary/90 text-white rounded-lg gap-1.5 shadow-xs transition-colors cursor-pointer"
+                  title="Download Digital Clearance Certificate in New Tab"
+                >
+                  <Download className="size-4" />
+                  <span>Certificate</span>
+                </Button>
               </Link>
             ) : (
               <Link
                 href="/#preview"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center h-8 px-2.5 text-micro font-bold rounded-lg border border-border text-foreground/85 hover:bg-muted gap-1 transition-colors cursor-pointer"
-                title="Inspect Protocol in New Tab"
               >
-                <span>Inspect</span>
-                <ChevronRight className="size-3.5" />
+                <Button
+                  type="button"
+                  variant="default"
+                  className="h-9 px-3.5 text-base font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-1.5 transition-colors cursor-pointer"
+                  title="Inspect Protocol in New Tab"
+                >
+                  <Eye className="size-4" />
+                  <span>Inspect</span>
+                </Button>
               </Link>
             )}
             <Link
               href="/#preview"
               target="_blank"
               rel="noopener noreferrer"
-              className="size-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
-              title="Open Protocol Inspector in New Tab"
             >
-              <ExternalLink className="size-3.5" />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                className="h-9 w-9 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground transition-colors cursor-pointer"
+                title="Open Protocol Inspector in New Tab"
+              >
+                <ExternalLink className="size-4" />
+              </Button>
             </Link>
           </div>
         ),
