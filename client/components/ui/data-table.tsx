@@ -905,12 +905,12 @@ export function DataTableSkeleton({
   return (
     <Card
       className={cn(
-        "w-full rounded-none sm:rounded-none border-0 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-none py-0 gap-0",
+        "w-full rounded-none sm:rounded-none bg-white dark:bg-[#0C1E34] overflow-hidden shadow-none py-0 gap-0 border-0 sm:border-0 border-none sm:border-none border-transparent sm:border-transparent ring-0",
         className
       )}
     >
       {showHeader && (
-        <CardHeader className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <CardHeader className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-0 border-none">
           <div className="space-y-2">
             <Skeleton className="h-6 w-48 rounded-md" />
             <Skeleton className="h-4 w-72 rounded-md" />
@@ -920,7 +920,7 @@ export function DataTableSkeleton({
       )}
 
       {showToolbar && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3 border-0 border-none">
           <Skeleton className="h-9 w-full sm:w-72 rounded-md" />
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-24 rounded-md" />
@@ -929,25 +929,25 @@ export function DataTableSkeleton({
         </div>
       )}
 
-      <div className="w-full overflow-x-auto">
-        <Table className="text-sm">
-          <TableHeader>
-            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-b-0">
+      <div className="w-full overflow-x-auto border-0 border-none">
+        <Table className="text-sm border-0 border-none">
+          <TableHeader className="border-0 border-none">
+            <TableRow className="bg-slate-50/90 dark:bg-slate-900/60 border-0 border-b-0 border-none">
               {Array.from({ length: columnCount }).map((_, idx) => (
-                <TableHead key={idx} className="px-3 py-2.5">
+                <TableHead key={idx} className="px-3 py-2.5 border-0 border-none">
                   <Skeleton className="h-4 w-20 rounded-md" />
                 </TableHead>
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="divide-y-0">
+          <TableBody className="divide-y-0 border-0 border-none">
             {Array.from({ length: rowCount }).map((_, rIdx) => (
               <TableRow
                 key={rIdx}
-                className="border-b-0"
+                className="border-0 border-b-0 border-none"
               >
                 {Array.from({ length: columnCount }).map((_, cIdx) => (
-                  <TableCell key={cIdx} className="px-3 py-2.5">
+                  <TableCell key={cIdx} className="px-3 py-2.5 border-0 border-none">
                     <Skeleton
                       className={cn(
                         "h-4 rounded-md",
@@ -969,7 +969,7 @@ export function DataTableSkeleton({
       </div>
 
       {showPagination && (
-        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row items-center justify-between gap-3 border-0 border-none">
           <Skeleton className="h-4 w-44 rounded-md" />
           <div className="flex items-center gap-1.5">
             <Skeleton className="size-8 rounded-lg" />

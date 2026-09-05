@@ -378,28 +378,28 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* Card: Scientific Scope Description */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <FolderKanban className="size-4 text-primary dark:text-sky-400" />
               <span>Scientific Scope & Protocol Classification</span>
             </h3>
-            <p className="text-xs sm:text-sm text-foreground/85 leading-relaxed font-normal">
+            <p className="text-body-sm text-foreground/85 leading-relaxed font-normal">
               {category.description}
             </p>
           </Card>
 
           {/* Card: Institutional Fee Breakdown */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Banknote className="size-4 text-secondary" />
               <span>Official Institutional Fee Schedule (BDT ৳)</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-body-sm">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
                 <span className="text-slate-400 block font-semibold uppercase text-micro">
                   Standard Institutional Clearance Fee
                 </span>
-                <span className="font-extrabold text-primary dark:text-sky-300 text-xl block">
+                <span className="font-extrabold text-primary dark:text-sky-300 text-body-sm block">
                   ৳ {category.priceBdt.toLocaleString()} BDT
                 </span>
                 <span className="text-slate-500 text-micro block mt-1">
@@ -407,11 +407,11 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </span>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 space-y-1">
                 <span className="text-slate-400 block font-semibold uppercase text-micro">
                   Fast-Track Expedited Review Surcharge
                 </span>
-                <span className="font-extrabold text-amber-700 dark:text-amber-400 text-xl block">
+                <span className="font-extrabold text-amber-700 dark:text-amber-400 text-body-sm block">
                   {category.expeditedAllowed
                     ? `+ ৳ ${category.expeditedFeeBdt.toLocaleString()} BDT`
                     : "Not Supported"}
@@ -430,12 +430,12 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Card: Operational Specifications */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Scale className="size-4 text-primary dark:text-sky-400" />
               <span>Operational Criteria</span>
             </h3>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-body-sm">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="text-slate-500">Governing Board</span>
                 <span className="font-bold text-foreground">{category.board}</span>
@@ -461,14 +461,14 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
           {/* Card: Quick Actions */}
           <Card className="p-5 rounded-none sm:rounded-2xl border-y sm:border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-primary dark:text-white uppercase tracking-wider">
+            <h3 className="text-body-sm font-bold text-primary dark:text-white uppercase tracking-wider">
               Management Actions
             </h3>
             <div className="space-y-2">
               <Button
                 type="button"
                 onClick={handleOpenEdit}
-                className="w-full justify-start text-xs font-bold h-9 bg-[#002752] hover:bg-[#001c3d] text-white"
+                className="w-full justify-start text-body-sm font-bold h-9 bg-[#002752] hover:bg-[#001c3d] !text-white"
               >
                 <Edit2 className="size-3.5 mr-2" />
                 Edit Category & Fee Structure
@@ -477,7 +477,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setDeleteDialogOpen(true)}
-                className="w-full justify-start text-xs font-bold h-9 text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="w-full justify-start text-body-sm font-bold h-9 text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/30"
               >
                 <Trash2 className="size-3.5 mr-2" />
                 Delete Research Category
@@ -496,7 +496,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 <Edit2 className="size-5 text-secondary" />
                 <span>Edit Category: {category.code}</span>
               </SheetTitle>
-              <SheetDescription className="text-xs text-muted-foreground">
+              <SheetDescription className="text-body-sm text-muted-foreground">
                 Update scientific scope, governing board, or adjust pricing in Bangladeshi Taka (BDT ৳).
               </SheetDescription>
             </SheetHeader>
@@ -504,7 +504,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2 space-y-1.5">
-                  <Label htmlFor="detail-edit-name" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-name" className="text-micro font-bold">
                     Category Name <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -519,7 +519,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-code" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-code" className="text-micro font-bold">
                     Category Code <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -531,7 +531,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-board" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-board" className="text-micro font-bold">
                     Governing Ethics Board
                   </Label>
                   <Select
@@ -554,7 +554,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-price" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-price" className="text-micro font-bold">
                     Standard Fee (BDT ৳) <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -569,7 +569,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-turnaround" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-turnaround" className="text-micro font-bold">
                     Turnaround Velocity (Days)
                   </Label>
                   <Input
@@ -594,7 +594,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                     />
                     <Label
                       htmlFor="detail-edit-expedited-toggle"
-                      className="text-xs font-bold text-foreground cursor-pointer"
+                      className="text-body-sm font-bold text-foreground cursor-pointer"
                     >
                       Enable Fast-Track Expedited Review (72-Hour Triage)
                     </Label>
@@ -602,7 +602,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
 
                   {editForm.expeditedAllowed && (
                     <div className="space-y-1.5 pl-6 pt-1">
-                      <Label htmlFor="detail-edit-expedited-fee" className="text-xs font-bold">
+                      <Label htmlFor="detail-edit-expedited-fee" className="text-micro font-bold">
                         Expedited Surcharge (BDT ৳)
                       </Label>
                       <Input
@@ -624,7 +624,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-risk" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-risk" className="text-micro font-bold">
                     Default Ethics Risk Tier
                   </Label>
                   <Select
@@ -650,7 +650,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="detail-edit-status" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-status" className="text-micro font-bold">
                     Status
                   </Label>
                   <Select
@@ -673,7 +673,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-1.5">
-                  <Label htmlFor="detail-edit-desc" className="text-xs font-bold">
+                  <Label htmlFor="detail-edit-desc" className="text-micro font-bold">
                     Scientific Scope & Description <span className="text-rose-500">*</span>
                   </Label>
                   <Textarea
@@ -710,7 +710,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
               <AlertTriangle className="size-5" />
               <span>Delete Category: {category.name}</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <AlertDialogDescription className="text-body-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Are you sure you want to permanently delete{" "}
               <strong className="text-foreground">
                 {category.name} ({category.code})
@@ -722,7 +722,7 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs"
+              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-body-sm"
             >
               Confirm Deletion
             </AlertDialogAction>
