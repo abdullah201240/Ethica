@@ -5,6 +5,7 @@ import {
   researchCategorySchema,
 } from "@/lib/schemas"
 import { z } from "zod"
+import { categoriesApi } from "@/lib/api/categories.api"
 
 export const initialCategories: ResearchCategory[] = [
   {
@@ -136,8 +137,6 @@ export const initialCategories: ResearchCategory[] = [
     updatedAt: "2026-08-05",
   },
 ]
-
-import { categoriesApi } from "@/lib/api/categories.api"
 
 // In-Memory Repository Key & Cache
 const CATEGORIES_KEY = "ethica_research_categories"
