@@ -40,15 +40,15 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 import {
   type AdminMember,
   type AdminAccessLevel,
@@ -605,9 +605,9 @@ export default function AdminListPage() {
                 <span>Reviewer Roster</span>
               </Link>
 
-              {/* Appoint System Admin Dialog Modal */}
-              <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                <DialogTrigger render={
+              {/* Appoint System Admin Slide-over Sheet */}
+              <Sheet open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                <SheetTrigger render={
                   <Button
                     type="button"
                     className="inline-flex items-center h-8 px-3.5 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
@@ -616,15 +616,15 @@ export default function AdminListPage() {
                     <span>Appoint System Admin</span>
                   </Button>
                 } />
-                <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-base font-bold text-[#002752] dark:text-white">
+                <SheetContent side="right" className="w-full sm:max-w-lg md:max-w-xl p-6">
+                  <SheetHeader className="p-0 pb-3">
+                    <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
                       Appoint Institutional System Administrator
-                    </DialogTitle>
-                    <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+                    </SheetTitle>
+                    <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
                       Register a new institutional officer with privileged access to the Ethica governance engine.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </SheetDescription>
+                  </SheetHeader>
 
                   {formError && (
                     <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs flex items-center gap-2">
