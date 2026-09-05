@@ -588,7 +588,7 @@ export function DataTable<T extends object>({
                   <TableHead
                     key={colId}
                     className={cn(
-                      "px-4 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap select-none h-auto",
+                      "px-4 py-3.5 text-sm sm:text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap select-none h-auto",
                       col.align === "center"
                         ? "text-center"
                         : col.align === "right"
@@ -706,7 +706,7 @@ export function DataTable<T extends object>({
                       <TableCell
                         key={colId}
                         className={cn(
-                          "px-4 py-3.5 align-middle text-slate-700 dark:text-slate-200 text-sm whitespace-normal",
+                          "px-4 py-4 align-middle text-slate-700 dark:text-slate-200 text-base whitespace-normal",
                           col.align === "center"
                             ? "text-center"
                             : col.align === "right"

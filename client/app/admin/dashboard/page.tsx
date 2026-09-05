@@ -178,9 +178,9 @@ export default function AdminDashboardPage() {
         accessorKey: "id",
         header: "Admin ID",
         sortable: true,
-        headerClassName: "w-[130px]",
+        headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+          <span className="font-mono text-base font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
             {row.id}
           </span>
         ),
@@ -202,14 +202,14 @@ export default function AdminDashboardPage() {
 
           return (
             <div className="flex items-center gap-3">
-              <div className="size-8 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-xs shrink-0 border border-[#002752]/15 dark:border-sky-500/20">
+              <div className="size-8 rounded-full bg-[#002752]/10 dark:bg-sky-500/10 text-[#002752] dark:text-sky-300 flex items-center justify-center font-bold text-base shrink-0 border border-[#002752]/15 dark:border-sky-500/20">
                 {initials}
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                <div className="text-base font-bold text-slate-900 dark:text-white truncate">
                   {row.name}
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                <div className="text-base text-slate-500 dark:text-slate-400 truncate">
                   {row.email}
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function AdminDashboardPage() {
         cell: ({ row }) => (
           <Badge
             variant="outline"
-            className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 whitespace-nowrap"
+            className="text-base font-semibold bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 whitespace-nowrap"
           >
             {row.role}
           </Badge>
@@ -237,7 +237,7 @@ export default function AdminDashboardPage() {
         header: "Department / Secretariat",
         sortable: true,
         cell: ({ row }) => (
-          <span className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-[220px] block">
+          <span className="text-base text-slate-600 dark:text-slate-300 truncate max-w-56 block">
             {row.department}
           </span>
         ),
@@ -248,9 +248,9 @@ export default function AdminDashboardPage() {
         header: "Protocols",
         sortable: true,
         align: "center",
-        headerClassName: "w-[100px]",
+        headerClassName: "w-24",
         cell: ({ row }) => (
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-200 tabular-nums">
+          <span className="text-base font-bold text-slate-700 dark:text-slate-200 tabular-nums">
             {row.protocols}
           </span>
         ),
@@ -260,12 +260,12 @@ export default function AdminDashboardPage() {
         accessorKey: "status",
         header: "Account Status",
         sortable: true,
-        headerClassName: "w-[130px]",
+        headerClassName: "w-32",
         cell: ({ row }) => {
           const isActive = row.status === "Active"
           return (
             <span
-              className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-md border ${
+              className={`inline-flex items-center gap-1.5 text-base font-bold px-2.5 py-1 rounded-md border ${
                 isActive
                   ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25"
                   : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/25"
@@ -285,7 +285,7 @@ export default function AdminDashboardPage() {
         id: "actions",
         header: "Manage Access",
         align: "right",
-        headerClassName: "w-[140px]",
+        headerClassName: "w-36",
         cell: ({ row }) => {
           const isActive = row.status === "Active"
           return (
@@ -376,12 +376,12 @@ export default function AdminDashboardPage() {
               <ScrollText className="size-5 text-[#198754]" />
               Cryptographic Audit Trail (SHA-256 Ledger)
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-base text-slate-500 dark:text-slate-400 font-medium">
               Every protocol triage, reviewer deliberation, consensus vote, and certificate issuance is immutably timestamped
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-500/20 self-start sm:self-auto">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-base font-bold border border-emerald-500/20 self-start sm:self-auto">
             <Database className="size-3.5" />
             <span>FIPS 140-3 HSM Root of Trust</span>
           </span>
@@ -399,10 +399,10 @@ export default function AdminDashboardPage() {
                   <span className="font-mono text-[0.7rem] font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                     {log.txId}
                   </span>
-                  <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#002752]/10 dark:bg-white/10 text-[#002752] dark:text-sky-300">
+                  <span className="font-mono text-base font-bold px-2 py-0.5 rounded bg-[#002752]/10 dark:bg-white/10 text-[#002752] dark:text-sky-300">
                     {log.protocol}
                   </span>
-                  <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                  <span className="text-base font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                     <CheckCircle2 className="size-3.5" />
                     {log.status}
                   </span>
@@ -411,7 +411,7 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
                   {log.action} • <span className="text-slate-500 dark:text-slate-400 font-normal">{log.actor}</span>
                 </h3>
 
@@ -446,14 +446,14 @@ export default function AdminDashboardPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/admins"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
               >
                 <ShieldCheck className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
                 <span>Admin List</span>
               </Link>
               <Link
                 href="/admin/roster"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
               >
                 <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
                 <span>Reviewer Roster</span>
@@ -462,7 +462,7 @@ export default function AdminDashboardPage() {
                 <SheetTrigger render={
                   <Button
                     type="button"
-                    className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
+                    className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-base rounded-lg transition-colors shadow-2xs shrink-0 cursor-pointer"
                   >
                     <UserPlus className="size-3.5 mr-1.5" />
                     <span>Add Administrator</span>
@@ -473,7 +473,7 @@ export default function AdminDashboardPage() {
                   <SheetTitle className="text-base font-bold text-[#002752] dark:text-white">
                     Appoint Institutional Administrator
                   </SheetTitle>
-                  <SheetDescription className="text-xs text-slate-500 dark:text-slate-400">
+                  <SheetDescription className="text-base text-slate-500 dark:text-slate-400">
                     Register a new ethics governance officer, committee secretariat member, or triage lead into the RBAC directory.
                   </SheetDescription>
                 </SheetHeader>
@@ -481,15 +481,15 @@ export default function AdminDashboardPage() {
                 {formError && (
                   <Alert className="border-rose-500/30 bg-rose-50/90 dark:bg-rose-950/40 text-rose-950 dark:text-rose-200 py-2">
                     <XCircle className="size-4 text-rose-600 dark:text-rose-400" />
-                    <AlertDescription className="text-xs font-semibold text-rose-800 dark:text-rose-300">
+                    <AlertDescription className="text-base font-semibold text-rose-800 dark:text-rose-300">
                       {formError}
                     </AlertDescription>
                   </Alert>
                 )}
 
-                <div className="space-y-3 py-1 text-xs">
+                <div className="space-y-3 py-1 text-base">
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                       Full Name & Title <span className="text-rose-500">*</span>
                     </Label>
                     <Input
@@ -500,12 +500,12 @@ export default function AdminDashboardPage() {
                         setFormError(null)
                         setNewAdmin((p) => ({ ...p, name: e.target.value }))
                       }}
-                      className="h-8 text-xs"
+                      className="h-8 text-base"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                       Institutional Email Address <span className="text-rose-500">*</span>
                     </Label>
                     <Input
@@ -516,12 +516,12 @@ export default function AdminDashboardPage() {
                         setFormError(null)
                         setNewAdmin((p) => ({ ...p, email: e.target.value }))
                       }}
-                      className="h-8 text-xs"
+                      className="h-8 text-base"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                       Governance Role
                     </Label>
                     <DropdownMenu>
@@ -529,7 +529,7 @@ export default function AdminDashboardPage() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full justify-between h-8 px-3 text-xs font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
+                          className="w-full justify-between h-8 px-3 text-base font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
                         >
                           <span className="truncate">{newAdmin.role}</span>
                           <ChevronDown className="size-3.5 text-slate-400 shrink-0 ml-2" />
@@ -552,7 +552,7 @@ export default function AdminDashboardPage() {
                             <DropdownMenuRadioItem
                               key={role}
                               value={role}
-                              className="text-xs font-medium cursor-pointer py-1.5 px-2.5"
+                              className="text-base font-medium cursor-pointer py-1.5 px-2.5"
                             >
                               {role}
                             </DropdownMenuRadioItem>
@@ -563,7 +563,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                       Faculty / Department
                     </Label>
                     <DropdownMenu>
@@ -571,7 +571,7 @@ export default function AdminDashboardPage() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full justify-between h-8 px-3 text-xs font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
+                          className="w-full justify-between h-8 px-3 text-base font-medium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer"
                         >
                           <span className="truncate">{newAdmin.department}</span>
                           <ChevronDown className="size-3.5 text-slate-400 shrink-0 ml-2" />
@@ -593,7 +593,7 @@ export default function AdminDashboardPage() {
                             <DropdownMenuRadioItem
                               key={dept}
                               value={dept}
-                              className="text-xs font-medium cursor-pointer py-1.5 px-2.5"
+                              className="text-base font-medium cursor-pointer py-1.5 px-2.5"
                             >
                               {dept}
                             </DropdownMenuRadioItem>
@@ -605,7 +605,7 @@ export default function AdminDashboardPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                         Assigned Protocols
                       </Label>
                       <Input
@@ -618,12 +618,12 @@ export default function AdminDashboardPage() {
                             protocols: Math.max(0, parseInt(e.target.value) || 0),
                           }))
                         }
-                        className="h-8 text-xs tabular-nums"
+                        className="h-8 text-base tabular-nums"
                       />
                     </div>
 
                     <div className="space-y-1">
-                      <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      <Label className="text-base font-semibold text-slate-700 dark:text-slate-300">
                         Initial Status
                       </Label>
                       <div className="grid grid-cols-2 gap-1 pt-0.5">
@@ -631,7 +631,7 @@ export default function AdminDashboardPage() {
                           type="button"
                           variant={newAdmin.status === "Active" ? "default" : "outline"}
                           onClick={() => setNewAdmin((p) => ({ ...p, status: "Active" }))}
-                          className={`h-7 px-2 text-[11px] font-bold cursor-pointer ${
+                          className={`h-7 px-2 text-base font-bold cursor-pointer ${
                             newAdmin.status === "Active"
                               ? "bg-[#198754] hover:bg-[#146c43] text-white"
                               : "text-slate-600 dark:text-slate-300"
@@ -644,7 +644,7 @@ export default function AdminDashboardPage() {
                           type="button"
                           variant={newAdmin.status === "Inactive" ? "default" : "outline"}
                           onClick={() => setNewAdmin((p) => ({ ...p, status: "Inactive" }))}
-                          className={`h-7 px-2 text-[11px] font-bold cursor-pointer ${
+                          className={`h-7 px-2 text-base font-bold cursor-pointer ${
                             newAdmin.status === "Inactive"
                               ? "bg-slate-700 text-white"
                               : "text-slate-600 dark:text-slate-300"
@@ -666,14 +666,14 @@ export default function AdminDashboardPage() {
                       setFormError(null)
                       setIsAddModalOpen(false)
                     }}
-                    className="text-xs font-semibold"
+                    className="text-base font-semibold"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="button"
                     onClick={handleCreateAdmin}
-                    className="bg-[#002752] hover:bg-[#001c3d] text-white text-xs font-bold"
+                    className="bg-[#002752] hover:bg-[#001c3d] text-white text-base font-bold"
                   >
                     Confirm & Appoint
                   </Button>
@@ -693,11 +693,11 @@ export default function AdminDashboardPage() {
               <ShieldCheck className="size-5 text-[#002752] dark:text-sky-300" />
               <span>Institutional Certificate Authority & Cryptographic HSM</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-base text-slate-500 dark:text-slate-400">
               FIPS 140-3 Level 3 Hardware Security Module root-of-trust for tamper-proof ethical clearance issuance
             </p>
           </div>
-          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/25 font-mono text-xs font-bold flex items-center gap-1.5">
+          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/25 font-mono text-base font-bold flex items-center gap-1.5">
             <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span>Root CA Online</span>
           </Badge>
@@ -705,40 +705,40 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-base text-slate-400 font-bold uppercase tracking-wider">
               <span>HSM Node Appliance</span>
               <Key className="size-3.5 text-amber-500" />
             </div>
-            <p className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
+            <p className="font-mono text-base font-bold text-slate-800 dark:text-slate-200">
               ETHICA-HSM-PRIMARY-01
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-base text-slate-500">
               Ed25519 & SHA-256 digital signature appliance in secure vault.
             </p>
           </Card>
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-base text-slate-400 font-bold uppercase tracking-wider">
               <span>Public Key Fingerprint</span>
               <Lock className="size-3.5 text-sky-500" />
             </div>
-            <p className="font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">
+            <p className="font-mono text-base font-bold text-slate-800 dark:text-slate-200 truncate">
               SHA256:7a4f91e8c045b8...92df
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-base text-slate-500">
               Root institutional anchor published on public transparency ledger.
             </p>
           </Card>
 
           <Card className="p-4 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-base text-slate-400 font-bold uppercase tracking-wider">
               <span>Next Key Rotation</span>
               <CheckCircle2 className="size-3.5 text-emerald-500" />
             </div>
-            <p className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
+            <p className="font-mono text-base font-bold text-slate-800 dark:text-slate-200">
               In 318 Calendar Days
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-base text-slate-500">
               Automated dual-custody key ceremony compliant with ISO 27001.
             </p>
           </Card>
@@ -753,39 +753,39 @@ export default function AdminDashboardPage() {
               <Settings className="size-5 text-[#002752] dark:text-sky-300" />
               <span>Institutional Research Policy Engine Config</span>
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-base text-slate-500 dark:text-slate-400">
               Configurable compliance thresholds and automated review workflows
             </p>
           </div>
-          <Badge variant="outline" className="text-xs font-mono text-slate-500">
+          <Badge variant="outline" className="text-base font-mono text-slate-500">
             Engine Version 2026.4
           </Badge>
         </div>
 
         <Card className="p-5 rounded-xl border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-base">
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-slate-400 uppercase font-bold text-[10px] block">IRB Quorum Threshold</span>
-              <strong className="text-sm font-black text-slate-900 dark:text-white block">5 Voting Members</strong>
-              <span className="text-slate-500 text-[11px] block">Includes at least 1 non-scientific lay member</span>
+              <span className="text-slate-400 uppercase font-bold text-base block">IRB Quorum Threshold</span>
+              <strong className="text-base font-black text-slate-900 dark:text-white block">5 Voting Members</strong>
+              <span className="text-slate-500 text-base block">Includes at least 1 non-scientific lay member</span>
             </div>
 
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-slate-400 uppercase font-bold text-[10px] block">Fast-Track Turnaround Target</span>
-              <strong className="text-sm font-black text-slate-900 dark:text-white block">3 Working Days</strong>
-              <span className="text-slate-500 text-[11px] block">Single designated reviewer triage</span>
+              <span className="text-slate-400 uppercase font-bold text-base block">Fast-Track Turnaround Target</span>
+              <strong className="text-base font-black text-slate-900 dark:text-white block">3 Working Days</strong>
+              <span className="text-slate-500 text-base block">Single designated reviewer triage</span>
             </div>
 
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-slate-400 uppercase font-bold text-[10px] block">Full Committee Cycle</span>
-              <strong className="text-sm font-black text-slate-900 dark:text-white block">14 Calendar Days</strong>
-              <span className="text-slate-500 text-[11px] block">Consensus or majority quorum vote</span>
+              <span className="text-slate-400 uppercase font-bold text-base block">Full Committee Cycle</span>
+              <strong className="text-base font-black text-slate-900 dark:text-white block">14 Calendar Days</strong>
+              <span className="text-slate-500 text-base block">Consensus or majority quorum vote</span>
             </div>
 
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200/70 dark:border-slate-800 space-y-1">
-              <span className="text-slate-400 uppercase font-bold text-[10px] block">Data Retention Mandate</span>
-              <strong className="text-sm font-black text-slate-900 dark:text-white block">7 Years Post-Closure</strong>
-              <span className="text-slate-500 text-[11px] block">Encrypted cold archive storage</span>
+              <span className="text-slate-400 uppercase font-bold text-base block">Data Retention Mandate</span>
+              <strong className="text-base font-black text-slate-900 dark:text-white block">7 Years Post-Closure</strong>
+              <span className="text-slate-500 text-base block">Encrypted cold archive storage</span>
             </div>
           </div>
         </Card>

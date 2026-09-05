@@ -275,13 +275,13 @@ export default function AdminCategoriesPage() {
         accessorKey: "code",
         header: "Code / ID",
         sortable: true,
-        headerClassName: "w-[150px]",
+        headerClassName: "w-36",
         cell: ({ row }) => (
           <div className="space-y-1">
-            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+            <span className="font-mono text-base font-bold px-2 py-0.5 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
               {row.code}
             </span>
-            <span className="block font-mono text-[10px] text-slate-400 dark:text-slate-500">
+            <span className="block font-mono text-base text-slate-400 dark:text-slate-500">
               {row.id}
             </span>
           </div>
@@ -300,7 +300,7 @@ export default function AdminCategoriesPage() {
             >
               {row.name}
             </Link>
-            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+            <p className="text-base text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
               {row.description}
             </p>
           </div>
@@ -311,11 +311,11 @@ export default function AdminCategoriesPage() {
         accessorKey: "board",
         header: "Ethics Board",
         sortable: true,
-        headerClassName: "w-[170px]",
+        headerClassName: "w-44",
         cell: ({ row }) => (
           <Badge
             variant="outline"
-            className="text-[11px] font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap"
+            className="text-base font-semibold bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap"
           >
             <Building2 className="size-3 mr-1 text-[#002752] dark:text-sky-400" />
             {row.board}
@@ -327,13 +327,13 @@ export default function AdminCategoriesPage() {
         accessorKey: "priceBdt",
         header: "Standard Fee (BDT ৳)",
         sortable: true,
-        headerClassName: "w-[160px]",
+        headerClassName: "w-40",
         cell: ({ row }) => (
           <div className="whitespace-nowrap">
-            <span className="font-bold text-slate-900 dark:text-white text-sm">
+            <span className="font-bold text-slate-900 dark:text-white text-base">
               ৳ {row.priceBdt.toLocaleString()}
             </span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase font-mono">
+            <span className="text-base text-slate-400 dark:text-slate-500 block uppercase font-mono">
               BDT / Submission
             </span>
           </div>
@@ -344,18 +344,18 @@ export default function AdminCategoriesPage() {
         accessorKey: "expeditedFeeBdt",
         header: "Expedited Review",
         sortable: true,
-        headerClassName: "w-[150px]",
+        headerClassName: "w-36",
         cell: ({ row }) => (
           row.expeditedAllowed ? (
             <div className="whitespace-nowrap">
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-400">
+              <span className="inline-flex items-center gap-1 text-base font-bold text-amber-700 dark:text-amber-400">
                 <Zap className="size-3" />
                 + ৳ {row.expeditedFeeBdt.toLocaleString()} BDT
               </span>
-              <span className="text-[10px] text-slate-400 block">72h Docket</span>
+              <span className="text-base text-slate-400 block">72h Docket</span>
             </div>
           ) : (
-            <span className="text-[11px] text-slate-400 italic">Not Eligible</span>
+            <span className="text-base text-slate-400 italic">Not Eligible</span>
           )
         ),
       },
@@ -364,9 +364,9 @@ export default function AdminCategoriesPage() {
         accessorKey: "turnaroundDays",
         header: "Turnaround",
         sortable: true,
-        headerClassName: "w-[120px]",
+        headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-700 dark:text-slate-300">
+          <span className="inline-flex items-center gap-1 text-base font-medium text-slate-700 dark:text-slate-300">
             <Clock className="size-3 text-slate-400" />
             ~{row.turnaroundDays} Days
           </span>
@@ -377,12 +377,12 @@ export default function AdminCategoriesPage() {
         accessorKey: "status",
         header: "Status",
         sortable: true,
-        headerClassName: "w-[120px]",
+        headerClassName: "w-32",
         cell: ({ row }) => {
           const isActive = row.status === "Active"
           return (
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-md border whitespace-nowrap ${
+              className={`inline-flex items-center gap-1 text-base font-bold px-2.5 py-0.5 rounded-md border whitespace-nowrap ${
                 isActive
                   ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700"
@@ -401,7 +401,7 @@ export default function AdminCategoriesPage() {
       {
         id: "actions",
         header: "Actions",
-        headerClassName: "w-[150px] text-right",
+        headerClassName: "w-36 text-right",
         align: "right",
         cell: ({ row }) => (
           <div className="flex items-center justify-end gap-1">
@@ -549,7 +549,7 @@ export default function AdminCategoriesPage() {
             <Button
               type="button"
               onClick={() => setCreateDialogOpen(true)}
-              className="gap-1.5 h-8 px-3 text-xs font-bold bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
+              className="gap-1.5 h-8 px-3 text-base font-bold bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
             >
               <Plus className="size-3.5" />
               <span>New Research Category</span>
@@ -573,13 +573,13 @@ export default function AdminCategoriesPage() {
                   variant="outline"
                   size="xs"
                   onClick={handleAutofillDemo}
-                  className="text-[11px] font-bold text-[#002752] dark:text-sky-300 gap-1"
+                  className="text-base font-bold text-[#002752] dark:text-sky-300 gap-1"
                 >
                   <Sparkles className="size-3 text-amber-500" />
                   <span>Autofill Sample</span>
                 </Button>
               </div>
-              <SheetDescription className="text-xs text-muted-foreground">
+              <SheetDescription className="text-base text-muted-foreground">
                 Define a scientific research categorization stream, assign its governing IRB board, and set institutional fee schedules in Bangladeshi Taka (BDT ৳).
               </SheetDescription>
             </SheetHeader>
@@ -588,7 +588,7 @@ export default function AdminCategoriesPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Category Name */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <Label htmlFor="create-name" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-name" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Category Name <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -603,13 +603,13 @@ export default function AdminCategoriesPage() {
                     className={createErrors.name ? "border-rose-500 ring-1 ring-rose-500/20" : ""}
                   />
                   {createErrors.name && (
-                    <p className="text-xs text-rose-600 font-semibold">{createErrors.name}</p>
+                    <p className="text-base text-rose-600 font-semibold">{createErrors.name}</p>
                   )}
                 </div>
 
                 {/* Category Code */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-code" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-code" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Category Code <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -624,13 +624,13 @@ export default function AdminCategoriesPage() {
                     className={createErrors.code ? "border-rose-500 ring-1 ring-rose-500/20 font-mono" : "font-mono"}
                   />
                   {createErrors.code && (
-                    <p className="text-xs text-rose-600 font-semibold">{createErrors.code}</p>
+                    <p className="text-base text-rose-600 font-semibold">{createErrors.code}</p>
                   )}
                 </div>
 
                 {/* Governing Ethics Board */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-board" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-board" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Governing Ethics Board <span className="text-rose-500">*</span>
                   </Label>
                   <Select
@@ -654,7 +654,7 @@ export default function AdminCategoriesPage() {
 
                 {/* Standard Fee in BDT */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-price" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-price" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Standard Fee (BDT ৳) <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -672,13 +672,13 @@ export default function AdminCategoriesPage() {
                     className={createErrors.priceBdt ? "border-rose-500 ring-1 ring-rose-500/20 font-mono" : "font-mono"}
                   />
                   {createErrors.priceBdt && (
-                    <p className="text-xs text-rose-600 font-semibold">{createErrors.priceBdt}</p>
+                    <p className="text-base text-rose-600 font-semibold">{createErrors.priceBdt}</p>
                   )}
                 </div>
 
                 {/* Estimated Turnaround Days */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-turnaround" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-turnaround" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Turnaround Velocity (Days) <span className="text-rose-500">*</span>
                   </Label>
                   <Input
@@ -707,7 +707,7 @@ export default function AdminCategoriesPage() {
                     />
                     <Label
                       htmlFor="create-expedited-toggle"
-                      className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                      className="text-base font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
                     >
                       Enable Fast-Track Expedited Review (72-Hour Triage)
                     </Label>
@@ -715,7 +715,7 @@ export default function AdminCategoriesPage() {
 
                   {createForm.expeditedAllowed && (
                     <div className="space-y-1.5 pl-6 pt-1">
-                      <Label htmlFor="create-expedited-fee" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <Label htmlFor="create-expedited-fee" className="text-base font-bold text-slate-700 dark:text-slate-300">
                         Expedited Surcharge (BDT ৳)
                       </Label>
                       <Input
@@ -738,7 +738,7 @@ export default function AdminCategoriesPage() {
 
                 {/* Default Ethics Risk Tier */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-risk" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-risk" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Default Ethics Risk Tier
                   </Label>
                   <Select
@@ -765,7 +765,7 @@ export default function AdminCategoriesPage() {
 
                 {/* Intake Status */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="create-status" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-status" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Initial Status
                   </Label>
                   <Select
@@ -789,7 +789,7 @@ export default function AdminCategoriesPage() {
 
                 {/* Scientific Scope Description */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <Label htmlFor="create-desc" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <Label htmlFor="create-desc" className="text-base font-bold text-slate-700 dark:text-slate-300">
                     Scientific Scope & Guidance Description <span className="text-rose-500">*</span>
                   </Label>
                   <Textarea
@@ -806,7 +806,7 @@ export default function AdminCategoriesPage() {
                     className={createErrors.description ? "border-rose-500 ring-1 ring-rose-500/20" : ""}
                   />
                   {createErrors.description && (
-                    <p className="text-xs text-rose-600 font-semibold">{createErrors.description}</p>
+                    <p className="text-base text-rose-600 font-semibold">{createErrors.description}</p>
                   )}
                 </div>
               </div>
@@ -841,7 +841,7 @@ export default function AdminCategoriesPage() {
                   <Edit2 className="size-5 text-[#198754]" />
                   <span>Edit Category: {categoryToEdit.code}</span>
                 </SheetTitle>
-                <SheetDescription className="text-xs text-muted-foreground">
+                <SheetDescription className="text-base text-muted-foreground">
                   Update scientific scope, IRB board assignment, or adjust pricing in Bangladeshi Taka (BDT ৳).
                 </SheetDescription>
               </SheetHeader>
@@ -850,7 +850,7 @@ export default function AdminCategoriesPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Category Name */}
                   <div className="sm:col-span-2 space-y-1.5">
-                    <Label htmlFor="edit-name" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-name" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Category Name <span className="text-rose-500">*</span>
                     </Label>
                     <Input
@@ -864,13 +864,13 @@ export default function AdminCategoriesPage() {
                       className={editErrors.name ? "border-rose-500 ring-1 ring-rose-500/20" : ""}
                     />
                     {editErrors.name && (
-                      <p className="text-xs text-rose-600 font-semibold">{editErrors.name}</p>
+                      <p className="text-base text-rose-600 font-semibold">{editErrors.name}</p>
                     )}
                   </div>
 
                   {/* Category Code */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-code" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-code" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Category Code <span className="text-rose-500">*</span>
                     </Label>
                     <Input
@@ -886,7 +886,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Governing Ethics Board */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-board" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-board" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Governing Ethics Board
                     </Label>
                     <Select
@@ -910,7 +910,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Standard Fee in BDT */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-price" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-price" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Standard Fee (BDT ৳) <span className="text-rose-500">*</span>
                     </Label>
                     <Input
@@ -929,7 +929,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Estimated Turnaround Days */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-turnaround" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-turnaround" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Turnaround Velocity (Days)
                     </Label>
                     <Input
@@ -958,7 +958,7 @@ export default function AdminCategoriesPage() {
                       />
                       <Label
                         htmlFor="edit-expedited-toggle"
-                        className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                        className="text-base font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
                       >
                         Enable Fast-Track Expedited Review (72-Hour Triage)
                       </Label>
@@ -966,7 +966,7 @@ export default function AdminCategoriesPage() {
 
                     {editForm.expeditedAllowed && (
                       <div className="space-y-1.5 pl-6 pt-1">
-                        <Label htmlFor="edit-expedited-fee" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <Label htmlFor="edit-expedited-fee" className="text-base font-bold text-slate-700 dark:text-slate-300">
                           Expedited Surcharge (BDT ৳)
                         </Label>
                         <Input
@@ -989,7 +989,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Default Risk Tier */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-risk" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-risk" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Default Ethics Risk Tier
                     </Label>
                     <Select
@@ -1016,7 +1016,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Status Toggle */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="edit-status" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-status" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Status
                     </Label>
                     <Select
@@ -1040,7 +1040,7 @@ export default function AdminCategoriesPage() {
 
                   {/* Description */}
                   <div className="sm:col-span-2 space-y-1.5">
-                    <Label htmlFor="edit-desc" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <Label htmlFor="edit-desc" className="text-base font-bold text-slate-700 dark:text-slate-300">
                       Scientific Scope & Description <span className="text-rose-500">*</span>
                     </Label>
                     <Textarea
@@ -1055,7 +1055,7 @@ export default function AdminCategoriesPage() {
                       className={editErrors.description ? "border-rose-500 ring-1 ring-rose-500/20" : ""}
                     />
                     {editErrors.description && (
-                      <p className="text-xs text-rose-600 font-semibold">{editErrors.description}</p>
+                      <p className="text-base text-rose-600 font-semibold">{editErrors.description}</p>
                     )}
                   </div>
                 </div>
@@ -1094,7 +1094,7 @@ export default function AdminCategoriesPage() {
               <ShieldAlert className="size-5" />
               <span>Confirm Category Removal</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <AlertDialogDescription className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Are you sure you want to permanently delete the research category{" "}
               <strong className="text-slate-900 dark:text-white">
                 {categoryToDelete?.name} ({categoryToDelete?.code})
@@ -1106,7 +1106,7 @@ export default function AdminCategoriesPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs"
+              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-base"
             >
               Confirm Deletion
             </AlertDialogAction>

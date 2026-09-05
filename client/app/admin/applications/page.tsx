@@ -90,13 +90,13 @@ export default function AdminReviewerApplicationsPage() {
         accessorKey: "id",
         header: "Application ID",
         sortable: true,
-        headerClassName: "w-[140px]",
+        headerClassName: "w-36",
         cell: ({ row }) => (
           <div className="space-y-1">
-            <span className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300 block">
+            <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300 block">
               {row.id}
             </span>
-            <div className="flex items-center gap-1 text-[11px] text-slate-400 dark:text-slate-500">
+            <div className="flex items-center gap-1 text-base text-slate-400 dark:text-slate-500">
               <Calendar className="size-3" />
               <span>{row.submittedAt}</span>
             </div>
@@ -111,14 +111,14 @@ export default function AdminReviewerApplicationsPage() {
         cell: ({ row }) => (
           <div className="space-y-1 max-w-sm">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-slate-900 dark:text-white">
+              <span className="font-bold text-base text-slate-900 dark:text-white">
                 {row.fullName}
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <span className="text-base font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                 {row.degree}
               </span>
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 truncate">
+            <div className="text-base text-slate-500 dark:text-slate-400 flex items-center gap-1.5 truncate">
               <Building2 className="size-3 shrink-0 text-slate-400" />
               <span className="truncate">{row.position} • {row.institution}</span>
             </div>
@@ -131,7 +131,7 @@ export default function AdminReviewerApplicationsPage() {
         header: "Department",
         sortable: true,
         cell: ({ row }) => (
-          <span className="text-xs text-slate-600 dark:text-slate-300">
+          <span className="text-base text-slate-600 dark:text-slate-300">
             {row.department}
           </span>
         ),
@@ -140,12 +140,12 @@ export default function AdminReviewerApplicationsPage() {
         id: "expertise",
         header: "Domain Expertise",
         cell: ({ row }) => (
-          <div className="flex flex-wrap gap-1 max-w-[220px]">
+          <div className="flex flex-wrap gap-1 max-w-56">
             {row.expertise.slice(0, 2).map((exp) => (
               <Badge
                 key={exp}
                 variant="secondary"
-                className="text-[10px] font-medium px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-none truncate"
+                className="text-base font-medium px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-none truncate"
               >
                 {exp}
               </Badge>
@@ -153,7 +153,7 @@ export default function AdminReviewerApplicationsPage() {
             {row.expertise.length > 2 && (
               <Badge
                 variant="outline"
-                className="text-[10px] font-mono px-1.5 py-0.5 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700"
+                className="text-base font-mono px-1.5 py-0.5 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700"
               >
                 +{row.expertise.length - 2}
               </Badge>
@@ -167,9 +167,9 @@ export default function AdminReviewerApplicationsPage() {
         header: "Experience",
         sortable: true,
         align: "center",
-        headerClassName: "w-[110px]",
+        headerClassName: "w-28",
         cell: ({ row }) => (
-          <span className="text-xs font-bold text-slate-800 dark:text-slate-200 tabular-nums">
+          <span className="text-base font-bold text-slate-800 dark:text-slate-200 tabular-nums">
             {row.yearsExperience} yrs
           </span>
         ),
@@ -179,7 +179,7 @@ export default function AdminReviewerApplicationsPage() {
         accessorKey: "status",
         header: "Governance Status",
         sortable: true,
-        headerClassName: "w-[170px]",
+        headerClassName: "w-44",
         cell: ({ row }) => {
           const isPending = row.status === "Pending Verification"
           const isApproved = row.status === "Approved"
@@ -187,7 +187,7 @@ export default function AdminReviewerApplicationsPage() {
           return (
             <div className="inline-flex items-center gap-1.5">
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-base font-bold border ${
                   isApproved
                     ? "bg-[#198754]/10 text-[#198754] dark:text-emerald-400 border-[#198754]/30"
                     : isPending
@@ -214,14 +214,14 @@ export default function AdminReviewerApplicationsPage() {
         id: "actions",
         header: "Dossier Actions",
         align: "right",
-        headerClassName: "w-[190px]",
+        headerClassName: "w-48",
         cell: ({ row }) => (
           <div className="inline-flex items-center gap-1.5 justify-end">
             <Link
               href={`/admin/applications/${row.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-bold gap-1 rounded-lg border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#002752] dark:text-sky-300 shadow-2xs transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#002752] dark:text-sky-300 shadow-2xs transition-colors cursor-pointer"
               title="Inspect Full Applicant Dossier in New Tab"
             >
               <Eye className="size-3.5" />
@@ -231,7 +231,7 @@ export default function AdminReviewerApplicationsPage() {
             {row.status === "Approved" && (
               <Link
                 href={`/admin/roster?search=${encodeURIComponent(row.fullName)}`}
-                className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-bold gap-1 rounded-lg border border-emerald-300/80 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-950/40 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 transition-colors"
+                className="inline-flex items-center justify-center h-8 px-2.5 text-base font-bold gap-1 rounded-lg border border-emerald-300/80 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-950/40 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 transition-colors"
                 title="View in Accredited Reviewer Roster"
               >
                 <Users className="size-3.5" />
@@ -245,7 +245,7 @@ export default function AdminReviewerApplicationsPage() {
                   <Button
                     type="button"
                     size="sm"
-                    className="h-8 px-2.5 text-xs font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white shadow-2xs cursor-pointer"
+                    className="h-8 px-2.5 text-base font-bold rounded-lg bg-[#198754] hover:bg-[#146c43] text-white shadow-2xs cursor-pointer"
                     title="Approve Reviewer Accreditation"
                   >
                     <CheckCircle2 className="size-3.5" />
@@ -257,17 +257,17 @@ export default function AdminReviewerApplicationsPage() {
                     <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
                       Approve Reviewer Accreditation
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <AlertDialogDescription className="text-base sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                       You are approving reviewer accreditation for{" "}
                       <strong className="text-slate-900 dark:text-white">{row.fullName}</strong> ({row.id}) from{" "}
                       {row.institution}. This will grant active voting privileges on the IRB deliberation docket.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className="text-xs font-semibold">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="text-base font-semibold">Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => handleApprove(row.id, row.fullName)}
-                      className="bg-[#198754] hover:bg-[#146c43] text-white text-xs font-bold"
+                      className="bg-[#198754] hover:bg-[#146c43] text-white text-base font-bold"
                     >
                       Confirm Approval
                     </AlertDialogAction>
@@ -283,7 +283,7 @@ export default function AdminReviewerApplicationsPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="h-8 px-2.5 text-xs font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                    className="h-8 px-2.5 text-base font-bold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
                     title="Decline Reviewer Application"
                   >
                     <XCircle className="size-3.5" />
@@ -295,17 +295,17 @@ export default function AdminReviewerApplicationsPage() {
                     <AlertDialogTitle className="text-base font-bold text-[#002752] dark:text-white">
                       Decline Reviewer Application
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <AlertDialogDescription className="text-base sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                       Are you sure you want to decline accreditation for{" "}
                       <strong className="text-slate-900 dark:text-white">{row.fullName}</strong> ({row.id})?
                       This decision will be registered in the institutional intake ledger.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className="text-xs font-semibold">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="text-base font-semibold">Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => handleReject(row.id, row.fullName)}
-                      className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                      className="bg-rose-600 hover:bg-rose-700 text-white text-base font-bold"
                     >
                       Decline Application
                     </AlertDialogAction>
@@ -354,7 +354,7 @@ export default function AdminReviewerApplicationsPage() {
 
   if (!isClient) {
     return (
-      <div className="p-8 text-center text-slate-500 font-mono text-sm">
+      <div className="p-8 text-center text-slate-500 font-mono text-base">
         Loading Institutional Applications Queue...
       </div>
     )
@@ -414,7 +414,7 @@ export default function AdminReviewerApplicationsPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/admin/roster"
-                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-base transition-colors shrink-0"
               >
                 <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
                 <span>Accredited Reviewer Roster</span>
@@ -422,7 +422,7 @@ export default function AdminReviewerApplicationsPage() {
               <Link
                 href="/reviewer/apply"
                 target="_blank"
-                className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-lg transition-colors shadow-2xs shrink-0"
+                className="inline-flex items-center h-8 px-3 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-base rounded-lg transition-colors shadow-2xs shrink-0"
               >
                 <ExternalLink className="size-3 mr-1.5" />
                 <span>Open Public Apply Form</span>

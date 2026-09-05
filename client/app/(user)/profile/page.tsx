@@ -459,9 +459,9 @@ export default function InvestigatorProfilePage() {
         accessorKey: "id",
         header: "Protocol ID",
         sortable: true,
-        headerClassName: "w-[130px]",
+        headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-xs font-bold text-[#002752] dark:text-sky-300">
+          <span className="font-mono text-base font-bold text-[#002752] dark:text-sky-300">
             {row.id}
           </span>
         ),
@@ -473,10 +473,10 @@ export default function InvestigatorProfilePage() {
         sortable: true,
         cell: ({ row }) => (
           <div className="space-y-1 min-w-0">
-            <span className="font-bold text-xs text-slate-900 dark:text-slate-100 line-clamp-1">
+            <span className="font-bold text-base text-slate-900 dark:text-slate-100 line-clamp-1">
               {row.title}
             </span>
-            <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-2 text-base text-slate-500 dark:text-slate-400">
               <span>{row.board}</span>
               <span>•</span>
               <span className="font-mono">{row.riskLevel}</span>
@@ -489,9 +489,9 @@ export default function InvestigatorProfilePage() {
         accessorKey: "submissionDate",
         header: "Submitted",
         sortable: true,
-        headerClassName: "w-[120px]",
+        headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+          <span className="text-base text-slate-600 dark:text-slate-300 font-medium">
             {row.submissionDate}
           </span>
         ),
@@ -501,14 +501,14 @@ export default function InvestigatorProfilePage() {
         accessorKey: "status",
         header: "Ethics Status",
         sortable: true,
-        headerClassName: "w-[170px]",
+        headerClassName: "w-44",
         cell: ({ row }) => {
           const isClearance = row.status === "Clearance Granted"
           const isReview = row.status === "Under Committee Review"
           return (
             <Badge
               variant="outline"
-              className={`text-[10px] font-bold ${
+              className={`text-base font-bold ${
                 isClearance
                   ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
                   : isReview
@@ -525,15 +525,15 @@ export default function InvestigatorProfilePage() {
         id: "clearanceCertId",
         accessorKey: "clearanceCertId",
         header: "Certificate",
-        headerClassName: "w-[130px]",
+        headerClassName: "w-32",
         cell: ({ row }) =>
           row.clearanceCertId ? (
-            <span className="inline-flex items-center gap-1 font-mono text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
+            <span className="inline-flex items-center gap-1 font-mono text-base text-emerald-700 dark:text-emerald-400 font-semibold">
               <FileCheck2 className="size-3 shrink-0" />
               {row.clearanceCertId}
             </span>
           ) : (
-            <span className="text-[11px] text-slate-400 italic">In Deliberation</span>
+            <span className="text-base text-slate-400 italic">In Deliberation</span>
           ),
       },
     ],
@@ -603,7 +603,7 @@ export default function InvestigatorProfilePage() {
                           <ImageIcon className="size-5 text-[#198754]" />
                           Update Profile Picture
                         </SheetTitle>
-                        <SheetDescription className="text-xs text-muted-foreground">
+                        <SheetDescription className="text-base text-muted-foreground">
                           Choose how you would like to set your institutional investigator photo.
                           Select between local device file upload or direct HTTPS web URL.
                         </SheetDescription>
@@ -618,14 +618,14 @@ export default function InvestigatorProfilePage() {
                         <TabsList className="grid grid-cols-2 w-full h-10 p-1 bg-muted rounded-lg">
                           <TabsTrigger
                             value="file"
-                            className="text-xs font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
+                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
                           >
                             <Upload className="size-3.5" />
                             Option 1: Upload from Device
                           </TabsTrigger>
                           <TabsTrigger
                             value="url"
-                            className="text-xs font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
+                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-[#002752] dark:data-[active=true]:text-white"
                           >
                             <LinkIcon className="size-3.5" />
                             Option 2: Web Image URL
@@ -648,10 +648,10 @@ export default function InvestigatorProfilePage() {
                               <Upload className="size-6" />
                             </div>
                             <div className="space-y-1">
-                              <p className="text-xs font-bold text-foreground">
+                              <p className="text-base font-bold text-foreground">
                                 Drag & drop your photo here, or browse files
                               </p>
-                              <p className="text-[11px] text-muted-foreground">
+                              <p className="text-base text-muted-foreground">
                                 Supports PNG, JPG, JPEG, WEBP, or GIF up to 5MB
                               </p>
                             </div>
@@ -670,7 +670,7 @@ export default function InvestigatorProfilePage() {
                               variant="outline"
                               size="sm"
                               onClick={() => fileInputRef.current?.click()}
-                              className="h-8 px-4 text-xs font-bold rounded-md border-border/85 hover:bg-muted"
+                              className="h-8 px-4 text-base font-bold rounded-md border-border/85 hover:bg-muted"
                             >
                               Browse Computer
                             </Button>
@@ -689,17 +689,17 @@ export default function InvestigatorProfilePage() {
                                   />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="text-xs font-bold text-foreground truncate">
+                                  <p className="text-base font-bold text-foreground truncate">
                                     {fileDraftMeta.name}
                                   </p>
-                                  <p className="text-[10px] text-muted-foreground font-mono">
+                                  <p className="text-base text-muted-foreground font-mono">
                                     {fileDraftMeta.type} • {fileDraftMeta.sizeKb}
                                   </p>
                                 </div>
                               </div>
                               <Badge
                                 variant="outline"
-                                className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px] shrink-0"
+                                className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-base shrink-0"
                               >
                                 Ready
                               </Badge>
@@ -710,10 +710,10 @@ export default function InvestigatorProfilePage() {
                         {/* ── OPTION 2: DIRECT IMAGE URL & PRESETS ─────────── */}
                         <TabsContent value="url" className="space-y-4 pt-4">
                           <div className="space-y-2">
-                            <label className="text-xs font-bold text-foreground flex items-center justify-between">
+                            <label className="text-base font-bold text-foreground flex items-center justify-between">
                               <span>Direct HTTPS Image Web Address:</span>
                               {urlVerified && (
-                                <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                                <span className="text-base text-emerald-600 font-bold flex items-center gap-1">
                                   <CheckCircle2 className="size-3" />
                                   Link Verified
                                 </span>
@@ -727,7 +727,7 @@ export default function InvestigatorProfilePage() {
                                   setUrlVerified(false)
                                 }}
                                 placeholder="https://images.example.com/dr-elena-headshot.jpg"
-                                className="h-9 text-xs font-mono"
+                                className="h-9 text-base font-mono"
                               />
                               <Button
                                 type="button"
@@ -735,7 +735,7 @@ export default function InvestigatorProfilePage() {
                                 size="sm"
                                 disabled={isTestingUrl || !urlInput.trim()}
                                 onClick={() => handleVerifyUrl(urlInput)}
-                                className="h-9 px-3 text-xs font-bold shrink-0 rounded-md"
+                                className="h-9 px-3 text-base font-bold shrink-0 rounded-md"
                               >
                                 {isTestingUrl ? (
                                   <RefreshCw className="size-3.5 animate-spin" />
@@ -748,7 +748,7 @@ export default function InvestigatorProfilePage() {
 
                           {/* Quick Select Institutional Presets */}
                           <div className="space-y-2">
-                            <span className="text-[11px] font-bold text-muted-foreground block uppercase tracking-wider">
+                            <span className="text-base font-bold text-muted-foreground block uppercase tracking-wider">
                               Or Choose Curated Institutional Headshots:
                             </span>
                             <div className="grid grid-cols-2 gap-2">
@@ -770,10 +770,10 @@ export default function InvestigatorProfilePage() {
                                     />
                                   </div>
                                   <div className="text-left leading-tight min-w-0">
-                                    <span className="text-xs font-bold text-foreground block truncate">
+                                    <span className="text-base font-bold text-foreground block truncate">
                                       {preset.label}
                                     </span>
-                                    <span className="text-[10px] text-muted-foreground block truncate">
+                                    <span className="text-base text-muted-foreground block truncate">
                                       {preset.role}
                                     </span>
                                   </div>
@@ -787,7 +787,7 @@ export default function InvestigatorProfilePage() {
                       {/* ── Real-Time Multi-Size Preview Arena ────────────── */}
                       {(fileDraftUrl || urlDraftUrl) && (
                         <div className="p-3.5 rounded-xl bg-muted/30 border border-border/70 space-y-2">
-                          <span className="text-[11px] font-bold text-muted-foreground block uppercase tracking-wider">
+                          <span className="text-base font-bold text-muted-foreground block uppercase tracking-wider">
                             Live Multi-Viewport Preview:
                           </span>
                           <div className="flex items-center justify-around gap-4 pt-1">
@@ -805,7 +805,7 @@ export default function InvestigatorProfilePage() {
                                   className="size-full object-cover"
                                 />
                               </div>
-                              <span className="text-[10px] text-muted-foreground font-medium">
+                              <span className="text-base text-muted-foreground font-medium">
                                 Profile Card (64px)
                               </span>
                             </div>
@@ -824,7 +824,7 @@ export default function InvestigatorProfilePage() {
                                   className="size-full object-cover"
                                 />
                               </div>
-                              <span className="text-[10px] text-muted-foreground font-medium">
+                              <span className="text-base text-muted-foreground font-medium">
                                 Navbar Pill (32px)
                               </span>
                             </div>
@@ -838,7 +838,7 @@ export default function InvestigatorProfilePage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => setAvatarDialogOpen(false)}
-                          className="h-9 px-3 text-xs font-semibold"
+                          className="h-9 px-3 text-base font-semibold"
                         >
                           Cancel
                         </Button>
@@ -851,7 +851,7 @@ export default function InvestigatorProfilePage() {
                               ? !fileDraftUrl
                               : !urlDraftUrl || !urlVerified
                           }
-                          className="h-9 px-4 text-xs font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
+                          className="h-9 px-4 text-base font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
                         >
                           Apply Profile Picture
                         </Button>
@@ -868,15 +868,15 @@ export default function InvestigatorProfilePage() {
                     </h1>
                     <Badge
                       variant="outline"
-                      className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px] font-bold"
+                      className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-base font-bold"
                     >
                       Verified PI
                     </Badge>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-muted-foreground mt-0.5">
+                  <p className="text-base sm:text-base font-semibold text-muted-foreground mt-0.5">
                     {profile.title}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 flex flex-wrap items-center gap-2">
+                  <p className="text-base text-muted-foreground mt-1 flex flex-wrap items-center gap-2">
                     <span>{profile.institution}</span>
                     <span>•</span>
                     <span className="font-mono font-bold text-foreground">
@@ -896,7 +896,7 @@ export default function InvestigatorProfilePage() {
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="h-9 px-3 text-xs font-semibold text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-md"
+                          className="h-9 px-3 text-base font-semibold text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-md"
                         >
                           <Trash2 className="size-3.5 mr-1.5" />
                           Remove Photo
@@ -905,21 +905,21 @@ export default function InvestigatorProfilePage() {
                     />
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle className="text-sm font-bold text-rose-600">
+                        <AlertDialogTitle className="text-base font-bold text-rose-600">
                           Revert to Institutional Monogram?
                         </AlertDialogTitle>
-                        <AlertDialogDescription className="text-xs text-muted-foreground">
+                        <AlertDialogDescription className="text-base text-muted-foreground">
                           Removing your profile picture will reset your avatar to the default
                           initials &quot;ER&quot; in the header and investigator roster.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="text-xs font-semibold">
+                        <AlertDialogCancel className="text-base font-semibold">
                           Keep Photo
                         </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleRemoveAvatar}
-                          className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
+                          className="bg-rose-600 hover:bg-rose-700 text-white text-base font-bold"
                         >
                           Remove Photo
                         </AlertDialogAction>
@@ -933,7 +933,7 @@ export default function InvestigatorProfilePage() {
                   variant={isEditingProfile ? "secondary" : "outline"}
                   size="sm"
                   onClick={() => setIsEditingProfile(!isEditingProfile)}
-                  className="h-9 px-3.5 text-xs font-bold rounded-md border-border/90"
+                  className="h-9 px-3.5 text-base font-bold rounded-md border-border/90"
                 >
                   {isEditingProfile ? "Cancel Editing" : "Edit Profile Info"}
                 </Button>
@@ -941,10 +941,10 @@ export default function InvestigatorProfilePage() {
             </div>
 
             {/* Academic Badges & Research Affiliations */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
               <div className="p-3.5 rounded-xl bg-muted/40 border border-border/70 space-y-1">
                 <span className="text-muted-foreground block font-medium">Faculty & Department:</span>
-                <strong className="text-foreground font-bold block text-sm">
+                <strong className="text-foreground font-bold block text-base">
                   {profile.department}
                 </strong>
                 <span className="text-muted-foreground block">
@@ -955,18 +955,18 @@ export default function InvestigatorProfilePage() {
               <div className="p-3.5 rounded-xl bg-muted/40 border border-border/70 space-y-1">
                 <span className="text-muted-foreground block font-medium">Research Identifiers:</span>
                 <div className="flex items-center gap-2 pt-0.5">
-                  <span className="font-mono text-xs font-bold text-foreground">
+                  <span className="font-mono text-base font-bold text-foreground">
                     ORCID: {profile.orcidId}
                   </span>
                   <Link
                     href={`https://orcid.org/${profile.orcidId}`}
                     target="_blank"
-                    className="text-emerald-600 hover:underline flex items-center gap-0.5 text-[11px] font-semibold"
+                    className="text-emerald-600 hover:underline flex items-center gap-0.5 text-base font-semibold"
                   >
                     Verify <ExternalLink className="size-2.5" />
                   </Link>
                 </div>
-                <span className="text-muted-foreground block text-[11px]">
+                <span className="text-muted-foreground block text-base">
                   Google Scholar: Verified Institutional Profile
                 </span>
               </div>
@@ -977,85 +977,85 @@ export default function InvestigatorProfilePage() {
               <form onSubmit={handleSaveProfile} className="space-y-4 pt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-foreground">Full Name:</label>
+                    <label className="text-base font-bold text-foreground">Full Name:</label>
                     <Input
                       value={editForm.name}
                       onChange={(e) => setEditForm((p) => ({ ...p, name: e.target.value }))}
-                      className="h-9 text-xs"
+                      className="h-9 text-base"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-foreground">Academic Title & Rank:</label>
+                    <label className="text-base font-bold text-foreground">Academic Title & Rank:</label>
                     <Input
                       value={editForm.title}
                       onChange={(e) => setEditForm((p) => ({ ...p, title: e.target.value }))}
-                      className="h-9 text-xs"
+                      className="h-9 text-base"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-foreground">Office Direct Phone:</label>
+                    <label className="text-base font-bold text-foreground">Office Direct Phone:</label>
                     <Input
                       value={editForm.phone}
                       onChange={(e) => setEditForm((p) => ({ ...p, phone: e.target.value }))}
-                      className="h-9 text-xs font-mono"
+                      className="h-9 text-base font-mono"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-foreground">Mobile Phone:</label>
+                    <label className="text-base font-bold text-foreground">Mobile Phone:</label>
                     <Input
                       value={editForm.mobile}
                       onChange={(e) => setEditForm((p) => ({ ...p, mobile: e.target.value }))}
-                      className="h-9 text-xs font-mono"
+                      className="h-9 text-base font-mono"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-bold text-foreground">Campus Office Location:</label>
+                    <label className="text-base font-bold text-foreground">Campus Office Location:</label>
                     <Input
                       value={editForm.office}
                       onChange={(e) => setEditForm((p) => ({ ...p, office: e.target.value }))}
-                      className="h-9 text-xs"
+                      className="h-9 text-base"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-bold text-foreground">Office Consultation Hours:</label>
+                    <label className="text-base font-bold text-foreground">Office Consultation Hours:</label>
                     <Input
                       value={editForm.consultationHours}
                       onChange={(e) =>
                         setEditForm((p) => ({ ...p, consultationHours: e.target.value }))
                       }
-                      className="h-9 text-xs"
+                      className="h-9 text-base"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-bold text-foreground">Research Interests:</label>
+                    <label className="text-base font-bold text-foreground">Research Interests:</label>
                     <Input
                       value={editForm.researchInterests}
                       onChange={(e) =>
                         setEditForm((p) => ({ ...p, researchInterests: e.target.value }))
                       }
-                      className="h-9 text-xs"
+                      className="h-9 text-base"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-bold text-foreground">Academic Biography:</label>
+                    <label className="text-base font-bold text-foreground">Academic Biography:</label>
                     <Textarea
                       value={editForm.bio}
                       onChange={(e) => setEditForm((p) => ({ ...p, bio: e.target.value }))}
-                      className="min-h-24 text-xs"
+                      className="min-h-24 text-base"
                       required
                     />
                   </div>
@@ -1067,14 +1067,14 @@ export default function InvestigatorProfilePage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsEditingProfile(false)}
-                    className="h-9 text-xs"
+                    className="h-9 text-base"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     size="sm"
-                    className="h-9 px-4 text-xs font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
+                    className="h-9 px-4 text-base font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
                   >
                     Save Changes
                   </Button>
@@ -1083,11 +1083,11 @@ export default function InvestigatorProfilePage() {
             ) : (
               <div className="space-y-4 pt-1">
                 {/* Contact Coordinates */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
                   <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
                     <Mail className="size-4 text-slate-400 shrink-0" />
                     <div className="min-w-0">
-                      <span className="text-muted-foreground block text-[11px]">Official Email</span>
+                      <span className="text-muted-foreground block text-base">Official Email</span>
                       <span className="font-semibold text-foreground truncate block font-mono">
                         {profile.email}
                       </span>
@@ -1097,7 +1097,7 @@ export default function InvestigatorProfilePage() {
                   <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
                     <Phone className="size-4 text-slate-400 shrink-0" />
                     <div className="min-w-0">
-                      <span className="text-muted-foreground block text-[11px]">Office Phone</span>
+                      <span className="text-muted-foreground block text-base">Office Phone</span>
                       <span className="font-semibold text-foreground truncate block font-mono">
                         {profile.phone}
                       </span>
@@ -1107,7 +1107,7 @@ export default function InvestigatorProfilePage() {
                   <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
                     <MapPin className="size-4 text-slate-400 shrink-0" />
                     <div className="min-w-0">
-                      <span className="text-muted-foreground block text-[11px]">Campus Office</span>
+                      <span className="text-muted-foreground block text-base">Campus Office</span>
                       <span className="font-semibold text-foreground truncate block">
                         {profile.office}
                       </span>
@@ -1117,7 +1117,7 @@ export default function InvestigatorProfilePage() {
                   <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
                     <Clock className="size-4 text-slate-400 shrink-0" />
                     <div className="min-w-0">
-                      <span className="text-muted-foreground block text-[11px]">Office Consultation</span>
+                      <span className="text-muted-foreground block text-base">Office Consultation</span>
                       <span className="font-semibold text-foreground truncate block">
                         {profile.consultationHours}
                       </span>
@@ -1127,7 +1127,7 @@ export default function InvestigatorProfilePage() {
 
                 {/* Research Interests Tags */}
                 <div className="space-y-1.5 pt-1">
-                  <span className="text-xs font-bold text-foreground block">
+                  <span className="text-base font-bold text-foreground block">
                     Research Domains & Specializations:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -1135,7 +1135,7 @@ export default function InvestigatorProfilePage() {
                       <Badge
                         key={i}
                         variant="secondary"
-                        className="text-[11px] font-semibold bg-muted text-foreground border border-border/70 px-2.5 py-0.5"
+                        className="text-base font-semibold bg-muted text-foreground border border-border/70 px-2.5 py-0.5"
                       >
                         {interest.trim()}
                       </Badge>
@@ -1144,7 +1144,7 @@ export default function InvestigatorProfilePage() {
                 </div>
 
                 {/* Narrative Bio */}
-                <div className="p-4 rounded-xl border border-border/75 bg-muted/30 text-xs leading-relaxed text-muted-foreground">
+                <div className="p-4 rounded-xl border border-border/75 bg-muted/30 text-base leading-relaxed text-muted-foreground">
                   <p className="font-medium text-foreground">{profile.bio}</p>
                 </div>
               </div>
@@ -1156,20 +1156,20 @@ export default function InvestigatorProfilePage() {
         <div className="space-y-6">
           {/* Institutional Ethics Accreditations */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white flex items-center gap-2">
+            <h3 className="text-base font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <Award className="size-4 text-[#E0C23C]" />
               Ethics Certifications & Training
             </h3>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-base">
               <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-foreground">CITI Bioethics & IRB Training</span>
-                  <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
                     Active
                   </Badge>
                 </div>
-                <p className="text-muted-foreground text-[11px]">
+                <p className="text-muted-foreground text-base">
                   Credential #CITI-2025-9921 • Valid thru Dec 2027
                 </p>
               </div>
@@ -1177,11 +1177,11 @@ export default function InvestigatorProfilePage() {
               <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-foreground">Good Clinical Practice (GCP E6-R2)</span>
-                  <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
                     Accredited
                   </Badge>
                 </div>
-                <p className="text-muted-foreground text-[11px]">
+                <p className="text-muted-foreground text-base">
                   International Council for Harmonisation (ICH) Standard
                 </p>
               </div>
@@ -1189,11 +1189,11 @@ export default function InvestigatorProfilePage() {
               <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-foreground">Declaration of Helsinki Compliance</span>
-                  <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
                     Verified
                   </Badge>
                 </div>
-                <p className="text-muted-foreground text-[11px]">
+                <p className="text-muted-foreground text-base">
                   Human subjects ethics charter binding agreement on file
                 </p>
               </div>
@@ -1202,18 +1202,18 @@ export default function InvestigatorProfilePage() {
 
           {/* Cryptographic Signature & PKI Seal */}
           <DashboardCard className="space-y-4">
-            <h3 className="text-sm font-bold text-[#002752] dark:text-white flex items-center gap-2">
+            <h3 className="text-base font-bold text-[#002752] dark:text-white flex items-center gap-2">
               <ShieldCheck className="size-4 text-[#198754]" />
               FIPS 140-3 Cryptographic Seal
             </h3>
 
-            <div className="space-y-2 text-xs">
-              <p className="text-muted-foreground text-[11px]">
+            <div className="space-y-2 text-base">
+              <p className="text-muted-foreground text-base">
                 Your protocol submissions and clearance approvals are cryptographically signed using your institutional private key.
               </p>
 
-              <div className="p-3 rounded-lg bg-muted border border-border/75 space-y-1.5 font-mono text-[11px]">
-                <span className="text-muted-foreground block text-[10px] uppercase font-sans font-bold">
+              <div className="p-3 rounded-lg bg-muted border border-border/75 space-y-1.5 font-mono text-base">
+                <span className="text-muted-foreground block text-base uppercase font-sans font-bold">
                   Public SHA-256 Fingerprint:
                 </span>
                 <span className="text-[#002752] dark:text-sky-300 font-bold block break-all">
@@ -1226,7 +1226,7 @@ export default function InvestigatorProfilePage() {
                 variant="outline"
                 size="sm"
                 onClick={handleCopyFingerprint}
-                className="w-full h-8 text-xs font-bold rounded-md"
+                className="w-full h-8 text-base font-bold rounded-md"
               >
                 {copiedKey ? (
                   <>
