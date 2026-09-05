@@ -4,33 +4,14 @@ import * as React from "react"
 import { usePathname } from "next/navigation"
 import {
   CheckCheck,
-  CalendarDays,
-  FileSearch,
-  Users,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
 const reviewerNavItems: NavItem[] = [
   {
-    label: "Expedited Triage",
-    href: "/reviewer/dashboard#triage",
-    icon: FileSearch,
-  },
-  {
-    label: "Consensus Voting",
-    href: "/reviewer/dashboard#consensus",
+    label: "Deliberation Overview",
+    href: "/reviewer/dashboard",
     icon: CheckCheck,
-    badge: "2 Pending",
-  },
-  {
-    label: "IRB Calendar & Quorum",
-    href: "/reviewer/dashboard#calendar",
-    icon: CalendarDays,
-  },
-  {
-    label: "Committee Roster",
-    href: "/reviewer/dashboard#roster",
-    icon: Users,
   },
 ]
 

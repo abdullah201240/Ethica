@@ -158,6 +158,22 @@ All metric counters, statistical indicators, and executive KPI summaries across 
   - **In-Page Notifications & Status Banners:** [`@/components/ui/alert`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/alert.tsx) (`Alert`, `AlertTitle`, `AlertDescription`, `AlertAction`)
   - **Modal Confirmations & Critical Decision Prompts:** [`@/components/ui/alert-dialog`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/alert-dialog.tsx) (`AlertDialog`, `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel`)
 
+---
+
+## 13. Mandatory Dedicated Dynamic Detail Pages for Primary Records
+- **Zero Ad-Hoc Modals for Primary Records:** For all primary platform entities (including accredited reviewer dossiers, reviewer intake applications, researcher protocols, institutional clearance certificates, and detailed audit records), developers and agents must **NEVER** constrain the primary inspection or detail experience to popup `<Dialog>` modals.
+- **Mandatory Dynamic Route (`[id]/page.tsx`):**
+  - Always implement a dedicated Next.js App Router dynamic page:
+    - Reviewer Dossier: [`/admin/roster/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/roster/%5Bid%5D/page.tsx)
+    - Reviewer Applications: [`/admin/applications/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/admin/applications/%5Bid%5D/page.tsx)
+    - Protocol Submissions: [`/dashboard/protocols/[id]`](file:///Users/abdullahalsakib/Documents/Ethica/client/app/%28user%29/dashboard/protocols/%5Bid%5D/page.tsx)
+  - Tables, rosters, directories, and lists must link directly to the dynamic page via `<Link href={`.../${row.id}`}>` or an explicit **"View Dossier"** / **"Inspect"** button.
+- **Dedicated Page Layout Standards:**
+  - **Back-Navigation:** Always provide a top back-navigation bar (`<Link href="...">` with `<ArrowLeft>` icon and clear label, e.g. "Back to Reviewer Roster").
+  - **Comprehensive Header:** Display the complete entity identity, degrees, titles, institutional badges, and direct status toggles (`AlertDialog` with Sonner toasts).
+  - **Full-Width Deep Context:** Utilize multi-column responsive cards for institutional affiliation, board credentials, domain specializations, research statements, active deliberation workload, and FIPS 140-3 SHA-256 digital seals.
+
+
 
 
 

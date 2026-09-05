@@ -324,3 +324,9 @@ export function updateReviewerStatus(
   saveStoredReviewers(updated)
   return updated
 }
+
+export function getReviewerById(id: string): AccreditedReviewer | undefined {
+  const current = getStoredReviewers()
+  return current.find((r) => r.id === id || r.applicationId === id)
+}
+

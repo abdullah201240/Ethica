@@ -94,6 +94,16 @@ export function DashboardShell({
         }
         return true
       }
+      if (
+        itemPath !== "/admin" &&
+        itemPath !== "/admin/dashboard" &&
+        itemPath !== "/reviewer" &&
+        itemPath !== "/reviewer/dashboard" &&
+        itemPath !== "/dashboard" &&
+        currentPath.startsWith(itemPath + "/")
+      ) {
+        return true
+      }
       return false
     },
     [pathname, currentHash, navItems]
@@ -215,8 +225,8 @@ export function DashboardShell({
                   <span className="block text-[15px] font-black tracking-tight text-[#002752] dark:text-white">
                     ETHICA
                   </span>
-                  <span className="block text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">
-                    {roleTitle}
+                  <span className="block text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5 truncate" title={`${roleBadge} • ${roleTitle}`}>
+                    {roleBadge ? `${roleBadge} • ` : ""}{roleTitle}
                   </span>
                 </div>
               </Link>
@@ -279,14 +289,7 @@ export function DashboardShell({
                       }`}
                     />
                     {!collapsed && (
-                      <>
-                        <span className="flex-1 truncate">{item.label}</span>
-                        {item.badge && (
-                          <span className="shrink-0 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
-                            {item.badge}
-                          </span>
-                        )}
-                      </>
+                      <span className="flex-1 truncate">{item.label}</span>
                     )}
                   </Link>
                 )

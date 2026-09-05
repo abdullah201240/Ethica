@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation"
 import {
   Sliders,
   Users,
-  ScrollText,
-  ShieldCheck,
-  Settings,
   ClipboardCheck,
   User,
+  ShieldCheck,
+  Contact,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 
@@ -20,37 +19,29 @@ const adminNavItems: NavItem[] = [
     icon: Sliders,
   },
   {
+    label: "All Users",
+    href: "/admin/users",
+    icon: Contact,
+  },
+  {
     label: "Reviewer Applications",
     href: "/admin/applications",
     icon: ClipboardCheck,
-    badge: "Pending Intake",
   },
   {
     label: "Reviewer Roster",
     href: "/admin/roster",
     icon: Users,
-    badge: "Accredited",
   },
   {
-    label: "Cryptographic Audit Logs",
-    href: "/admin/dashboard#audit",
-    icon: ScrollText,
-    badge: "SHA-256",
-  },
-  {
-    label: "Certificate Authority",
-    href: "/admin/dashboard#authority",
+    label: "Admin List",
+    href: "/admin/admins",
     icon: ShieldCheck,
   },
   {
     label: "Secretariat Profile",
     href: "/admin/profile",
     icon: User,
-  },
-  {
-    label: "Policy Engine Config",
-    href: "/admin/dashboard#policies",
-    icon: Settings,
   },
 ]
 

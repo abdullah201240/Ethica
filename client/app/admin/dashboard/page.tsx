@@ -24,7 +24,8 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { toast } from "@/components/ui/sonner"
 import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 import {
   Dialog,
@@ -102,7 +103,6 @@ const auditLedgerLogs = [
 ]
 
 export default function AdminDashboardPage() {
-  const [statusNotice, setStatusNotice] = React.useState<string | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false)
   const [formError, setFormError] = React.useState<string | null>(null)
 
@@ -124,12 +124,15 @@ export default function AdminDashboardPage() {
   const handleToggleStatus = (id: string, name: string) => {
     const updated = toggleAdminMemberStatus(id)
     if (updated) {
-      setStatusNotice(
-        `Administrator account for ${name} (${updated.id}) is now ${updated.status}. Institutional governance access ${
-          updated.status === "Active" ? "restored" : "suspended"
-        }.`
-      )
-      setTimeout(() => setStatusNotice(null), 5000)
+      if (updated.status === "Active") {
+        toast.success("Administrator Account Activated", {
+          description: `${name} (${updated.id}) restored to Active status with full governance authority.`,
+        })
+      } else {
+        toast.warning("Administrator Account Suspended", {
+          description: `${name} (${updated.id}) marked Inactive. Governance permissions and signing privileges paused.`,
+        })
+      }
     }
   }
 
@@ -151,9 +154,9 @@ export default function AdminDashboardPage() {
       status: newAdmin.status,
       protocols: Number(newAdmin.protocols) || 0,
     })
-    setStatusNotice(
-      `New administrator ${created.name} (${created.id}) successfully appointed as ${created.role} with ${created.status} status.`
-    )
+    toast.success("New Administrator Appointed", {
+      description: `${created.name} (${created.id}) successfully appointed as ${created.role} with ${created.status} status.`,
+    })
     setNewAdmin({
       name: "",
       email: "",
@@ -164,7 +167,6 @@ export default function AdminDashboardPage() {
     })
     setFormError(null)
     setIsAddModalOpen(false)
-    setTimeout(() => setStatusNotice(null), 5000)
   }
 
   // ── DataTable Column Definitions ──────────────────────────────────────────
@@ -489,16 +491,6 @@ export default function AdminDashboardPage() {
 
       {/* Institutional Member Directory & Governance Administration */}
       <div id="roster" className="space-y-4">
-        {statusNotice && (
-          <Alert className="border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200">
-            <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
-            <AlertTitle className="text-xs font-bold">Roster Directory Updated</AlertTitle>
-            <AlertDescription className="text-xs text-emerald-800 dark:text-emerald-300">
-              {statusNotice}
-            </AlertDescription>
-          </Alert>
-        )}
-
         <DataTable<AdminMember>
           data={members}
           columns={columns}
@@ -516,11 +508,18 @@ export default function AdminDashboardPage() {
           toolbarActions={
             <div className="flex items-center gap-2">
               <Link
+                href="/admin/admins"
+                className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
+              >
+                <ShieldCheck className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
+                <span>Admin List</span>
+              </Link>
+              <Link
                 href="/admin/roster"
                 className="inline-flex items-center h-8 px-3 rounded-lg border border-slate-200/90 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors shrink-0"
               >
                 <Users className="size-3.5 mr-1.5 text-[#002752] dark:text-sky-400" />
-                <span>Reviewer Roster & Controls</span>
+                <span>Reviewer Roster</span>
               </Link>
               <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
                 <DialogTrigger render={

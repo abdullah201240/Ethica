@@ -18,6 +18,8 @@ import {
   Sliders,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -123,13 +125,14 @@ export default function AdminLoginPage() {
               <Sparkles className="size-4 text-[#198754] shrink-0" />
               <span>Testing administrator access?</span>
             </div>
-            <button
+            <Button
               type="button"
+              size="sm"
               onClick={handleDemoFill}
-              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer"
+              className="h-7 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
             >
               Autofill Admin
-            </button>
+            </Button>
           </div>
 
           {statusMessage && (
@@ -144,12 +147,13 @@ export default function AdminLoginPage() {
             
             {/* Admin ID / Email */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              <Label htmlFor="adminId" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
                 Administrator Email / ID
-              </label>
+              </Label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <input
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none z-10" />
+                <Input
+                  id="adminId"
                   type="email"
                   required
                   placeholder="admin.secretariat@diu.edu.bd"
@@ -163,9 +167,9 @@ export default function AdminLoginPage() {
             {/* Passphrase */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+                <Label htmlFor="passphrase" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
                   Master Administrative Passphrase
-                </label>
+                </Label>
                 <a
                   href="#support"
                   onClick={(e) => {
@@ -178,8 +182,9 @@ export default function AdminLoginPage() {
                 </a>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <input
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none z-10" />
+                <Input
+                  id="passphrase"
                   type={showPassphrase ? "text" : "password"}
                   required
                   placeholder="••••••••••••••••"
@@ -187,14 +192,16 @@ export default function AdminLoginPage() {
                   onChange={(e) => setPassphrase(e.target.value)}
                   className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-slate-900 dark:text-white placeholder:text-slate-400 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassphrase(!showPassphrase)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 size-8 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-transparent cursor-pointer"
                   aria-label="Toggle password visibility"
                 >
                   {showPassphrase ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
+                </Button>
               </div>
             </div>
 

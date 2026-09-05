@@ -17,6 +17,9 @@ import {
   ArrowLeft,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export default function UserLoginPage() {
   const router = useRouter()
@@ -123,13 +126,14 @@ export default function UserLoginPage() {
               <Sparkles className="size-4 text-[#198754] shrink-0" />
               <span>Testing the platform?</span>
             </div>
-            <button
+            <Button
               type="button"
+              size="sm"
               onClick={handleDemoFill}
-              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer"
+              className="h-7 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
             >
               Autofill Demo PI
-            </button>
+            </Button>
           </div>
 
           {statusMessage && (
@@ -181,12 +185,13 @@ export default function UserLoginPage() {
           {/* Credentials Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
                 Institutional Email
-              </label>
+              </Label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <input
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none z-10" />
+                <Input
+                  id="email"
                   type="email"
                   required
                   placeholder="investigator@diu.edu.bd"
@@ -199,9 +204,9 @@ export default function UserLoginPage() {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+                <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
                   Password
-                </label>
+                </Label>
                 <a
                   href="#forgot"
                   onClick={(e) => {
@@ -214,8 +219,9 @@ export default function UserLoginPage() {
                 </a>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none" />
-                <input
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400 pointer-events-none z-10" />
+                <Input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••••••"
@@ -223,28 +229,29 @@ export default function UserLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#002752] dark:focus-visible:ring-white transition-all"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 size-8 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-transparent cursor-pointer"
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
+                </Button>
               </div>
             </div>
 
             <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="remember"
                 checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="size-4 rounded border-slate-300 text-[#002752] focus:ring-[#002752] cursor-pointer"
+                onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
+                className="cursor-pointer"
               />
-              <label htmlFor="remember" className="text-xs text-slate-600 dark:text-slate-400 font-medium cursor-pointer">
+              <Label htmlFor="remember" className="text-xs text-slate-600 dark:text-slate-400 font-medium cursor-pointer">
                 Keep my active session signed in on this device
-              </label>
+              </Label>
             </div>
 
             <Button

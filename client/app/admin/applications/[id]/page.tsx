@@ -498,7 +498,7 @@ export default function AdminApplicationDossierPage({ params }: PageProps) {
 
               {isApproved && (
                 <Link
-                  href={`/admin/roster?search=${encodeURIComponent(application.fullName)}`}
+                  href={`/admin/roster/${encodeURIComponent(application.id)}`}
                   className="w-full flex items-center justify-center h-9 text-xs font-bold rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 gap-2 transition-colors shadow-2xs"
                 >
                   <Users className="size-4" />
