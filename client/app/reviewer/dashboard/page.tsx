@@ -53,6 +53,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   getStoredProtocols,
   subscribeProtocols,
   syncProtocolsFromServer,
@@ -63,6 +70,8 @@ import {
 } from "@/lib/protocols-store"
 import {
   getStoredReviewers,
+  getActiveReviewerEmail,
+  setActiveReviewerEmail as setGlobalActiveReviewerEmail,
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
 
@@ -77,8 +86,13 @@ export default function ReviewerDashboardPage() {
   const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
   const [reviewers, setReviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
   
-  // Current active reviewer identity (defaults to Prof. Charles Montgomery, IRB Chair)
-  const [activeReviewerEmail, setActiveReviewerEmail] = React.useState("charles.montgomery@diu.edu.bd")
+  // Current active reviewer identity synced with global store
+  const [activeReviewerEmail, setActiveReviewerEmailState] = React.useState<string>(getActiveReviewerEmail)
+
+  const handlePersonaChange = (email: string) => {
+    setActiveReviewerEmailState(email)
+    setGlobalActiveReviewerEmail(email)
+  }
 
   // Modals state
   const [acceptingProtocol, setAcceptingProtocol] = React.useState<Protocol | null>(null)
@@ -102,8 +116,17 @@ export default function ReviewerDashboardPage() {
       setProtocols(getStoredProtocols())
     }
 
+    const handleActiveChanged = () => {
+      setActiveReviewerEmailState(getActiveReviewerEmail())
+    }
+
+    window.addEventListener("ethica:active-reviewer-changed", handleActiveChanged)
     const unsubscribe = subscribeProtocols(handleSync)
-    return () => unsubscribe()
+
+    return () => {
+      window.removeEventListener("ethica:active-reviewer-changed", handleActiveChanged)
+      unsubscribe()
+    }
   }, [])
 
   const currentReviewer = reviewers.find((r) => r.email === activeReviewerEmail) || {
@@ -192,40 +215,6 @@ export default function ReviewerDashboardPage() {
 
   return (
     <DashboardContainer className="space-y-6 select-text">
-      {/* Reviewer Header with Identity Switcher for Demo */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] shadow-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-base text-foreground">
-              {currentReviewer.name}
-            </span>
-            <Badge className="bg-primary/10 text-primary dark:text-sky-300 text-micro font-bold border border-primary/20">
-              IRB Voting Member
-            </Badge>
-          </div>
-          <p className="text-micro text-muted-foreground">
-            {currentReviewer.department} • {currentReviewer.institution}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="text-micro text-muted-foreground font-medium hidden md:inline">
-            Reviewer Persona:
-          </span>
-          <select
-            value={activeReviewerEmail}
-            onChange={(e) => setActiveReviewerEmail(e.target.value)}
-            className="h-9 px-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-base font-bold text-foreground focus:outline-none cursor-pointer"
-          >
-            <option value="charles.montgomery@diu.edu.bd">Prof. Charles Montgomery (Chair, Biomedical)</option>
-            <option value="sarah.jenkins@diu.edu.bd">Dr. Sarah Jenkins (Vice Chair, Pediatrics)</option>
-            <option value="farzana.choudhury@icddrb.org">Dr. Farzana Choudhury (icddr,b, Epidemiology)</option>
-            <option value="m.hasan@nimh.gov.bd">Dr. Mahmudul Hasan (NIMH, Social & Behavioral)</option>
-            <option value="tariqul.islam@buet.ac.bd">Prof. Tariqul Islam (BUET, AI & Tech)</option>
-          </select>
-        </div>
-      </div>
-
       {/* KPI Review Metrics */}
       <KpiGrid columns={4}>
         <KpiCard
@@ -273,9 +262,22 @@ export default function ReviewerDashboardPage() {
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 text-micro font-bold border border-amber-500/20 self-start sm:self-auto">
-            <span>Requires Your Decision</span>
-          </span>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <Link href="/reviewer/requests">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 px-2.5 text-xs font-bold gap-1 cursor-pointer"
+              >
+                <span>View All Requests</span>
+                <ExternalLink className="size-3" />
+              </Button>
+            </Link>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 text-micro font-bold border border-amber-500/20">
+              <span>Requires Your Decision</span>
+            </span>
+          </div>
         </div>
 
         {incomingRequests.length === 0 ? (
@@ -389,10 +391,23 @@ export default function ReviewerDashboardPage() {
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20 self-start sm:self-auto">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Deliberation Active</span>
-          </span>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <Link href="/reviewer/deliberations">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 px-2.5 text-xs font-bold gap-1 cursor-pointer"
+              >
+                <span>Open Deliberations Docket</span>
+                <ExternalLink className="size-3" />
+              </Button>
+            </Link>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-micro font-bold border border-emerald-500/20">
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Deliberation Active</span>
+            </span>
+          </div>
         </div>
 
         {activeEvaluations.length === 0 ? (
@@ -505,9 +520,22 @@ export default function ReviewerDashboardPage() {
               <CheckCircle2 className="size-5 text-secondary" />
               <span>Resolved & Sealed Deliberation Register ({completedEvaluations.length})</span>
             </h2>
-            <span className="text-micro font-mono text-muted-foreground">
-              FIPS 140-3 Sealed
-            </span>
+            <div className="flex items-center gap-2">
+              <Link href="/reviewer/completed">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-2.5 text-xs font-bold gap-1 cursor-pointer"
+                >
+                  <span>View Full Archive</span>
+                  <ExternalLink className="size-3" />
+                </Button>
+              </Link>
+              <span className="text-micro font-mono text-muted-foreground hidden sm:inline">
+                FIPS 140-3 Sealed
+              </span>
+            </div>
           </div>
 
           <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
@@ -662,35 +690,38 @@ export default function ReviewerDashboardPage() {
                 Ethical Determination Recommendation
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {[
-                  {
-                    value: "Clearance Approved",
-                    label: "Approved",
-                    color: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300",
-                  },
-                  {
-                    value: "Revisions Required",
-                    label: "Revisions Due",
-                    color: "border-amber-500 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300",
-                  },
-                  {
-                    value: "Ethics Rejection",
-                    label: "Reject / Capped",
-                    color: "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300",
-                  },
-                ].map((opt) => (
-                  <button
+                {(
+                  [
+                    {
+                      value: "Clearance Approved" as const,
+                      label: "Approved",
+                      color: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300",
+                    },
+                    {
+                      value: "Revisions Required" as const,
+                      label: "Revisions Due",
+                      color: "border-amber-500 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300",
+                    },
+                    {
+                      value: "Ethics Rejection" as const,
+                      label: "Reject / Capped",
+                      color: "border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300",
+                    },
+                  ] as const
+                ).map((opt) => (
+                  <Button
                     key={opt.value}
                     type="button"
-                    onClick={() => setEvaluationRecommendation(opt.value as any)}
-                    className={`p-2.5 rounded-lg border text-center font-bold text-base transition-all cursor-pointer ${
+                    variant="outline"
+                    onClick={() => setEvaluationRecommendation(opt.value)}
+                    className={`h-10 p-2.5 rounded-lg border text-center font-bold text-base transition-all cursor-pointer ${
                       evaluationRecommendation === opt.value
                         ? `${opt.color} ring-2 ring-primary/20`
                         : "border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-muted-foreground"
                     }`}
                   >
                     {opt.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -701,18 +732,20 @@ export default function ReviewerDashboardPage() {
                 <span className="text-micro font-bold text-foreground">Scientific Merit & Design:</span>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((num) => (
-                    <button
+                    <Button
                       key={num}
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setMeritScore(num)}
-                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                      className={`size-7 p-0 rounded text-micro font-bold cursor-pointer transition-all ${
                         meritScore >= num
-                          ? "bg-primary text-white"
-                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                          ? "bg-primary text-white hover:bg-primary/90 hover:text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500 hover:bg-slate-300"
                       }`}
                     >
                       {num}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -721,18 +754,20 @@ export default function ReviewerDashboardPage() {
                 <span className="text-micro font-bold text-foreground">Human Subject Protections:</span>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((num) => (
-                    <button
+                    <Button
                       key={num}
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setSafeguardsScore(num)}
-                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                      className={`size-7 p-0 rounded text-micro font-bold cursor-pointer transition-all ${
                         safeguardsScore >= num
-                          ? "bg-primary text-white"
-                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                          ? "bg-secondary text-white hover:bg-secondary/90 hover:text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500 hover:bg-slate-300"
                       }`}
                     >
                       {num}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -741,18 +776,20 @@ export default function ReviewerDashboardPage() {
                 <span className="text-micro font-bold text-foreground">Informed Consent Compliance:</span>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((num) => (
-                    <button
+                    <Button
                       key={num}
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setConsentScore(num)}
-                      className={`size-7 rounded text-micro font-bold cursor-pointer transition-all ${
+                      className={`size-7 p-0 rounded text-micro font-bold cursor-pointer transition-all ${
                         consentScore >= num
-                          ? "bg-primary text-white"
-                          : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                          ? "bg-amber-500 text-white hover:bg-amber-600 hover:text-white"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-500 hover:bg-slate-300"
                       }`}
                     >
                       {num}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>

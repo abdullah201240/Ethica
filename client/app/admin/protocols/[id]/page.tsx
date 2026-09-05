@@ -240,55 +240,9 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
     setDecisionAction(null)
   }
 
-  if (loading) {
-    return (
-      <DashboardContainer className="py-8">
-        <div className="rounded-xl border border-border/80 bg-card p-8 text-center space-y-3">
-          <p className="text-body-sm text-muted-foreground">Loading protocol dossier from institutional ledger...</p>
-        </div>
-      </DashboardContainer>
-    )
-  }
+  const isDeclined = protocol?.assignmentStatus === "Declined"
 
-  if (!protocol) {
-    return (
-      <DashboardContainer className="py-8 space-y-6">
-        <Link
-          href="/admin/protocols"
-          className="inline-flex items-center gap-2 text-table-cell font-bold text-primary dark:text-sky-300 hover:underline"
-        >
-          <ArrowLeft className="size-4" />
-          <span>Back to Protocol Applications Docket</span>
-        </Link>
-        <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-8 text-center space-y-4">
-          <AlertCircle className="size-10 text-rose-500 mx-auto" />
-          <h2 className="text-section-heading text-foreground">Protocol Record Not Found</h2>
-          <p className="text-body-sm text-muted-foreground max-w-md mx-auto">
-            The requested research protocol identifier <code className="font-mono font-bold text-foreground">{protocolId}</code> does not exist in the institutional registry.
-          </p>
-          <Link href="/admin/protocols">
-            <Button variant="default" className="mt-2">
-              Return to Protocol Applications
-            </Button>
-          </Link>
-        </div>
-      </DashboardContainer>
-    )
-  }
-
-  const isCleared = protocol.status === "Clearance Granted"
-  const isExpedited = protocol.status === "Expedited Triage" || protocol.isExpedited
-  const isUnderReview = protocol.status === "Under Committee Review"
-  const isRevision = protocol.status === "Revision Requested"
-
-  const stepNumber = protocol.reviewStep || (isCleared ? 5 : 4)
-
-  const isDeclined = protocol.assignmentStatus === "Declined"
-  const isPendingAcceptance = protocol.assignmentStatus === "Pending Acceptance"
-  const isAccepted = protocol.assignmentStatus === "Accepted"
-  const isReviewCompleted = protocol.assignmentStatus === "Review Completed"
-
-  // ── Smart Reviewer Matching Algorithm ────────────────────────────────────
+  // ── Smart Reviewer Matching Algorithm (Hook called unconditionally) ─────
   const scoredReviewers = React.useMemo(() => {
     if (!protocol) return []
 
@@ -364,6 +318,53 @@ export default function AdminProtocolInspectionPage({ params }: PageProps) {
       return b.matchScore - a.matchScore
     })
   }, [scoredReviewers, reviewerSearch])
+
+  if (loading) {
+    return (
+      <DashboardContainer className="py-8">
+        <div className="rounded-xl border border-border/80 bg-card p-8 text-center space-y-3">
+          <p className="text-body-sm text-muted-foreground">Loading protocol dossier from institutional ledger...</p>
+        </div>
+      </DashboardContainer>
+    )
+  }
+
+  if (!protocol) {
+    return (
+      <DashboardContainer className="py-8 space-y-6">
+        <Link
+          href="/admin/protocols"
+          className="inline-flex items-center gap-2 text-table-cell font-bold text-primary dark:text-sky-300 hover:underline"
+        >
+          <ArrowLeft className="size-4" />
+          <span>Back to Protocol Applications Docket</span>
+        </Link>
+        <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-8 text-center space-y-4">
+          <AlertCircle className="size-10 text-rose-500 mx-auto" />
+          <h2 className="text-section-heading text-foreground">Protocol Record Not Found</h2>
+          <p className="text-body-sm text-muted-foreground max-w-md mx-auto">
+            The requested research protocol identifier <code className="font-mono font-bold text-foreground">{protocolId}</code> does not exist in the institutional registry.
+          </p>
+          <Link href="/admin/protocols">
+            <Button variant="default" className="mt-2">
+              Return to Protocol Applications
+            </Button>
+          </Link>
+        </div>
+      </DashboardContainer>
+    )
+  }
+
+  const isCleared = protocol.status === "Clearance Granted"
+  const isExpedited = protocol.status === "Expedited Triage" || protocol.isExpedited
+  const isUnderReview = protocol.status === "Under Committee Review"
+  const isRevision = protocol.status === "Revision Requested"
+
+  const stepNumber = protocol.reviewStep || (isCleared ? 5 : 4)
+
+  const isPendingAcceptance = protocol.assignmentStatus === "Pending Acceptance"
+  const isAccepted = protocol.assignmentStatus === "Accepted"
+  const isReviewCompleted = protocol.assignmentStatus === "Review Completed"
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
