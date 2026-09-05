@@ -16,7 +16,9 @@ import {
   Star,
   Clock,
   Lock,
+  Sparkles,
 } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -54,6 +56,7 @@ import {
   step2AcademicProfileSchema,
   step3ExpertiseSchema,
   fullApplicationSchema,
+  type FullApplicationInput,
 } from "@/lib/schemas"
 
 const EXPERTISE_AREAS = [
@@ -79,157 +82,158 @@ const STEPS = [
 export default function ApplyAsReviewerPage() {
   const [currentStep, setCurrentStep] = React.useState(1)
   const [submitted, setSubmitted] = React.useState(false)
-  const [selectedExpertise, setSelectedExpertise] = React.useState<string[]>([])
-  const [errors, setErrors] = React.useState<Record<string, string>>({})
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-  const [form, setForm] = React.useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    institution: "",
-    degree: "",
-    department: "",
-    position: "",
-    yearsExperience: "",
-    orcid: "",
-    statement: "",
-    cvFileName: "",
-    agreeTerms: false,
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<FullApplicationInput>({
+    mode: "onChange",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      institution: "",
+      degree: "" as any,
+      department: "",
+      position: "" as any,
+      yearsExperience: "" as any,
+      orcid: "",
+      expertise: [],
+      statement: "",
+      cvFileName: "",
+      agreeTerms: false,
+    },
   })
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }))
-    if (errors[name]) {
-      setErrors((prev) => {
-        const next = { ...prev }
-        delete next[name]
-        return next
-      })
+  const formValues = watch()
+  const selectedExpertise = formValues.expertise || []
+
+  const toggleExpertise = (area: string) => {
+    const next = selectedExpertise.includes(area)
+      ? selectedExpertise.filter((a) => a !== area)
+      : [...selectedExpertise, area]
+    setValue("expertise", next, { shouldValidate: true })
+    if (next.length > 0) {
+      clearErrors("expertise")
+    } else {
+      setError("expertise", { message: "Please select at least one area of expertise" })
     }
   }
 
-  const toggleExpertise = (area: string) => {
-    setSelectedExpertise((prev) => {
-      const next = prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
-      if (next.length > 0 && errors.expertise) {
-        setErrors((e) => {
-          const updated = { ...e }
-          delete updated.expertise
-          return updated
-        })
-      }
-      return next
-    })
+  const handleDemoFill = () => {
+    setValue("fullName", "Prof. Dr. Tariqul Islam", { shouldValidate: true })
+    setValue("email", "tariqul.pharm@diu.edu.bd", { shouldValidate: true })
+    setValue("phone", "+880 1712-345678", { shouldValidate: true })
+    setValue("institution", "Daffodil International University", { shouldValidate: true })
+    setValue("degree", "PhD / Doctorate", { shouldValidate: true })
+    setValue("department", "Department of Pharmacy & Public Health", { shouldValidate: true })
+    setValue("position", "Professor", { shouldValidate: true })
+    setValue("yearsExperience", "13–20 years", { shouldValidate: true })
+    setValue("orcid", "0000-0002-1825-0097", { shouldValidate: true })
+    setValue("expertise", ["Biomedical & Clinical Research", "Public Health & Epidemiology"], { shouldValidate: true })
+    setValue("statement", "Over 15 years of leading randomized control clinical trials and pharmacovigilance studies with deep commitment to human subject protection and Helsinki ethics compliance.", { shouldValidate: true })
+    setValue("cvFileName", "Prof_Tariqul_Islam_CV.pdf", { shouldValidate: true })
+    setValue("agreeTerms", true, { shouldValidate: true })
+    clearErrors()
   }
 
   const handleNext = () => {
     if (currentStep === 1) {
       const res = step1PersonalDetailsSchema.safeParse({
-        fullName: form.fullName,
-        email: form.email,
-        phone: form.phone,
-        institution: form.institution,
+        fullName: formValues.fullName,
+        email: formValues.email,
+        phone: formValues.phone,
+        institution: formValues.institution,
       })
       if (!res.success) {
-        const flattened = res.error.flatten().fieldErrors
-        const errMap: Record<string, string> = {}
-        for (const [k, v] of Object.entries(flattened)) {
-          if (v?.[0]) errMap[k] = v[0]
+        for (const issue of res.error.issues) {
+          setError(issue.path[0] as any, { message: issue.message })
         }
-        setErrors(errMap)
         return
       }
     } else if (currentStep === 2) {
       const res = step2AcademicProfileSchema.safeParse({
-        degree: form.degree,
-        department: form.department,
-        position: form.position,
-        yearsExperience: form.yearsExperience,
-        orcid: form.orcid,
+        degree: formValues.degree,
+        department: formValues.department,
+        position: formValues.position,
+        yearsExperience: formValues.yearsExperience,
+        orcid: formValues.orcid,
       })
       if (!res.success) {
-        const flattened = res.error.flatten().fieldErrors
-        const errMap: Record<string, string> = {}
-        for (const [k, v] of Object.entries(flattened)) {
-          if (v?.[0]) errMap[k] = v[0]
+        for (const issue of res.error.issues) {
+          setError(issue.path[0] as any, { message: issue.message })
         }
-        setErrors(errMap)
         return
       }
     } else if (currentStep === 3) {
       const res = step3ExpertiseSchema.safeParse({
         expertise: selectedExpertise,
-        statement: form.statement,
-        cvFileName: form.cvFileName,
+        statement: formValues.statement,
+        cvFileName: formValues.cvFileName,
       })
       if (!res.success) {
-        const flattened = res.error.flatten().fieldErrors
-        const errMap: Record<string, string> = {}
-        for (const [k, v] of Object.entries(flattened)) {
-          if (v?.[0]) errMap[k] = v[0]
+        for (const issue of res.error.issues) {
+          setError(issue.path[0] as any, { message: issue.message })
         }
-        setErrors(errMap)
         return
       }
     }
 
-    setErrors({})
+    clearErrors()
     if (currentStep < 4) setCurrentStep((s) => s + 1)
   }
 
   const handleBack = () => {
-    setErrors({})
+    clearErrors()
     if (currentStep > 1) setCurrentStep((s) => s - 1)
   }
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-
+  const onSubmit = () => {
     const fullRes = fullApplicationSchema.safeParse({
-      ...form,
+      ...formValues,
       expertise: selectedExpertise,
     })
 
     if (!fullRes.success) {
-      const flattened = fullRes.error.flatten().fieldErrors
-      const errMap: Record<string, string> = {}
-      for (const [k, v] of Object.entries(flattened)) {
-        if (v?.[0]) errMap[k] = v[0]
+      for (const issue of fullRes.error.issues) {
+        setError(issue.path[0] as any, { message: issue.message })
       }
-      setErrors(errMap)
-      if (errMap.fullName || errMap.email || errMap.institution) {
+      if (issueHasField(fullRes.error.issues, ["fullName", "email", "phone", "institution"])) {
         setCurrentStep(1)
-      } else if (errMap.degree || errMap.department || errMap.position || errMap.yearsExperience) {
+      } else if (issueHasField(fullRes.error.issues, ["degree", "department", "position", "yearsExperience", "orcid"])) {
         setCurrentStep(2)
-      } else if (errMap.expertise || errMap.statement) {
+      } else if (issueHasField(fullRes.error.issues, ["expertise", "statement"])) {
         setCurrentStep(3)
       }
       return
     }
 
-    const expYears = parseInt(form.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
+    const expYears = parseInt(formValues.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
     addReviewerApplication({
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone || "+880 1700-000000",
-      institution: form.institution,
-      department: form.department,
-      position: form.position || "Research Faculty",
-      degree: form.degree || "PhD / Doctorate",
+      fullName: formValues.fullName,
+      email: formValues.email,
+      phone: formValues.phone || "+880 1700-000000",
+      institution: formValues.institution,
+      department: formValues.department,
+      position: formValues.position || "Research Faculty",
+      degree: formValues.degree || "PhD / Doctorate",
       yearsExperience: expYears,
-      orcid: form.orcid || "0000-0000-0000-0000",
+      orcid: formValues.orcid || "0000-0000-0000-0000",
       expertise: selectedExpertise.length > 0 ? selectedExpertise : ["Biomedical & Clinical Research"],
-      statement: form.statement,
-      cvFileName: form.cvFileName || "Curriculum_Vitae.pdf",
+      statement: formValues.statement,
+      cvFileName: formValues.cvFileName || "Curriculum_Vitae.pdf",
     })
     setSubmitted(true)
+  }
+
+  function issueHasField(issues: readonly { path?: readonly PropertyKey[] }[], fields: string[]) {
+    return issues.some((i) => i.path && fields.includes(String(i.path[0])))
   }
 
   // ── Success screen ───────────────────────────────────────────────────────────
@@ -255,7 +259,7 @@ export default function ApplyAsReviewerPage() {
                 Application Submitted!
               </h1>
               <p className="text-slate-500 text-base leading-relaxed">
-                Thank you, <strong className="text-slate-800">{form.fullName || "Applicant"}</strong>. Your reviewer application has been received and logged in the Ethica ledger.
+                Thank you, <strong className="text-slate-800">{formValues.fullName || "Applicant"}</strong>. Your reviewer application has been received and logged in the Ethica ledger.
                 <br />The IRB Secretariat will review your credentials and respond within <strong className="text-slate-800">5–7 working days</strong>.
               </p>
             </div>
@@ -328,7 +332,22 @@ export default function ApplyAsReviewerPage() {
             Institutional Review Board. Applications are reviewed by the IRB Secretariat on a rolling basis.
           </p>
 
+        {/* Quick Demo Autofill Banner */}
+        <div className="w-full mb-8 p-3.5 sm:p-4 rounded-xl border border-emerald-200/80 bg-emerald-50/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-800 font-medium">
+            <Sparkles className="size-4.5 text-[#198754] shrink-0" />
+            <span>Testing reviewer accreditation? Pre-populate a verified clinical investigator dossier:</span>
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleDemoFill}
+            className="h-8 text-xs font-bold px-3.5 py-1.5 rounded-lg bg-[#198754] hover:bg-[#146c43] text-white transition-colors shrink-0 cursor-pointer shadow-none"
+          >
+            Autofill Demo Reviewer
+          </Button>
         </div>
+      </div>
 
         {/* ── Step progress ────────────────────────────────────────────────── */}
         <div className="w-full mb-8">
@@ -373,7 +392,7 @@ export default function ApplyAsReviewerPage() {
         </div>
 
         {/* ── Form card ────────────────────────────────────────────────────── */}
-        <form onSubmit={handleSubmit} noValidate className="w-full">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full">
           <div className="w-full bg-white rounded-2xl border border-border/75 shadow-sm overflow-hidden">
 
             {/* Card header */}
@@ -397,10 +416,50 @@ export default function ApplyAsReviewerPage() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
                     {[
-                      { label: "Full Name", name: "fullName", placeholder: "Prof. Jane Smith", required: true, type: "text" },
-                      { label: "Institutional Email", name: "email", placeholder: "you@university.edu.bd", required: true, type: "email" },
-                      { label: "Phone Number", name: "phone", placeholder: "+880 1XXX-XXXXXX", required: false, type: "tel" },
-                      { label: "Current Institution", name: "institution", placeholder: "Daffodil International University", required: true, type: "text" },
+                      {
+                        label: "Full Name",
+                        name: "fullName" as const,
+                        placeholder: "Prof. Jane Smith",
+                        required: true,
+                        type: "text",
+                        validate: (val: string) => {
+                          const r = step1PersonalDetailsSchema.shape.fullName.safeParse(val)
+                          return r.success ? true : r.error.issues[0]?.message
+                        },
+                      },
+                      {
+                        label: "Institutional Email",
+                        name: "email" as const,
+                        placeholder: "you@university.edu.bd",
+                        required: true,
+                        type: "email",
+                        validate: (val: string) => {
+                          const r = step1PersonalDetailsSchema.shape.email.safeParse(val)
+                          return r.success ? true : r.error.issues[0]?.message
+                        },
+                      },
+                      {
+                        label: "Phone Number",
+                        name: "phone" as const,
+                        placeholder: "+880 1XXX-XXXXXX",
+                        required: false,
+                        type: "tel",
+                        validate: (val: string) => {
+                          const r = step1PersonalDetailsSchema.shape.phone.safeParse(val)
+                          return r.success ? true : r.error.issues[0]?.message
+                        },
+                      },
+                      {
+                        label: "Current Institution",
+                        name: "institution" as const,
+                        placeholder: "Daffodil International University",
+                        required: true,
+                        type: "text",
+                        validate: (val: string) => {
+                          const r = step1PersonalDetailsSchema.shape.institution.safeParse(val)
+                          return r.success ? true : r.error.issues[0]?.message
+                        },
+                      },
                     ].map((field) => (
                       <div key={field.name} className="space-y-1.5">
                         <Label htmlFor={field.name} className="block text-xs font-semibold text-slate-600">
@@ -409,10 +468,8 @@ export default function ApplyAsReviewerPage() {
                         <Input
                           id={field.name}
                           type={field.type}
-                          name={field.name}
-                          value={(form as unknown as Record<string, string>)[field.name]}
-                          onChange={handleChange}
                           placeholder={field.placeholder}
+                          {...register(field.name, { validate: field.validate })}
                           aria-invalid={Boolean(errors[field.name])}
                           className={`w-full h-11 px-4 rounded-lg border ${
                             errors[field.name]
@@ -422,7 +479,7 @@ export default function ApplyAsReviewerPage() {
                         />
                         {errors[field.name] && (
                           <p className="text-xs text-rose-600 font-semibold mt-1">
-                            {errors[field.name]}
+                            {errors[field.name]?.message}
                           </p>
                         )}
                       </div>
@@ -443,24 +500,47 @@ export default function ApplyAsReviewerPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                   {[
                     {
-                      label: "Highest Degree", name: "degree", type: "select", required: true,
+                      label: "Highest Degree",
+                      name: "degree" as const,
+                      type: "select",
+                      required: true,
                       options: ["PhD / Doctorate", "MD / MBBS", "Masters (Research)", "Professional Certification", "Other"],
                     },
                     {
-                      label: "Department / Faculty", name: "department", type: "input", required: true,
+                      label: "Department / Faculty",
+                      name: "department" as const,
+                      type: "input",
+                      required: true,
                       placeholder: "e.g. Public Health & Epidemiology",
+                      validate: (val: string) => {
+                        const r = step2AcademicProfileSchema.shape.department.safeParse(val)
+                        return r.success ? true : r.error.issues[0]?.message
+                      },
                     },
                     {
-                      label: "Academic Position", name: "position", type: "select", required: true,
+                      label: "Academic Position",
+                      name: "position" as const,
+                      type: "select",
+                      required: true,
                       options: ["Professor", "Associate Professor", "Assistant Professor", "Lecturer / Instructor", "Research Scientist", "Independent Expert", "Other"],
                     },
                     {
-                      label: "Years of Research Experience", name: "yearsExperience", type: "select", required: true,
+                      label: "Years of Research Experience",
+                      name: "yearsExperience" as const,
+                      type: "select",
+                      required: true,
                       options: ["1–3 years", "4–7 years", "8–12 years", "13–20 years", "20+ years"],
                     },
                     {
-                      label: "ORCID iD (optional)", name: "orcid", type: "input", required: false,
+                      label: "ORCID iD (optional)",
+                      name: "orcid" as const,
+                      type: "input",
+                      required: false,
                       placeholder: "0000-0000-0000-0000",
+                      validate: (val: string) => {
+                        const r = step2AcademicProfileSchema.shape.orcid.safeParse(val)
+                        return r.success ? true : r.error.issues[0]?.message
+                      },
                     },
                   ].map((field) => (
                     <div key={field.name} className="space-y-1.5">
@@ -469,16 +549,10 @@ export default function ApplyAsReviewerPage() {
                       </Label>
                       {field.type === "select" ? (
                         <Select
-                          value={String((form as Record<string, unknown>)[field.name] ?? "")}
+                          value={String(formValues[field.name] ?? "")}
                           onValueChange={(val) => {
-                            setForm((prev) => ({ ...prev, [field.name]: val ?? "" }))
-                            if (errors[field.name]) {
-                              setErrors((prev) => {
-                                const next = { ...prev }
-                                delete next[field.name]
-                                return next
-                              })
-                            }
+                            setValue(field.name as any, val, { shouldValidate: true })
+                            clearErrors(field.name)
                           }}
                         >
                           <SelectTrigger
@@ -503,10 +577,8 @@ export default function ApplyAsReviewerPage() {
                       ) : (
                         <Input
                           id={field.name}
-                          name={field.name}
-                          value={String((form as Record<string, unknown>)[field.name] ?? "")}
-                          onChange={handleChange}
                           placeholder={(field as { placeholder?: string }).placeholder}
+                          {...register(field.name, { validate: field.validate })}
                           aria-invalid={Boolean(errors[field.name])}
                           className={`w-full h-11 px-4 rounded-lg border ${
                             errors[field.name]
@@ -517,7 +589,7 @@ export default function ApplyAsReviewerPage() {
                       )}
                       {errors[field.name] && (
                         <p className="text-xs text-rose-600 font-semibold mt-1">
-                          {errors[field.name]}
+                          {errors[field.name]?.message}
                         </p>
                       )}
                     </div>
@@ -556,7 +628,7 @@ export default function ApplyAsReviewerPage() {
                     </div>
                     {errors.expertise && (
                       <p className="text-xs text-rose-600 font-semibold mt-1">
-                        {errors.expertise}
+                        {errors.expertise.message}
                       </p>
                     )}
                   </div>
@@ -567,10 +639,13 @@ export default function ApplyAsReviewerPage() {
                     </Label>
                     <Textarea
                       id="statement"
-                      name="statement"
-                      value={form.statement}
-                      onChange={handleChange}
                       rows={7}
+                      {...register("statement", {
+                        validate: (val) => {
+                          const r = step3ExpertiseSchema.shape.statement.safeParse(val)
+                          return r.success ? true : r.error.issues[0]?.message
+                        },
+                      })}
                       aria-invalid={Boolean(errors.statement)}
                       placeholder="Briefly describe your research ethics background, any prior IRB or ethics committee experience, and your motivation for joining the Ethica Review Board…"
                       className={`w-full px-4 py-3 rounded-lg border ${
@@ -581,7 +656,7 @@ export default function ApplyAsReviewerPage() {
                     />
                     {errors.statement ? (
                       <p className="text-xs text-rose-600 font-semibold mt-1">
-                        {errors.statement}
+                        {errors.statement.message}
                       </p>
                     ) : (
                       <p className="text-[10px] text-slate-400">Minimum 20 characters recommended</p>
@@ -593,7 +668,7 @@ export default function ApplyAsReviewerPage() {
                       Curriculum Vitae (CV / Resume)
                     </Label>
                     <Attachment
-                      state={form.cvFileName ? "done" : "idle"}
+                      state={formValues.cvFileName ? "done" : "idle"}
                       className="w-full flex items-center gap-4 px-5 py-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer border border-dashed border-border"
                       onClick={() => fileInputRef.current?.click()}
                     >
@@ -602,7 +677,7 @@ export default function ApplyAsReviewerPage() {
                       </AttachmentMedia>
                       <AttachmentContent className="min-w-0 flex-1">
                         <AttachmentTitle className="text-[13px] font-semibold text-slate-700 truncate">
-                          {form.cvFileName || "Click to upload your CV"}
+                          {formValues.cvFileName || "Click to upload your CV"}
                         </AttachmentTitle>
                         <AttachmentDescription className="text-[11px] text-slate-400 mt-0.5">
                           PDF or DOCX · Max 5MB
@@ -615,7 +690,7 @@ export default function ApplyAsReviewerPage() {
                           size="sm"
                           className="text-xs font-bold border-slate-200 text-slate-700 pointer-events-none"
                         >
-                          {form.cvFileName ? "Change File" : "Browse Files"}
+                          {formValues.cvFileName ? "Change File" : "Browse Files"}
                         </Button>
                       </AttachmentActions>
                       <Input
@@ -625,7 +700,7 @@ export default function ApplyAsReviewerPage() {
                         className="sr-only hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0]
-                          if (file) setForm((p) => ({ ...p, cvFileName: file.name }))
+                          if (file) setValue("cvFileName", file.name, { shouldValidate: true })
                         }}
                       />
                     </Attachment>
@@ -641,17 +716,17 @@ export default function ApplyAsReviewerPage() {
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Application Summary</span>
                     </div>
                     {[
-                      { label: "Full Name", value: form.fullName },
-                      { label: "Email", value: form.email },
-                      { label: "Phone", value: form.phone },
-                      { label: "Institution", value: form.institution },
-                      { label: "Degree", value: form.degree },
-                      { label: "Department", value: form.department },
-                      { label: "Position", value: form.position },
-                      { label: "Experience", value: form.yearsExperience },
-                      { label: "ORCID", value: form.orcid },
+                      { label: "Full Name", value: formValues.fullName },
+                      { label: "Email", value: formValues.email },
+                      { label: "Phone", value: formValues.phone },
+                      { label: "Institution", value: formValues.institution },
+                      { label: "Degree", value: formValues.degree },
+                      { label: "Department", value: formValues.department },
+                      { label: "Position", value: formValues.position },
+                      { label: "Experience", value: formValues.yearsExperience },
+                      { label: "ORCID", value: formValues.orcid },
                       { label: "Expertise Areas", value: selectedExpertise.join(", ") || "None selected" },
-                      { label: "CV File", value: form.cvFileName || "Not uploaded" },
+                      { label: "CV File", value: formValues.cvFileName || "Not uploaded" },
                     ].map(({ label, value }) => (
                       <div key={label} className="flex items-start justify-between gap-6 px-5 py-3 hover:bg-slate-50/60 transition-colors">
                         <span className="text-[11px] font-semibold text-slate-400 shrink-0 w-32">{label}</span>
@@ -670,17 +745,10 @@ export default function ApplyAsReviewerPage() {
                       <div className="flex items-center gap-3">
                         <Checkbox
                           id="agreeTerms"
-                          name="agreeTerms"
-                          checked={form.agreeTerms}
+                          checked={Boolean(formValues.agreeTerms)}
                           onCheckedChange={(checked) => {
-                            setForm((prev) => ({ ...prev, agreeTerms: Boolean(checked) }))
-                            if (errors.agreeTerms) {
-                              setErrors((e) => {
-                                const next = { ...e }
-                                delete next.agreeTerms
-                                return next
-                              })
-                            }
+                            setValue("agreeTerms", Boolean(checked), { shouldValidate: true })
+                            if (checked) clearErrors("agreeTerms")
                           }}
                           className="cursor-pointer"
                         />
@@ -693,7 +761,7 @@ export default function ApplyAsReviewerPage() {
                       </div>
                       {errors.agreeTerms && (
                         <p className="text-xs text-rose-600 font-semibold mt-1">
-                          {errors.agreeTerms}
+                          {errors.agreeTerms.message}
                         </p>
                       )}
                     </div>
@@ -745,7 +813,7 @@ export default function ApplyAsReviewerPage() {
                   <AlertDialogTrigger render={
                     <Button
                       type="button"
-                      disabled={!form.agreeTerms}
+                      disabled={!formValues.agreeTerms}
                       className="flex items-center gap-2 h-10 px-6 rounded-lg bg-gradient-to-r from-[#198754] to-emerald-500 hover:opacity-95 text-white text-[13px] font-semibold transition-all shadow-sm hover:shadow-md disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                     >
                       <CheckCircle2 className="size-4" />
@@ -758,13 +826,13 @@ export default function ApplyAsReviewerPage() {
                         Confirm Reviewer Application Submission
                       </AlertDialogTitle>
                       <AlertDialogDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        You are about to formally submit your reviewer application for <strong className="text-slate-900 dark:text-white">{form.fullName || "Applicant"}</strong> to the Daffodil International University Institutional Review Board. Please verify that all entered credentials and declarations are accurate.
+                        You are about to formally submit your reviewer application for <strong className="text-slate-900 dark:text-white">{formValues.fullName || "Applicant"}</strong> to the Daffodil International University Institutional Review Board. Please verify that all entered credentials and declarations are accurate.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel className="text-xs font-semibold">Review Dossier</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => handleSubmit()}
+                        onClick={handleSubmit(onSubmit)}
                         className="bg-[#198754] hover:bg-[#146c43] text-white text-xs font-bold"
                       >
                         Confirm & Submit

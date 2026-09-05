@@ -108,7 +108,7 @@ export type Step3Expertise = z.infer<typeof step3ExpertiseSchema>
  * Step 4: Declaration & Terms Schema
  */
 export const step4ReviewSubmitSchema = z.object({
-  agreeTerms: z.literal(true, {
+  agreeTerms: z.boolean().refine((val) => val === true, {
     message: "You must accept the ethical declaration and DIU IRB Reviewer Code of Conduct",
   }),
 })
