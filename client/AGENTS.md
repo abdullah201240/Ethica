@@ -40,3 +40,9 @@ All UI components and features must adhere strictly to these rules:
    - ⚫ **Primary Text:** Dark Navy (`#0F172A`) - High-contrast headings and body copy (`text-foreground`)
    - ⚫ **Secondary Text:** Slate Gray (`#64748B`) - Captions, metadata, hints, timestamps (`text-muted-foreground`)
 
+4. **Mandatory Unified DataTable Standard:**
+   - All lists, dockets, rosters, and audit trails must use the shared `<DataTable<T> ... />` component from `@/components/ui/data-table`.
+   - Every table must include search, column sorting, faceted filters, page size selection (`[5, 10, 20, 50]`), and full pagination.
+   - Tables must be wrapped in `relative w-full overflow-x-auto` to guarantee zero viewport overflow across mobile, tablet, and desktop.
+
+

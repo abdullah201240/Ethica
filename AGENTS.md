@@ -68,3 +68,33 @@ All pages, components, illustrations, and design tokens must strictly adhere to 
 - **Forbidden `select-none` on Content:** Never apply `select-none` to content containers, sections, headers, cards, text wrappers, buttons, or parent layout divs.
 - **Strictly Decorative Use Only:** `select-none` and `pointer-events-none` are strictly reserved for pure non-text background decorative elements (such as ghost watermarks or ambient blur halos) so they never obstruct or intercept user text selection.
 
+---
+
+## 6. Mandatory Unified DataTable UI Standard
+All tabular data, rosters, protocol lists, deliberation dockets, and audit trails across the entire Ethica platform MUST strictly use the centralized `DataTable` component located at [`@/components/ui/data-table`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/data-table.tsx). Never build ad-hoc `<table>` implementations in pages or feature components.
+
+### 6.1 Core Required Features
+Every table view in the system must leverage the built-in DataTable features:
+1. **Real-Time Search:** Instant search filtering across specified `searchKeys` with search icon and clear (`X`) button.
+2. **Column Sorting:** Tri-state interactive sorting (`ArrowUpDown`, `ArrowUp`, `ArrowDown`) on sortable columns.
+3. **Faceted Filtering:** Select filters for statuses, categories, or boards with an active-filter badge and a one-click reset action.
+4. **Page Size Selection:** Configurable rows per page selector (`[5, 10, 20, 50]`) with responsive labeling ("Rows per page:").
+5. **Full Pagination Controls:** First (`<<`), Previous (`<`), intelligent sliding numbered page buttons with ellipsis, Next (`>`), Last (`>>`), and an entry count summary ("Showing X to Y of Z entries").
+6. **Mobile & Tablet Responsiveness:**
+   - Always wrap table markup in a horizontal scroll container (`relative w-full overflow-x-auto`).
+   - Toolbars and footers must wrap gracefully on small screens without horizontal scrollbar overflow.
+   - Touch targets for pagination controls must maintain at least 36px height/width.
+7. **Institutional Styling:**
+   - Outer container: `rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs`.
+   - Header row: `bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-200/85 dark:border-slate-800 text-[0.72rem] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400`.
+### 6.2 Strict Internal Component Composition Mandate
+`DataTable` must NEVER use raw HTML elements (`<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`, `<input>`, `<button>`). Instead, it MUST strictly compose the platform's installed components:
+- **Table Primitives:** [`@/components/ui/table`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/table.tsx) (`Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`)
+- **Pagination Primitives:** [`@/components/ui/pagination`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/pagination.tsx) (`Pagination`, `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`)
+- **Inputs & Controls:** [`@/components/ui/input`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/input.tsx) (`Input`) and [`@/components/ui/button`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/button.tsx) (`Button`)
+- **Indicators & Surfaces:** [`@/components/ui/badge`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/badge.tsx) (`Badge`) and [`@/components/ui/card`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/card.tsx) (`Card`, `CardHeader`, `CardTitle`, `CardDescription`)
+- **Dropdowns & Selects:** [`@/components/ui/dropdown-menu`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/dropdown-menu.tsx) (`DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`) or [`@/components/ui/select`](file:///Users/abdullahalsakib/Documents/Ethica/client/components/ui/select.tsx) (`Select`, `SelectTrigger`, `SelectContent`, `SelectItem`). Never use raw `<select>` or unstyled native dropdowns *(Note: Base UI requires `<DropdownMenuLabel>` to always be nested inside a `<DropdownMenuGroup>` or `<DropdownMenuRadioGroup>`)*.
+
+
+
+

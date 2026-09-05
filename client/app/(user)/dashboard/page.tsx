@@ -16,8 +16,23 @@ import {
   Building2,
   Calendar,
 } from "lucide-react"
+import { DataTable, type ColumnDef, type DataTableFilter } from "@/components/ui/data-table"
 
-const sampleProtocols = [
+interface Protocol {
+  id: string
+  title: string
+  department: string
+  board: string
+  status: "Under Committee Review" | "Clearance Granted" | "Revision Requested" | "Expedited Triage"
+  statusColor: "amber" | "emerald" | "rose" | "blue"
+  risk: "Minimal Risk" | "Exempt - Fast Track" | "Greater Than Minimal"
+  riskColor: "blue" | "emerald" | "purple"
+  submissionDate: string
+  daysInReview: number
+  hasCertificate: boolean
+}
+
+const sampleProtocols: Protocol[] = [
   {
     id: "ETH-2026-089",
     title: "Longitudinal AI-Assisted Clinical Biomarker Analysis in Type 2 Diabetes",
@@ -70,21 +85,309 @@ const sampleProtocols = [
     daysInReview: 14,
     hasCertificate: false,
   },
+  {
+    id: "ETH-2026-092",
+    title: "Randomized Controlled Trial of Pediatric Cognitive Behavioral Teletherapy",
+    department: "Pediatrics & Behavioral Health",
+    board: "Biomedical IRB",
+    status: "Under Committee Review",
+    statusColor: "amber",
+    risk: "Greater Than Minimal",
+    riskColor: "purple",
+    submissionDate: "Sep 01, 2026",
+    daysInReview: 4,
+    hasCertificate: false,
+  },
+  {
+    id: "ETH-2026-085",
+    title: "Occupational Ergonomics and Musculoskeletal Disorders Among Remote Tech Workers",
+    department: "Occupational Health & Ergonomics",
+    board: "Social & Behavioral Board",
+    status: "Expedited Triage",
+    statusColor: "blue",
+    risk: "Minimal Risk",
+    riskColor: "blue",
+    submissionDate: "Aug 22, 2026",
+    daysInReview: 5,
+    hasCertificate: false,
+  },
+  {
+    id: "ETH-2026-055",
+    title: "Cross-Sectional Investigation into Maternal Nutritional Biomarkers in Rural Cohorts",
+    department: "Nutrition & Food Engineering",
+    board: "Biomedical IRB",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Minimal Risk",
+    riskColor: "blue",
+    submissionDate: "Jun 30, 2026",
+    daysInReview: 7,
+    hasCertificate: true,
+  },
+  {
+    id: "ETH-2026-038",
+    title: "Generative AI Code Assistance and Academic Integrity Perceptions Among Students",
+    department: "Software Engineering & Pedagogy",
+    board: "AI & Data Ethics Board",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Exempt - Fast Track",
+    riskColor: "emerald",
+    submissionDate: "May 18, 2026",
+    daysInReview: 2,
+    hasCertificate: true,
+  },
+  {
+    id: "ETH-2026-029",
+    title: "Microbiome Alterations in Patients Undergoing Early-Stage Chemotherapy",
+    department: "Biomedical Engineering & Oncology",
+    board: "Biomedical IRB",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Greater Than Minimal",
+    riskColor: "purple",
+    submissionDate: "Apr 25, 2026",
+    daysInReview: 16,
+    hasCertificate: true,
+  },
+  {
+    id: "ETH-2026-021",
+    title: "Perceived Fairness of Automated Healthcare Resource Allocation Algorithms",
+    department: "Public Health Informatics",
+    board: "AI & Data Ethics Board",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Minimal Risk",
+    riskColor: "blue",
+    submissionDate: "Apr 04, 2026",
+    daysInReview: 6,
+    hasCertificate: true,
+  },
+  {
+    id: "ETH-2026-015",
+    title: "Bioimpedance Sensor Calibration for Non-Invasive Cardiovascular Screening",
+    department: "Electrical Engineering & Health Devices",
+    board: "Biomedical IRB",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Minimal Risk",
+    riskColor: "blue",
+    submissionDate: "Mar 12, 2026",
+    daysInReview: 8,
+    hasCertificate: true,
+  },
+  {
+    id: "ETH-2026-008",
+    title: "Ethical Implications of Autonomous Vehicle Collision Triage Models",
+    department: "Robotics & Moral Philosophy",
+    board: "AI & Data Ethics Board",
+    status: "Clearance Granted",
+    statusColor: "emerald",
+    risk: "Exempt - Fast Track",
+    riskColor: "emerald",
+    submissionDate: "Feb 19, 2026",
+    daysInReview: 3,
+    hasCertificate: true,
+  },
 ]
 
 export default function UserDashboardPage() {
-  const [filter, setFilter] = React.useState("all")
+  // ── Column Definitions ──────────────────────────────────────────────────────
+  const columns = React.useMemo<ColumnDef<Protocol>[]>(
+    () => [
+      {
+        id: "id",
+        accessorKey: "id",
+        header: "Protocol ID",
+        sortable: true,
+        headerClassName: "w-[130px]",
+        cell: ({ row }) => (
+          <span className="font-mono text-xs font-bold px-2 py-1 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10 whitespace-nowrap inline-block">
+            {row.id}
+          </span>
+        ),
+      },
+      {
+        id: "title",
+        accessorKey: "title",
+        header: "Title & Research Department",
+        sortable: true,
+        cell: ({ row }) => (
+          <div className="max-w-md min-w-[220px]">
+            <p className="font-semibold text-slate-900 dark:text-white text-[13px] leading-snug line-clamp-2">
+              {row.title}
+            </p>
+            <div className="flex items-center gap-1.5 mt-1 text-[0.7rem] text-slate-400 dark:text-slate-500 flex-wrap">
+              <span className="inline-flex items-center gap-1">
+                <Building2 className="size-3 shrink-0" />
+                <span className="truncate">{row.department}</span>
+              </span>
+              <span className="text-slate-300 dark:text-slate-700">·</span>
+              <span className="truncate font-medium text-slate-500 dark:text-slate-400">
+                {row.board}
+              </span>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "status",
+        accessorKey: "status",
+        header: "Governance Status",
+        sortable: true,
+        headerClassName: "w-[180px]",
+        cell: ({ row }) => (
+          <span
+            className={`inline-flex items-center gap-1.5 text-[0.7rem] font-bold px-2.5 py-1 rounded-md border whitespace-nowrap ${
+              row.statusColor === "emerald"
+                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                : row.statusColor === "amber"
+                ? "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/20"
+                : row.statusColor === "blue"
+                ? "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20"
+                : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+            }`}
+          >
+            <span
+              className={`size-1.5 rounded-full ${
+                row.statusColor === "emerald"
+                  ? "bg-emerald-500"
+                  : row.statusColor === "amber"
+                  ? "bg-amber-500"
+                  : row.statusColor === "blue"
+                  ? "bg-sky-500"
+                  : "bg-rose-500"
+              }`}
+            />
+            {row.status}
+          </span>
+        ),
+      },
+      {
+        id: "risk",
+        accessorKey: "risk",
+        header: "Risk Tier",
+        sortable: true,
+        headerClassName: "w-[150px]",
+        cell: ({ row }) => (
+          <span
+            className={`text-[0.7rem] font-semibold px-2 py-1 rounded-md whitespace-nowrap inline-block ${
+              row.riskColor === "emerald"
+                ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400"
+                : row.riskColor === "purple"
+                ? "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400"
+                : "bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-400"
+            }`}
+          >
+            {row.risk}
+          </span>
+        ),
+      },
+      {
+        id: "submissionDate",
+        accessorKey: "submissionDate",
+        header: "Submitted",
+        sortable: true,
+        headerClassName: "w-[130px]",
+        cell: ({ row }) => (
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
+            <Calendar className="size-3.5 text-slate-400 shrink-0" />
+            {row.submissionDate}
+          </div>
+        ),
+      },
+      {
+        id: "daysInReview",
+        accessorKey: "daysInReview",
+        header: "Days",
+        sortable: true,
+        align: "center",
+        headerClassName: "w-[80px]",
+        cell: ({ row }) => (
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-200 tabular-nums">
+            {row.daysInReview}d
+          </span>
+        ),
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        align: "right",
+        headerClassName: "w-[140px]",
+        cell: ({ row }) => (
+          <div className="inline-flex items-center gap-2">
+            {row.hasCertificate ? (
+              <Link
+                href="/#certificate"
+                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1 transition-colors"
+                title="Download Digital Clearance Certificate"
+              >
+                <Download className="size-3.5" />
+                <span>Certificate</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="inline-flex items-center h-8 px-2.5 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors gap-1 cursor-pointer"
+              >
+                <span>Inspect</span>
+                <ChevronRight className="size-3.5" />
+              </button>
+            )}
+            <Link
+              href="/#preview"
+              className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Open Protocol Inspector"
+            >
+              <ExternalLink className="size-3.5" />
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    []
+  )
 
-  const filtered = sampleProtocols.filter((p) => {
-    if (filter === "review") return p.status === "Under Committee Review"
-    if (filter === "approved") return p.status === "Clearance Granted"
-    if (filter === "revision") return p.status === "Revision Requested"
-    return true
-  })
+  // ── Faceted Filter Definitions ──────────────────────────────────────────────
+  const filters = React.useMemo<DataTableFilter<Protocol>[]>(
+    () => [
+      {
+        id: "status",
+        title: "Status",
+        accessorKey: "status",
+        options: [
+          { label: "Under Review", value: "Under Committee Review" },
+          { label: "Clearance Granted", value: "Clearance Granted" },
+          { label: "Revisions Due", value: "Revision Requested" },
+          { label: "Expedited Triage", value: "Expedited Triage" },
+        ],
+      },
+      {
+        id: "risk",
+        title: "Risk Tier",
+        accessorKey: "risk",
+        options: [
+          { label: "Minimal Risk", value: "Minimal Risk" },
+          { label: "Exempt - Fast Track", value: "Exempt - Fast Track" },
+          { label: "Greater Than Minimal", value: "Greater Than Minimal" },
+        ],
+      },
+      {
+        id: "board",
+        title: "Ethics Board",
+        accessorKey: "board",
+        options: [
+          { label: "Biomedical IRB", value: "Biomedical IRB" },
+          { label: "Social & Behavioral", value: "Social & Behavioral Board" },
+          { label: "AI & Data Ethics", value: "AI & Data Ethics Board" },
+        ],
+      },
+    ],
+    []
+  )
 
   return (
-    <div className="space-y-6 sm:space-y-4">
-      
+    <div className="space-y-6 sm:space-y-8">
       {/* Welcome Banner Card */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-6 sm:p-8">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -97,21 +400,21 @@ export default function UserDashboardPage() {
               Investigator Protocol Workspace
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
-              Welcome back, <strong className="text-slate-900 dark:text-white">Dr. Elena Rostova</strong>. You have 1 protocol currently undergoing full IRB committee deliberation and 1 protocol requiring revision updates.
+              Welcome back, <strong className="text-slate-900 dark:text-white">Dr. Elena Rostova</strong>. You have 2 protocols undergoing active IRB committee deliberation and 1 protocol requiring revision updates.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/#checker"
-              className="inline-flex items-center h-10 px-4 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-xl transition-colors"
+              className="inline-flex items-center h-10 px-4 bg-[#002752] hover:bg-[#001c3d] text-white font-bold text-xs rounded-xl transition-colors shadow-xs"
             >
               <Sparkles className="size-3.5 text-[#198754] mr-1.5" />
               <span>Check Fast-Track</span>
             </Link>
             <Link
               href="#new-protocol"
-              className="inline-flex items-center h-10 px-4 bg-[#198754] hover:bg-[#146c43] text-white font-bold text-xs rounded-xl transition-colors"
+              className="inline-flex items-center h-10 px-4 bg-[#198754] hover:bg-[#146c43] text-white font-bold text-xs rounded-xl transition-colors shadow-xs"
             >
               <Plus className="size-3.5 mr-1.5" />
               <span>Submit New Protocol</span>
@@ -128,7 +431,6 @@ export default function UserDashboardPage() {
 
       {/* Metric Counters Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
         <div className="rounded-xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-5 space-y-1">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
             <span>Total Submissions</span>
@@ -180,228 +482,41 @@ export default function UserDashboardPage() {
             Deadline in 8 calendar days
           </span>
         </div>
-
       </div>
 
-      {/* Protocols Section with Filters */}
-      <div className="rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden" id="protocols">
-        
-        {/* Table Header & Tabs */}
-        <div className="p-4 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-[#002752] dark:text-white uppercase tracking-tight">
-              My Protocol Dossiers
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Real-time multi-stage governance tracking from initial screening to digital clearance certificate
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setFilter("all")}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                filter === "all"
-                  ? "bg-white dark:bg-card text-slate-900 dark:text-white shadow-2xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              }`}
+      {/* Unified Institutional DataTable Section */}
+      <div id="protocols" className="w-full">
+        <DataTable<Protocol>
+          data={sampleProtocols}
+          columns={columns}
+          title="My Protocol Dossiers"
+          description="Real-time multi-stage governance tracking from initial screening to digital clearance certificate"
+          searchPlaceholder="Search by ID, title, department, or board..."
+          searchKeys={["id", "title", "department", "board"]}
+          filters={filters}
+          initialPageSize={5}
+          pageSizeOptions={[5, 10, 20, 50]}
+          initialSort={{
+            columnId: "id",
+            direction: "desc",
+          }}
+          toolbarActions={
+            <Link
+              href="#new-protocol"
+              className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-bold bg-[#002752] hover:bg-[#001c3d] text-white rounded-lg transition-colors shadow-xs"
             >
-              All ({sampleProtocols.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilter("review")}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                filter === "review"
-                  ? "bg-white dark:bg-card text-slate-900 dark:text-white shadow-2xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              }`}
-            >
-              In Review
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilter("approved")}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                filter === "approved"
-                  ? "bg-white dark:bg-card text-slate-900 dark:text-white shadow-2xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              }`}
-            >
-              Approved
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilter("revision")}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                filter === "revision"
-                  ? "bg-white dark:bg-card text-slate-900 dark:text-white shadow-2xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              }`}
-            >
-              Revisions
-            </button>
-          </div>
-        </div>
-
-        {/* Protocols Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800">
-                <th className="text-left px-4 sm:px-6 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Protocol ID
-                </th>
-                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  Title &amp; Department
-                </th>
-                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Status
-                </th>
-                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Risk Level
-                </th>
-                <th className="text-left px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Submitted
-                </th>
-                <th className="text-center px-4 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Days
-                </th>
-                <th className="text-right px-4 sm:px-6 py-3 text-[0.7rem] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800">
-              {filtered.map((protocol) => (
-                <tr
-                  key={protocol.id}
-                  className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
-                >
-                  {/* Protocol ID */}
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                    <span className="font-mono text-xs font-bold px-2 py-1 rounded-md bg-[#002752]/8 dark:bg-white/8 text-[#002752] dark:text-sky-300 border border-[#002752]/10 dark:border-white/10">
-                      {protocol.id}
-                    </span>
-                  </td>
-
-                  {/* Title + Department */}
-                  <td className="px-4 py-4 max-w-xs">
-                    <p className="font-semibold text-slate-900 dark:text-white text-[13px] leading-snug line-clamp-2">
-                      {protocol.title}
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-1 text-[0.7rem] text-slate-400 dark:text-slate-500">
-                      <Building2 className="size-3 shrink-0" />
-                      <span className="truncate">{protocol.department}</span>
-                      <span className="text-slate-300 dark:text-slate-700">·</span>
-                      <span className="truncate">{protocol.board}</span>
-                    </div>
-                  </td>
-
-                  {/* Status */}
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center gap-1.5 text-[0.7rem] font-bold px-2.5 py-1 rounded-md border ${
-                        protocol.statusColor === "emerald"
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-                          : protocol.statusColor === "amber"
-                            ? "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/20"
-                            : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
-                      }`}
-                    >
-                      <span
-                        className={`size-1.5 rounded-full ${
-                          protocol.statusColor === "emerald"
-                            ? "bg-emerald-500"
-                            : protocol.statusColor === "amber"
-                              ? "bg-amber-500"
-                              : "bg-rose-500"
-                        }`}
-                      />
-                      {protocol.status}
-                    </span>
-                  </td>
-
-                  {/* Risk */}
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span
-                      className={`text-[0.7rem] font-semibold px-2 py-1 rounded-md ${
-                        protocol.riskColor === "emerald"
-                          ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400"
-                          : protocol.riskColor === "purple"
-                            ? "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400"
-                            : "bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-400"
-                      }`}
-                    >
-                      {protocol.risk}
-                    </span>
-                  </td>
-
-                  {/* Submitted */}
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                      <Calendar className="size-3.5 text-slate-400 shrink-0" />
-                      {protocol.submissionDate}
-                    </div>
-                  </td>
-
-                  {/* Days in review */}
-                  <td className="px-4 py-4 text-center whitespace-nowrap">
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-200 tabular-nums">
-                      {protocol.daysInReview}d
-                    </span>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right">
-                    <div className="inline-flex items-center gap-2">
-                      {protocol.hasCertificate ? (
-                        <Link
-                          href="/#certificate"
-                          className="inline-flex items-center h-8 px-3 text-[0.7rem] font-bold bg-[#198754] hover:bg-[#146c43] text-white rounded-lg gap-1.5 transition-colors"
-                        >
-                          <Download className="size-3.5" />
-                          Certificate
-                        </Link>
-                      ) : (
-                        <button
-                          type="button"
-                          className="inline-flex items-center h-8 px-3 text-[0.7rem] font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors gap-1"
-                        >
-                          Inspect
-                          <ChevronRight className="size-3.5" />
-                        </button>
-                      )}
-                      <Link
-                        href="/#preview"
-                        className="size-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        title="Open Protocol Inspector"
-                      >
-                        <ExternalLink className="size-3.5" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Empty state */}
-          {filtered.length === 0 && (
-            <div className="py-16 text-center text-slate-400 dark:text-slate-600">
-              <FileText className="size-8 mx-auto mb-3 opacity-40" />
-              <p className="text-sm font-semibold">No protocols match this filter</p>
-            </div>
-          )}
-        </div>
-
+              <Plus className="size-3.5" />
+              <span className="hidden sm:inline">New Submission</span>
+              <span className="sm:hidden">New</span>
+            </Link>
+          }
+        />
       </div>
 
       {/* Institutional Support & Integrity Banner */}
       <div className="p-4 sm:p-6 rounded-2xl border border-[#198754]/30 bg-[#198754]/5 dark:bg-[#198754]/10 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="size-10 rounded-xl bg-[#198754] text-white flex items-center justify-center shrink-0">
+          <div className="size-10 rounded-xl bg-[#198754] text-white flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="size-6" />
           </div>
           <div>
@@ -421,7 +536,6 @@ export default function UserDashboardPage() {
           Read Institutional Ethics Guidelines
         </Link>
       </div>
-
     </div>
   )
 }

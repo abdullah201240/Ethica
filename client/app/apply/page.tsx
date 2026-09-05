@@ -16,7 +16,6 @@ import {
   Star,
   Clock,
   Lock,
-  ShieldCheck,
 } from "lucide-react"
 
 const EXPERTISE_AREAS = [
