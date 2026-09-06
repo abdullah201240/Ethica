@@ -4,6 +4,21 @@ import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { usePathname } from "next/navigation"
 
+// Filter out React 19 false-positive warning regarding next-themes' inline script tag
+if (process.env.NODE_ENV === "development") {
+  const origError = console.error
+  console.error = (...args: unknown[]) => {
+    const first = args[0]
+    if (
+      typeof first === "string" &&
+      first.includes("Encountered a script tag while rendering React component")
+    ) {
+      return
+    }
+    origError.apply(console, args)
+  }
+}
+
 export function ThemeProvider({
   children,
   ...props

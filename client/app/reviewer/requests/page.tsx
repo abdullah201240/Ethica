@@ -14,6 +14,12 @@ import {
   UserX,
   FileSearch,
   ChevronRight,
+  Calendar,
+  Building2,
+  User,
+  ShieldAlert,
+  Shield,
+  FileCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +27,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { toast } from "@/components/ui/sonner"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
+import {
+  DataTable,
+  type ColumnDef,
+  type DataTableFilter,
+} from "@/components/ui/data-table"
 import {
   Select,
   SelectContent,
@@ -59,11 +70,33 @@ import {
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
 
-const DECLINE_REASONS = [
-  "Conflict of interest with principal investigator or affiliated research site",
-  "Specialization or methodology outside my clinical/academic domain",
-  "Excess clinical, surgical, or administrative institutional workload",
-  "Institutional leave or sabbatical commitments",
+interface DeclineReason {
+  value: string
+  label: string
+  detail: string
+}
+
+const DECLINE_REASONS: DeclineReason[] = [
+  {
+    value: "Conflict of Interest (COI) with investigator or study site",
+    label: "Conflict of Interest (COI)",
+    detail: "Affiliation with investigator, sponsor, or trial site",
+  },
+  {
+    value: "Specialization outside my clinical/academic domain",
+    label: "Outside Domain of Expertise",
+    detail: "Methodology is outside my accredited medical/technical scope",
+  },
+  {
+    value: "Excess institutional workload & capacity constraints",
+    label: "Workload & Capacity Constraints",
+    detail: "Excess clinical, surgical, or teaching workload",
+  },
+  {
+    value: "Institutional leave or sabbatical commitments",
+    label: "Institutional Leave / Sabbatical",
+    detail: "Unavailable during the mandatory review turnaround window",
+  },
 ]
 
 export default function ReviewerRequestsPage() {
@@ -74,7 +107,7 @@ export default function ReviewerRequestsPage() {
   // Modals state
   const [acceptingProtocol, setAcceptingProtocol] = React.useState<Protocol | null>(null)
   const [decliningProtocol, setDecliningProtocol] = React.useState<Protocol | null>(null)
-  const [declineReason, setDeclineReason] = React.useState(DECLINE_REASONS[0])
+  const [declineReason, setDeclineReason] = React.useState(DECLINE_REASONS[0].value)
   const [customReason, setCustomReason] = React.useState("")
   const [inspectingProtocol, setInspectingProtocol] = React.useState<Protocol | null>(null)
 
@@ -109,9 +142,11 @@ export default function ReviewerRequestsPage() {
   }
 
   // Filter pending review requests
-  const pendingRequests = protocols.filter(
-    (p) => p.assignmentStatus === "Pending Acceptance"
-  )
+  const pendingRequests = React.useMemo(() => {
+    return protocols.filter(
+      (p) => p.assignmentStatus === "Pending Acceptance"
+    )
+  }, [protocols])
 
   const activeEvaluationsCount = protocols.filter(
     (p) => p.assignmentStatus === "Accepted"
@@ -140,12 +175,202 @@ export default function ReviewerRequestsPage() {
     if (updated) {
       setProtocols(getStoredProtocols())
     }
-    toast.error("Review Assignment Declined", {
+    toast.error("Review Assignment Rejected", {
       description: `Declined review for ${decliningProtocol.id}. The Secretariat has been notified and will reassign the protocol to an alternative accredited reviewer.`,
     })
     setDecliningProtocol(null)
     setCustomReason("")
   }
+
+  // ── DataTable Columns Definition ──────────────────────────────────────────
+  const columns: ColumnDef<Protocol>[] = React.useMemo(
+    () => [
+      {
+        id: "id",
+        accessorKey: "id",
+        header: "Protocol Reference",
+        sortable: true,
+        headerClassName: "w-36",
+        className: "w-36",
+        cell: ({ row }) => (
+          <div className="space-y-1 select-text">
+            <span className="font-mono text-base font-bold text-primary dark:text-sky-300 block">
+              {row.id}
+            </span>
+            <div className="flex items-center gap-1 text-micro text-slate-500 dark:text-slate-400 whitespace-nowrap">
+              <Calendar className="size-3 shrink-0" />
+              <span>{row.assignmentDate || row.submissionDate || "Recent"}</span>
+            </div>
+            {row.isExpedited && (
+              <Badge
+                variant="outline"
+                className="bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20 text-[0.68rem] px-1.5 py-0 font-bold inline-flex items-center gap-0.5"
+              >
+                <Zap className="size-2.5 text-sky-600 dark:text-sky-400" />
+                <span>Fast-Track</span>
+              </Badge>
+            )}
+          </div>
+        ),
+      },
+      {
+        id: "title",
+        accessorKey: "title",
+        header: "Research Protocol & PI",
+        sortable: true,
+        cell: ({ row }) => (
+          <div className="space-y-1.5 max-w-sm select-text">
+            <span className="font-bold text-foreground text-table-cell leading-snug line-clamp-2 block">
+              {row.title}
+            </span>
+            <div className="flex flex-wrap items-center gap-2 text-micro text-muted-foreground">
+              <span className="inline-flex items-center gap-1">
+                <Building2 className="size-3 text-slate-400 shrink-0" />
+                <span className="truncate">{row.department}</span>
+              </span>
+              <span className="inline-flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
+                <User className="size-3 text-primary/70 dark:text-sky-400 shrink-0" />
+                <span>{row.piName || "Dr. Elena Rostova"}</span>
+              </span>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "board",
+        accessorKey: "board",
+        header: "Board & Risk Tier",
+        sortable: true,
+        headerClassName: "w-44",
+        className: "w-44",
+        cell: ({ row }) => {
+          const riskLevel = row.risk || "Minimal Risk"
+          const isHigh = riskLevel.toLowerCase().includes("high")
+          const isMod = riskLevel.toLowerCase().includes("moderate")
+
+          return (
+            <div className="space-y-1 select-text">
+              <Badge
+                variant="secondary"
+                className="font-medium text-micro bg-primary/8 dark:bg-primary/20 text-primary dark:text-sky-300 border-none"
+              >
+                {row.board}
+              </Badge>
+              <div>
+                {isHigh ? (
+                  <Badge className="bg-rose-500/15 text-rose-800 dark:text-rose-300 border-rose-500/30 text-[0.68rem] px-1.5 py-0 font-bold gap-1">
+                    <ShieldAlert className="size-2.5 text-rose-600 dark:text-rose-400" />
+                    <span>{riskLevel}</span>
+                  </Badge>
+                ) : isMod ? (
+                  <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30 text-[0.68rem] px-1.5 py-0 font-bold gap-1">
+                    <Shield className="size-2.5 text-amber-600 dark:text-amber-400" />
+                    <span>{riskLevel}</span>
+                  </Badge>
+                ) : (
+                  <Badge className="bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/30 text-[0.68rem] px-1.5 py-0 font-bold gap-1">
+                    <ShieldCheck className="size-2.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>{riskLevel}</span>
+                  </Badge>
+                )}
+              </div>
+              <div className="text-[0.68rem] text-muted-foreground truncate max-w-40">
+                {row.studyType || "Observational Study"}
+              </div>
+            </div>
+          )
+        },
+      },
+      {
+        id: "dossier",
+        header: "Dossier",
+        headerClassName: "w-28",
+        className: "w-28",
+        cell: ({ row }) => (
+          <div className="space-y-1 select-text">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setInspectingProtocol(row)}
+              className="h-7 px-2 text-micro font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 gap-1 cursor-pointer"
+            >
+              <FileSearch className="size-3.5 text-primary dark:text-sky-400" />
+              <span>Details</span>
+            </Button>
+            <div className="flex items-center gap-1 text-[0.65rem] text-muted-foreground">
+              <FileCheck className="size-3 text-emerald-600 shrink-0" />
+              <span className="truncate max-w-20 font-mono">
+                {row.proposalDocumentName ? "PDF" : "—"}
+              </span>
+            </div>
+          </div>
+        ),
+      },
+      {
+        id: "actions",
+        header: "Decision Actions",
+        align: "right",
+        headerClassName: "w-44 text-right sticky right-0 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-xs z-20 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)]",
+        className: "text-right sticky right-0 bg-white dark:bg-[#0C1E34] group-hover:bg-slate-50/95 dark:group-hover:bg-slate-800/95 z-10 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)]",
+        cell: ({ row }) => (
+          <div className="flex items-center justify-end gap-2">
+            {/* Accept Button: High-visibility institutional DIU Green with pure white text */}
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setAcceptingProtocol(row)}
+              className="h-8 px-3 rounded-md bg-[#198754] hover:bg-[#157347] text-white font-bold text-xs gap-1.5 shadow-sm transition-all duration-150 cursor-pointer inline-flex items-center justify-center border border-[#198754]"
+              title="Accept Review Assignment"
+            >
+              <UserCheck className="size-3.5 text-white shrink-0" />
+              <span className="text-white font-bold">Accept</span>
+            </Button>
+
+            {/* Reject Button: High-visibility crisp Crimson Red with pure white text */}
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setDecliningProtocol(row)}
+              className="h-8 px-3 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs gap-1.5 shadow-sm transition-all duration-150 cursor-pointer inline-flex items-center justify-center border border-rose-600"
+              title="Reject / Decline Review Assignment"
+            >
+              <UserX className="size-3.5 text-white shrink-0" />
+              <span className="text-white font-bold">Reject</span>
+            </Button>
+          </div>
+        ),
+      },
+    ],
+    []
+  )
+
+  // ── Faceted Filters ──────────────────────────────────────────────────────
+  const filters: DataTableFilter<Protocol>[] = React.useMemo(
+    () => [
+      {
+        id: "board",
+        title: "IRB Board",
+        accessorKey: "board",
+        options: [
+          { label: "Biomedical IRB", value: "Biomedical IRB" },
+          { label: "Social & Behavioral Board", value: "Social & Behavioral Board" },
+          { label: "AI & Data Ethics Board", value: "AI & Data Ethics Board" },
+        ],
+      },
+      {
+        id: "risk",
+        title: "Risk Tier",
+        accessorKey: "risk",
+        options: [
+          { label: "Minimal Risk", value: "Minimal Risk" },
+          { label: "Moderate Risk", value: "Moderate Risk" },
+          { label: "High Risk", value: "High Risk" },
+        ],
+      },
+    ],
+    []
+  )
 
   return (
     <DashboardContainer className="space-y-6 select-text pb-12">
@@ -177,29 +402,28 @@ export default function ReviewerRequestsPage() {
         />
       </KpiGrid>
 
-      {/* Main Review Requests List Container */}
-      <div className="rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] overflow-hidden shadow-xs">
-        <div className="p-5 sm:p-6 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight flex items-center gap-2">
-              <Inbox className="size-6 text-amber-500" />
-              Incoming Protocol Review Requests
-            </h2>
-            <p className="text-body-sm text-muted-foreground font-medium mt-1">
-              Secretariat has dispatched these research protocols for your evaluation. Review the summary and accept to begin deliberation or decline with reasons so Secretariat can reassign.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 text-micro font-bold border border-amber-500/20">
-              <Clock className="size-3.5 animate-pulse" />
-              <span>{pendingRequests.length} Pending Action</span>
-            </span>
-          </div>
-        </div>
-
-        {pendingRequests.length === 0 ? (
-          <div className="p-12 text-center space-y-3 text-muted-foreground">
+      {/* Centralized Institutional DataTable View */}
+      <DataTable
+        data={pendingRequests}
+        columns={columns}
+        filters={filters}
+        searchKeys={["id", "title", "piName", "department", "board", "studyType"]}
+        searchPlaceholder="Search by ID, protocol title, investigator, department, or methodology..."
+        title={
+          <span className="flex items-center gap-2">
+            <Inbox className="size-5 text-amber-500" />
+            <span>Incoming Protocol Review Requests</span>
+          </span>
+        }
+        description="Secretariat has dispatched these research protocols for your evaluation. Review the summary and accept to begin deliberation or decline with reasons so Secretariat can reassign."
+        totalCountBadge={
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 text-micro font-bold border border-amber-500/20">
+            <Clock className="size-3 animate-pulse" />
+            <span>{pendingRequests.length} Pending Action</span>
+          </span>
+        }
+        emptyState={
+          <div className="py-12 text-center space-y-3 text-muted-foreground">
             <CheckCircle2 className="size-10 text-emerald-500 mx-auto" />
             <h3 className="text-lg font-bold text-foreground">All Review Requests Addressed</h3>
             <p className="text-body-sm max-w-md mx-auto">
@@ -214,102 +438,10 @@ export default function ReviewerRequestsPage() {
               </Link>
             </div>
           </div>
-        ) : (
-          <div className="divide-y divide-slate-200/70 dark:divide-slate-800">
-            {pendingRequests.map((protocol) => (
-              <div
-                key={protocol.id}
-                className="p-5 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-start justify-between gap-5"
-              >
-                <div className="space-y-3 flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-base font-bold px-2 py-0.5 rounded bg-primary/10 dark:bg-white/10 text-primary dark:text-sky-300">
-                      {protocol.id}
-                    </span>
-                    <Badge variant="outline" className="text-base font-semibold">
-                      {protocol.board}
-                    </Badge>
-                    {protocol.isExpedited && (
-                      <Badge className="bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20 text-micro font-bold gap-1">
-                        <Zap className="size-2.5" />
-                        <span>Fast-Track</span>
-                      </Badge>
-                    )}
-                    <span className="text-micro text-amber-700 dark:text-amber-400 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 flex items-center gap-1">
-                      <Clock className="size-3 animate-pulse" />
-                      <span>Assigned to You • Pending Acceptance</span>
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg font-bold text-foreground leading-snug">
-                    {protocol.title}
-                  </h3>
-
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-muted-foreground">
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
-                      PI: {protocol.piName || "Dr. Elena Rostova"}
-                    </span>
-                    <span>•</span>
-                    <span>{protocol.department}</span>
-                    <span>•</span>
-                    <span>Risk: <strong>{protocol.risk}</strong></span>
-                    <span>•</span>
-                    <span>Dispatched: {protocol.assignmentDate || "Recently"}</span>
-                  </div>
-
-                  {protocol.abstract && (
-                    <p className="text-body-sm text-muted-foreground line-clamp-3 italic pt-1">
-                      &ldquo;{protocol.abstract}&rdquo;
-                    </p>
-                  )}
-
-                  {/* Documents & Details Pills */}
-                  <div className="flex flex-wrap items-center gap-2 pt-1 text-micro">
-                    <span className="font-bold text-slate-700 dark:text-slate-300">Attachments:</span>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-300">
-                      {protocol.proposalDocumentName || "Proposal_v2.pdf"}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-300">
-                      {protocol.consentDocumentName || "Consent_Form.pdf"}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => setInspectingProtocol(protocol)}
-                      className="h-6 px-2 text-micro font-bold text-primary dark:text-sky-400 hover:underline gap-1 p-0 cursor-pointer"
-                    >
-                      <FileSearch className="size-3" />
-                      <span>View Full Summary</span>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Accept / Decline Action Controls */}
-                <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0 pt-2 lg:pt-0">
-                  <Button
-                    type="button"
-                    onClick={() => setAcceptingProtocol(protocol)}
-                    className="h-10 px-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold text-base gap-1.5 shadow-xs cursor-pointer"
-                  >
-                    <UserCheck className="size-4" />
-                    <span>Accept Assignment</span>
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setDecliningProtocol(protocol)}
-                    className="h-10 px-4 border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 font-bold text-base gap-1.5 cursor-pointer"
-                  >
-                    <UserX className="size-4" />
-                    <span>Decline Assignment</span>
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+        }
+        initialPageSize={10}
+        pageSizeOptions={[5, 10, 20, 50]}
+      />
 
       {/* Acceptance Confirmation Dialog */}
       <AlertDialog
@@ -318,36 +450,37 @@ export default function ReviewerRequestsPage() {
           if (!open) setAcceptingProtocol(null)
         }}
       >
-        <AlertDialogContent className="max-w-md">
+        <AlertDialogContent className="sm:max-w-lg w-full overflow-hidden p-6 gap-5">
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <UserCheck className="size-5 text-secondary" />
+            <AlertDialogTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold">
+              <UserCheck className="size-5 text-[#198754]" />
               <span>Accept Review Assignment</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3 text-body-sm text-muted-foreground pt-2">
-              <p>
-                By accepting, you confirm that you have no disqualifying conflicts of interest and commit to completing the ethical deliberation within the institutional SLA.
-              </p>
-              {acceptingProtocol && (
-                <div className="p-3 rounded-lg bg-muted border border-border font-mono text-table-cell">
-                  <span className="font-bold text-foreground">{acceptingProtocol.id}</span>: {acceptingProtocol.title}
-                </div>
-              )}
+            <AlertDialogDescription className="text-body-sm text-muted-foreground pt-1 leading-relaxed">
+              By accepting, you confirm that as accredited reviewer ({currentReviewer.name}), you have no disqualifying conflicts of interest and commit to completing the ethical deliberation within the institutional SLA.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+          {acceptingProtocol && (
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-table-cell overflow-hidden">
+              <span className="font-bold text-foreground">{acceptingProtocol.id}</span>: {acceptingProtocol.title}
+            </div>
+          )}
+
+          <AlertDialogFooter className="m-0 p-0 pt-3 bg-transparent border-t border-border/60 flex flex-row items-center justify-end gap-3">
+            <AlertDialogCancel className="font-semibold cursor-pointer">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmAccept}
-              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold cursor-pointer"
+              className="bg-[#198754] hover:bg-[#157347] text-white font-bold cursor-pointer gap-1.5 shadow-xs"
             >
-              Confirm Acceptance
+              <UserCheck className="size-4 text-white" />
+              <span>Confirm Acceptance</span>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Decline Reason Dialog */}
+      {/* Decline / Reject Reason Dialog */}
       <Dialog
         open={!!decliningProtocol}
         onOpenChange={(open) => {
@@ -357,27 +490,35 @@ export default function ReviewerRequestsPage() {
           }
         }}
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
-              <AlertTriangle className="size-5" />
-              <span>Decline Review Assignment</span>
+        <DialogContent className="sm:max-w-lg w-full overflow-hidden p-6 gap-5">
+          <DialogHeader className="gap-1.5">
+            <DialogTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-lg sm:text-xl font-bold">
+              <AlertTriangle className="size-5 shrink-0" />
+              <span>Reject Review Assignment</span>
             </DialogTitle>
-            <DialogDescription className="text-body-sm text-muted-foreground">
+            <DialogDescription className="text-body-sm text-muted-foreground leading-relaxed">
               Please specify the reason for declining. The Secretariat will be notified immediately to reassign this protocol to another qualified reviewer.
             </DialogDescription>
           </DialogHeader>
 
           {decliningProtocol && (
-            <div className="p-3 rounded-lg bg-muted border border-border text-micro space-y-1">
-              <span className="font-bold font-mono text-foreground">{decliningProtocol.id}</span>
-              <p className="text-muted-foreground truncate">{decliningProtocol.title}</p>
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-micro space-y-1 overflow-hidden">
+              <div className="font-mono font-bold text-foreground flex items-center gap-1.5">
+                <span className="px-1.5 py-0.5 rounded bg-primary/10 dark:bg-primary/20 text-primary dark:text-sky-300">
+                  {decliningProtocol.id}
+                </span>
+                <span className="text-slate-400">•</span>
+                <span className="text-muted-foreground">{decliningProtocol.board}</span>
+              </div>
+              <p className="text-foreground/90 font-medium truncate" title={decliningProtocol.title}>
+                {decliningProtocol.title}
+              </p>
             </div>
           )}
 
-          <div className="space-y-3 py-2">
+          <div className="space-y-3">
             <label className="text-table-cell font-bold text-foreground block">
-              Reason for Declining
+              Reason for Rejecting Assignment
             </label>
             <Select
               value={declineReason}
@@ -385,21 +526,36 @@ export default function ReviewerRequestsPage() {
                 if (val) setDeclineReason(val)
               }}
             >
-              <SelectTrigger className="w-full text-base">
-                <SelectValue placeholder="Select decline reason" />
+              <SelectTrigger className="w-full h-11 px-3.5 text-sm min-w-0 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                <SelectValue placeholder="Select decline reason">
+                  {DECLINE_REASONS.find((r) => r.value === declineReason)?.label ||
+                    (declineReason === "Other" ? "Other Specific Reason..." : declineReason)}
+                </SelectValue>
               </SelectTrigger>
-              <SelectContent>
-                {DECLINE_REASONS.map((reason) => (
-                  <SelectItem key={reason} value={reason}>
-                    {reason}
+              <SelectContent
+                alignItemWithTrigger={false}
+                align="start"
+                className="w-[var(--anchor-width)] min-w-full max-w-[var(--anchor-width)] overflow-hidden"
+              >
+                {DECLINE_REASONS.map((r) => (
+                  <SelectItem key={r.value} value={r.value} className="py-2 px-2.5">
+                    <div className="flex flex-col text-left gap-0.5 min-w-0">
+                      <span className="font-semibold text-foreground text-sm leading-tight">{r.label}</span>
+                      <span className="text-micro text-muted-foreground leading-normal">{r.detail}</span>
+                    </div>
                   </SelectItem>
                 ))}
-                <SelectItem value="Other">Other Specific Reason...</SelectItem>
+                <SelectItem value="Other" className="py-2 px-2.5">
+                  <div className="flex flex-col text-left gap-0.5 min-w-0">
+                    <span className="font-semibold text-foreground text-sm">Other Specific Reason...</span>
+                    <span className="text-micro text-muted-foreground">Provide custom notes for the Secretariat</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
 
             {declineReason === "Other" && (
-              <div className="space-y-1 pt-2">
+              <div className="space-y-1.5 pt-1">
                 <label className="text-micro font-bold text-foreground">
                   Specify Justification
                 </label>
@@ -408,13 +564,13 @@ export default function ReviewerRequestsPage() {
                   onChange={(e) => setCustomReason(e.target.value)}
                   placeholder="Provide context for the Secretariat regarding this decline..."
                   rows={3}
-                  className="text-base"
+                  className="text-base resize-none"
                 />
               </div>
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="m-0 p-0 pt-3 bg-transparent border-t border-border/60 flex flex-row items-center justify-end gap-3">
             <Button
               type="button"
               variant="outline"
@@ -422,15 +578,17 @@ export default function ReviewerRequestsPage() {
                 setDecliningProtocol(null)
                 setCustomReason("")
               }}
+              className="font-semibold cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               type="button"
               onClick={handleConfirmDecline}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-bold cursor-pointer"
+              className="bg-rose-600 hover:bg-rose-700 text-white font-bold cursor-pointer gap-1.5 shadow-xs"
             >
-              Decline & Notify Secretariat
+              <UserX className="size-4 shrink-0 text-white" />
+              <span>Reject Assignment</span>
             </Button>
           </DialogFooter>
         </DialogContent>
