@@ -328,28 +328,24 @@ export default function UserApplicationsPage() {
           value={totalApps}
           icon={Layers}
           color="navy"
-          description="Lifetime research protocol submissions"
         />
         <KpiCard
           label="In Deliberation"
           value={underReviewCount}
           icon={Clock}
           color="amber"
-          description="Currently active under committee review"
         />
         <KpiCard
           label="Clearance Granted"
           value={clearanceGrantedCount}
           icon={CheckCircle2}
           color="green"
-          description="Official ethical clearance certificates issued"
         />
         <KpiCard
           label="Revisions Due"
           value={revisionDueCount}
           icon={AlertCircle}
           color="rose"
-          description="Committee feedback requiring investigator action"
         />
       </KpiGrid>
 

@@ -223,14 +223,12 @@ export default function ReviewerNotificationsPage() {
         <KpiCard
           label="Deliberation Notices"
           value={totalCount}
-          description="Committee queue items"
           icon={Scale}
           color="gold"
         />
         <KpiCard
           label="Unread Alerts"
           value={unreadCount}
-          description={unreadCount === 0 ? "Docket clear" : "Action required"}
           icon={Bell}
           color="amber"
           badge={
@@ -244,14 +242,12 @@ export default function ReviewerNotificationsPage() {
         <KpiCard
           label="Pending Invitations"
           value={invitationCount}
-          description="Awaiting acceptance"
           icon={Inbox}
           color="navy"
         />
         <KpiCard
           label="Urgent Deadlines"
           value={urgentCount}
-          description="Determination due soon"
           icon={AlertTriangle}
           color="rose"
         />

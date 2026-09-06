@@ -207,28 +207,24 @@ export default function ReviewerDashboardPage() {
         <KpiCard
           label="Incoming Review Requests"
           value={incomingRequests.length}
-          description="Awaiting your acceptance / decline"
           icon={Clock}
           color={incomingRequests.length > 0 ? "amber" : "navy"}
         />
         <KpiCard
           label="Active In-Progress Evaluations"
           value={activeEvaluations.length}
-          description="Accepted protocols in deliberation"
           icon={Vote}
           color="navy"
         />
         <KpiCard
           label="Determinations Sealed"
           value={completedEvaluations.length}
-          description="Formal reviews recorded in register"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Quorum Compliance"
           value="100%"
-          description="Institutional turnaround on schedule"
           icon={Scale}
           color="gold"
         />

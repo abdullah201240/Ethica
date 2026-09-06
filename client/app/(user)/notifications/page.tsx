@@ -249,14 +249,12 @@ export default function InvestigatorNotificationsPage() {
         <KpiCard
           label="Total Notifications"
           value={totalCount}
-          description="Historical dispatches"
           icon={Bell}
           color="navy"
         />
         <KpiCard
           label="Unread Alerts"
           value={unreadCount}
-          description={unreadCount === 0 ? "All caught up" : "Awaiting review"}
           icon={CheckCircle2}
           color="green"
           badge={
@@ -270,14 +268,12 @@ export default function InvestigatorNotificationsPage() {
         <KpiCard
           label="Clearance Grants"
           value={clearanceCount}
-          description="Institutional determinations"
           icon={Award}
           color="sky"
         />
         <KpiCard
           label="Urgent Revisions"
           value={urgentCount}
-          description="Action required by PI"
           icon={AlertTriangle}
           color="amber"
         />

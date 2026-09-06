@@ -357,28 +357,24 @@ export default function ReviewerCompletedPage() {
         <KpiCard
           label="Total Deliberations Archived"
           value={completedProtocols.length}
-          description="Binding committee determinations"
           icon={Award}
           color="navy"
         />
         <KpiCard
           label="Clearance Approvals"
           value={approvedCount}
-          description="Full ethical clearances granted"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Revisions Dispatched"
           value={revisionsCount}
-          description="Amendments sent to investigators"
           icon={AlertCircle}
           color="amber"
         />
         <KpiCard
           label="Ethics Rejections"
           value={rejectedCount}
-          description="Declined on bioethical grounds"
           icon={AlertTriangle}
           color={rejectedCount > 0 ? "rose" : "navy"}
         />

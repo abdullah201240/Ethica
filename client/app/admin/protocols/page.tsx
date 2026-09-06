@@ -548,28 +548,24 @@ export default function AdminProtocolApplicationsPage() {
           value={totalProtocols}
           icon={ScrollText}
           color="navy"
-          description="Clearance submissions from /apply"
         />
         <KpiCard
           label="Active Deliberation & Triage"
           value={activeReviewCount}
           icon={Clock}
           color="amber"
-          description="Queued for IRB committee session"
         />
         <KpiCard
           label="Ethical Clearance Granted"
           value={clearedCount}
           icon={CheckCircle2}
           color="green"
-          description="Certified with SHA-256 seal"
         />
         <KpiCard
           label="Processing Fees Collected"
           value={`৳ ${totalBdtRevenue.toLocaleString()} BDT`}
           icon={Wallet}
           color="gold"
-          description="Bangladeshi Taka revenue ledger"
         />
       </KpiGrid>
 

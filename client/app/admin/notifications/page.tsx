@@ -224,14 +224,12 @@ export default function GovernanceAdminNotificationsPage() {
         <KpiCard
           label="Secretariat Dispatches"
           value={totalCount}
-          description="Institutional audit log"
           icon={ShieldCheck}
           color="navy"
         />
         <KpiCard
           label="Unread Alerts"
           value={unreadCount}
-          description={unreadCount === 0 ? "Secretariat synchronized" : "Action required"}
           icon={Bell}
           color="green"
           badge={
@@ -245,14 +243,12 @@ export default function GovernanceAdminNotificationsPage() {
         <KpiCard
           label="Protocol Intakes"
           value={protocolIntakeCount}
-          description="Triage & submissions"
           icon={ScrollText}
           color="sky"
         />
         <KpiCard
           label="Reviewer Actions"
           value={deliberationCount}
-          description="Acceptances & determinations"
           icon={Scale}
           color="amber"
         />

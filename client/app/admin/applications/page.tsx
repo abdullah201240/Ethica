@@ -793,28 +793,24 @@ export default function AdminApplicationsManagementPage() {
               value={totalProtocols}
               icon={ScrollText}
               color="navy"
-              description="All submissions from /apply"
             />
             <KpiCard
               label="Active Deliberation"
               value={activeProtocolsCount}
               icon={Clock}
               color="amber"
-              description="Committee review & expedited triage"
             />
             <KpiCard
               label="Clearance Granted"
               value={clearedProtocolsCount}
               icon={CheckCircle2}
               color="green"
-              description="Sealed with SHA-256 certificate"
             />
             <KpiCard
               label="Processing Fees Collected"
               value={`৳ ${totalBdtRevenue.toLocaleString()} BDT`}
               icon={Wallet}
               color="gold"
-              description="Voucher revenue ledger"
             />
           </KpiGrid>
 
@@ -839,28 +835,24 @@ export default function AdminApplicationsManagementPage() {
               value={totalReviewerApps}
               icon={Users}
               color="navy"
-              description="Submitted reviewer dossiers"
             />
             <KpiCard
               label="Pending Verification"
               value={pendingReviewersCount}
               icon={Clock}
               color="amber"
-              description="Awaiting accreditation vote"
             />
             <KpiCard
               label="Accredited Reviewers"
               value={approvedReviewersCount}
               icon={CheckCircle2}
               color="green"
-              description="Enrolled into active voting roster"
             />
             <KpiCard
               label="Declined Applications"
               value={rejectedReviewersCount}
               icon={XCircle}
               color="rose"
-              description="Ineligible or quorum capped"
             />
           </KpiGrid>
 

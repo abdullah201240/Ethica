@@ -46,7 +46,6 @@ const colorStyles: Record<
 export interface KpiCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string
   value: React.ReactNode
-  description?: React.ReactNode
   icon?: React.ComponentType<{ className?: string }>
   iconClassName?: string
   color?: KpiColorVariant
@@ -73,7 +72,6 @@ export function KpiCardSkeleton({ className }: { className?: string }) {
         <Skeleton className="size-4 rounded-full" />
       </div>
       <Skeleton className="h-8 w-28 rounded-md" />
-      <Skeleton className="h-3 w-36 rounded" />
     </div>
   )
 }
@@ -109,7 +107,6 @@ export function KpiGridSkeleton({
 export function KpiCard({
   label,
   value,
-  description,
   icon: Icon,
   iconClassName,
   color = "navy",
@@ -155,21 +152,18 @@ export function KpiCard({
         {value}
       </div>
 
-      {(description || trend) && (
-        <div className="flex items-center justify-between gap-2 pt-0.5 text-body text-muted-foreground select-text">
-          {description && <span className="truncate">{description}</span>}
-          {trend && (
-            <span
-              className={cn(
-                "inline-flex items-center text-xs font-bold px-2 py-0.5 rounded shrink-0",
-                trend.isPositive
-                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                  : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
-              )}
-            >
-              {trend.value}
-            </span>
-          )}
+      {trend && (
+        <div className="flex items-center justify-end gap-2 pt-0.5 text-body text-muted-foreground select-text">
+          <span
+            className={cn(
+              "inline-flex items-center text-xs font-bold px-2 py-0.5 rounded shrink-0",
+              trend.isPositive
+                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+            )}
+          >
+            {trend.value}
+          </span>
         </div>
       )}
     </div>

@@ -160,28 +160,24 @@ export default function ReviewerDeliberationsPage() {
         <KpiCard
           label="Active Deliberations"
           value={activeDeliberations.length}
-          description="Protocols currently under your evaluation"
           icon={Vote}
           color={activeDeliberations.length > 0 ? "navy" : "green"}
         />
         <KpiCard
           label="Pending Requests"
           value={pendingRequestsCount}
-          description="Awaiting your initial response"
           icon={Clock}
           color={pendingRequestsCount > 0 ? "amber" : "navy"}
         />
         <KpiCard
           label="Expedited Triage Cases"
           value={expeditedCount}
-          description="72-hour priority review track"
           icon={Zap}
           color={expeditedCount > 0 ? "gold" : "navy"}
         />
         <KpiCard
           label="Determinations Sealed"
           value={completedEvaluationsCount}
-          description="Reviews registered with seals"
           icon={CheckCircle2}
           color="green"
         />

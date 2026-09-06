@@ -154,28 +154,24 @@ export default function ReviewerRequestsPage() {
         <KpiCard
           label="Pending Review Requests"
           value={pendingRequests.length}
-          description="Awaiting your acceptance / decline"
           icon={Inbox}
           color={pendingRequests.length > 0 ? "amber" : "navy"}
         />
         <KpiCard
           label="Active In-Progress Cases"
           value={activeEvaluationsCount}
-          description="Accepted protocols in deliberation"
           icon={ShieldCheck}
           color="navy"
         />
         <KpiCard
           label="Determinations Sealed"
           value={completedEvaluationsCount}
-          description="Clearances recorded in register"
           icon={CheckCircle2}
           color="green"
         />
         <KpiCard
           label="Acceptance Turnaround"
           value="< 24h"
-          description="Secretariat target response SLA"
           icon={Clock}
           color="gold"
         />
