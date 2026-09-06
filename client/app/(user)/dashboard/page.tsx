@@ -10,7 +10,6 @@ import {
   Plus,
   Download,
   ExternalLink,
-  ChevronRight,
   ShieldCheck,
   Building2,
   Calendar,

@@ -36,7 +36,6 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -50,7 +49,6 @@ import {
   initialReviewerApplications,
   getStoredApplications,
   subscribeApplications,
-  updateReviewerApplicationStatus,
 } from "@/lib/reviewer-applications"
 import {
   getStoredProtocols,
@@ -78,39 +76,11 @@ export default function AdminApplicationsManagementPage() {
   }, [])
 
   // ── Reviewer State ───────────────────────────────────────────────────────
-  const isClient = React.useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  )
-
   const reviewerApplications = React.useSyncExternalStore(
     subscribeApplications,
     getStoredApplications,
     () => initialReviewerApplications
   )
-
-  const handleApproveReviewer = (appId: string, fullName: string) => {
-    updateReviewerApplicationStatus(
-      appId,
-      "Approved",
-      "Accreditation approved by Institutional Ethics Secretariat."
-    )
-    toast.success("Reviewer Accreditation Granted", {
-      description: `${fullName} (${appId}) is now accredited into the Institutional Reviewer Roster.`,
-    })
-  }
-
-  const handleRejectReviewer = (appId: string, fullName: string) => {
-    updateReviewerApplicationStatus(
-      appId,
-      "Rejected",
-      "Application declined by Secretariat due to eligibility thresholds."
-    )
-    toast.error("Application Declined", {
-      description: `Application declined for ${fullName} (${appId}). Formal determination logged in institutional ledger.`,
-    })
-  }
 
   const handleQuickGrantProtocol = (protocol: Protocol) => {
     const sealHash = Array.from({ length: 64 }, () =>

@@ -61,7 +61,6 @@ import {
   updateAdminMember,
   toggleAdminMemberStatus,
 } from "@/lib/admin-roster"
-import { cn } from "@/lib/utils"
 
 const AVAILABLE_PERMISSIONS = [
   "Root Governance Authority",

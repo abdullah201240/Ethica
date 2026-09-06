@@ -5,7 +5,6 @@ import Link from "next/link"
 import {
   Users,
   UserCheck,
-  UserX,
   UserPlus,
   Eye,
   Mail,
@@ -60,7 +59,6 @@ import {
   addUser,
   updateUserStatus,
 } from "@/lib/users-directory"
-import { cn } from "@/lib/utils"
 
 export default function AdminUsersDirectoryPage() {
   const users = React.useSyncExternalStore(

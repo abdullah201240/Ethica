@@ -1,25 +1,16 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import {
   Upload,
   Link as LinkIcon,
   CheckCircle2,
-  Trash2,
   Camera,
   X,
-  Lock,
-  KeyRound,
   Eye,
   EyeOff,
-  Globe,
   FileCheck2,
   RefreshCw,
-  Image as ImageIcon,
-  Check,
-  AlertCircle,
-  ShieldCheck,
   Save,
   RotateCcw,
 } from "lucide-react"
@@ -48,7 +39,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import {
   Sheet,
-  SheetTrigger,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -66,11 +56,10 @@ import {
   type ColumnDef,
   type DataTableFilter,
 } from "@/components/ui/data-table"
-import { DashboardContainer, DashboardCard } from "@/components/dashboard/dashboard-container"
+import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import { investigatorProfileApi } from "@/lib/api/investigator-profile.api"
 import {
   investigatorProfileSchema,
-  changePasswordSchema,
   userAvatarFileSchema,
   userAvatarUrlSchema,
   type InvestigatorProfileInput,
@@ -216,7 +205,6 @@ export default function ProfilePage() {
   const [isUploadSheetOpen, setIsUploadSheetOpen] = React.useState(false)
   const [uploadOption, setUploadOption] = React.useState<"file" | "url">("file")
   const [fileDraftUrl, setFileDraftUrl] = React.useState<string | null>(null)
-  const [fileDraftMeta, setFileDraftMeta] = React.useState<{ name: string; sizeKb: string } | null>(null)
   const [isDragging, setIsDragging] = React.useState(false)
   const [urlInput, setUrlInput] = React.useState("")
   const [urlVerified, setUrlVerified] = React.useState(false)
@@ -320,10 +308,6 @@ export default function ProfilePage() {
       }
 
       setFileDraftUrl(result)
-      setFileDraftMeta({
-        name: file.name,
-        sizeKb: (file.size / 1024).toFixed(1) + " KB",
-      })
 
       // Directly apply photo if selected via direct file input
       setFormData((prev) => ({ ...prev, avatarUrl: result }))
@@ -403,7 +387,6 @@ export default function ProfilePage() {
     setFormData((prev) => ({ ...prev, avatarUrl: "" }))
     void persistChanges({ ...profile, avatarUrl: "" })
     setFileDraftUrl(null)
-    setFileDraftMeta(null)
     setUrlInput("")
     setUrlVerified(false)
     toast.success("Photo removed", {

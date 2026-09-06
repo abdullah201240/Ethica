@@ -18,7 +18,7 @@ import {
   Lock,
   Sparkles,
 } from "lucide-react"
-import { useForm, type Path } from "react-hook-form"
+import { useForm, useWatch, type Path } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -88,7 +88,7 @@ export default function ApplyAsReviewerPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     setError,
     clearErrors,
     formState: { errors },
@@ -111,7 +111,7 @@ export default function ApplyAsReviewerPage() {
     },
   })
 
-  const formValues = watch()
+  const formValues = useWatch({ control }) ?? {}
   const selectedExpertise = formValues.expertise || []
 
   const toggleExpertise = (area: string) => {
@@ -214,20 +214,21 @@ export default function ApplyAsReviewerPage() {
       return
     }
 
-    const expYears = parseInt(formValues.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
+    const data = fullRes.data
+    const expYears = parseInt(data.yearsExperience.split("–")[0]?.replace(/\+/g, "") || "5", 10) || 5
     addReviewerApplication({
-      fullName: formValues.fullName,
-      email: formValues.email,
-      phone: formValues.phone || "+880 1700-000000",
-      institution: formValues.institution,
-      department: formValues.department,
-      position: formValues.position || "Research Faculty",
-      degree: formValues.degree || "PhD / Doctorate",
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone || "+880 1700-000000",
+      institution: data.institution,
+      department: data.department,
+      position: data.position || "Research Faculty",
+      degree: data.degree || "PhD / Doctorate",
       yearsExperience: expYears,
-      orcid: formValues.orcid || "0000-0000-0000-0000",
+      orcid: data.orcid || "0000-0000-0000-0000",
       expertise: selectedExpertise.length > 0 ? selectedExpertise : ["Biomedical & Clinical Research"],
-      statement: formValues.statement,
-      cvFileName: formValues.cvFileName || "Curriculum_Vitae.pdf",
+      statement: data.statement,
+      cvFileName: data.cvFileName || "Curriculum_Vitae.pdf",
     })
     setSubmitted(true)
   }

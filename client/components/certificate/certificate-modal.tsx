@@ -10,20 +10,17 @@ import {
   ShieldCheck,
   Award,
   QrCode,
-  CheckCircle2,
   Lock,
   ExternalLink,
   Sparkles,
   FileCheck2,
   Eye,
-  Building2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"

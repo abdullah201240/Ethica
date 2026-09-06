@@ -6,36 +6,30 @@ import {
   Scale,
   Clock,
   CheckCircle2,
-  Calendar,
   ExternalLink,
   Vote,
-  MessageSquare,
-  Sparkles,
   FileSearch,
-  Users,
-  XCircle,
-  Building2,
-  FileText,
-  ShieldCheck,
   Zap,
-  Check,
   Download,
-  AlertTriangle,
-  RotateCcw,
   UserCheck,
   Send,
   UserX,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 import { KpiCard, KpiGrid } from "@/components/ui/kpi-card"
 import { toast } from "@/components/ui/sonner"
 import { DashboardContainer } from "@/components/dashboard/dashboard-container"
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -76,7 +70,7 @@ const DECLINE_REASONS = [
 
 export default function ReviewerDashboardPage() {
   const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
-  const [reviewers, setReviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
+  const [reviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
   
   // Current active reviewer identity synced with global store
   const [activeReviewerEmail, setActiveReviewerEmailState] = React.useState<string>(getActiveReviewerEmail)
@@ -572,18 +566,17 @@ export default function ReviewerDashboardPage() {
               <UserCheck className="size-5 text-secondary" />
               <span>Accept Research Protocol Review Assignment</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2 text-body-sm text-muted-foreground pt-2">
-              <p>
-                You are accepting formal peer review and IRB committee deliberation for:
-              </p>
-              <div className="p-3 rounded-lg bg-muted border border-border font-mono text-table-cell">
-                <span className="font-bold text-foreground">{acceptingProtocol?.id}</span>: {acceptingProtocol?.title}
-              </div>
-              <p>
-                By accepting, you certify zero conflict of interest and agree to evaluate the scientific methodology and human subject safeguards under Declaration of Helsinki principles.
-              </p>
+            <AlertDialogDescription className="text-body-sm text-muted-foreground pt-1 leading-relaxed">
+              You are accepting formal peer review and IRB committee deliberation. By accepting, you certify zero conflict of interest and agree to evaluate the scientific methodology and human subject safeguards under Declaration of Helsinki principles.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {acceptingProtocol && (
+            <div className="p-3 rounded-lg bg-muted border border-border font-mono text-table-cell">
+              <span className="font-bold text-foreground">{acceptingProtocol.id}</span>: {acceptingProtocol.title}
+            </div>
+          )}
+
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
@@ -611,29 +604,40 @@ export default function ReviewerDashboardPage() {
               <UserX className="size-5 text-rose-600" />
               <span>Decline Review Assignment</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3 text-body-sm text-muted-foreground pt-2">
-              <p>
-                Decline review for <strong className="text-foreground">{decliningProtocol?.id}</strong>. The protocol will be returned to the Institutional Ethics Secretariat for reassignment to another accredited reviewer.
-              </p>
-
-              <div className="space-y-1.5 text-left">
-                <label className="text-micro font-bold text-foreground">
-                  Reason for Declining:
-                </label>
-                <select
-                  value={declineReason}
-                  onChange={(e) => setDeclineReason(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-base text-foreground focus:outline-none"
-                >
-                  {DECLINE_REASONS.map((r, i) => (
-                    <option key={i} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <AlertDialogDescription className="text-body-sm text-muted-foreground pt-1 leading-relaxed">
+              Decline review for this protocol. It will be returned to the Institutional Ethics Secretariat for reassignment to another accredited reviewer.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {decliningProtocol && (
+            <div className="p-3 rounded-lg bg-muted border border-border font-mono text-table-cell">
+              <span className="font-bold text-foreground">{decliningProtocol.id}</span>: {decliningProtocol.title}
+            </div>
+          )}
+
+          <div className="space-y-2 text-left">
+            <label className="text-xs font-bold text-foreground block">
+              Reason for Declining
+            </label>
+            <Select
+              value={declineReason}
+              onValueChange={(val) => {
+                if (val) setDeclineReason(val)
+              }}
+            >
+              <SelectTrigger className="w-full h-10 px-3 text-sm bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700">
+                <SelectValue placeholder="Select decline reason" />
+              </SelectTrigger>
+              <SelectContent>
+                {DECLINE_REASONS.map((r, i) => (
+                  <SelectItem key={i} value={r} className="text-xs py-2">
+                    {r}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <AlertDialogFooter>
             <AlertDialogCancel>Keep Assignment</AlertDialogCancel>
             <AlertDialogAction

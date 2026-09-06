@@ -6,7 +6,6 @@ import {
   ScrollText,
   CheckCircle2,
   Clock,
-  AlertCircle,
   Eye,
   Building2,
   Calendar,
@@ -14,8 +13,6 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  Sparkles,
-  ExternalLink,
   ChevronRight,
   User,
   Zap,
@@ -35,7 +32,6 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,

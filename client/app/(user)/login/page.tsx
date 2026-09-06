@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { userLoginSchema, type UserLoginInput } from "@/lib/schemas"
 
@@ -34,7 +34,7 @@ export default function UserLoginPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<UserLoginInput>({
     resolver: zodResolver(userLoginSchema),
@@ -46,7 +46,7 @@ export default function UserLoginPage() {
     },
   })
 
-  const rememberMe = watch("rememberMe")
+  const rememberMe = useWatch({ control, name: "rememberMe", defaultValue: true })
 
   const handleDemoFill = () => {
     setValue("email", "elena.rostova@diu.edu.bd", { shouldValidate: true })

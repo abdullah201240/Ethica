@@ -40,16 +40,8 @@ import {
   syncProtocolsFromServer,
   type Protocol,
 } from "@/lib/protocols-store"
-import {
-  getStoredReviewers,
-  getActiveReviewerEmail,
-  type AccreditedReviewer,
-} from "@/lib/reviewer-roster"
-
 export default function ReviewerCompletedPage() {
   const [protocols, setProtocols] = React.useState<Protocol[]>(getStoredProtocols)
-  const [reviewers] = React.useState<AccreditedReviewer[]>(getStoredReviewers)
-  const [activeReviewerEmail, setActiveReviewerEmailState] = React.useState<string>(getActiveReviewerEmail)
   const [copiedHash, setCopiedHash] = React.useState<string | null>(null)
   const [inspectingProtocol, setInspectingProtocol] = React.useState<Protocol | null>(null)
 
@@ -62,26 +54,9 @@ export default function ReviewerCompletedPage() {
       setProtocols(getStoredProtocols())
     }
 
-    const handleActiveChanged = () => {
-      setActiveReviewerEmailState(getActiveReviewerEmail())
-    }
-
-    window.addEventListener("ethica:active-reviewer-changed", handleActiveChanged)
     const unsubscribe = subscribeProtocols(handleSync)
-
-    return () => {
-      window.removeEventListener("ethica:active-reviewer-changed", handleActiveChanged)
-      unsubscribe()
-    }
+    return () => unsubscribe()
   }, [])
-
-  const currentReviewer = reviewers.find((r) => r.email === activeReviewerEmail) || {
-    id: "REV-DIU-001",
-    name: "Prof. Charles Montgomery",
-    email: "charles.montgomery@diu.edu.bd",
-    institution: "Daffodil International University",
-    department: "Biomedical Research Ethics Board",
-  }
 
   // Filter completed evaluations
   const completedProtocols = React.useMemo(() => {

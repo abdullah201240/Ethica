@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import {
   ArrowLeft,
   Layers,
@@ -16,8 +15,6 @@ import {
   Scale,
   FileCheck2,
   FolderKanban,
-  Trash2,
-  AlertTriangle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -48,7 +45,6 @@ import {
   getStoredCategories,
   subscribeCategories,
   updateCategory,
-  deleteCategory,
   toggleCategoryStatus,
   initialCategories,
 } from "@/lib/categories-store"
