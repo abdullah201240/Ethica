@@ -11,13 +11,13 @@ import {
   Clock,
   Zap,
   Edit2,
-  Trash2,
   Copy,
   Check,
-  AlertTriangle,
   Scale,
   FileCheck2,
   FolderKanban,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -43,17 +43,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet"
 import { Switch } from "@/components/ui/switch"
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
 import { toast } from "@/components/ui/sonner"
 import {
   getStoredCategories,
@@ -78,7 +67,6 @@ interface PageProps {
 export default function ResearchCategoryDetailPage({ params }: PageProps) {
   const resolvedParams = React.use(params)
   const categoryId = decodeURIComponent(resolvedParams.id)
-  const router = useRouter()
 
   const allCategories = React.useSyncExternalStore(
     subscribeCategories,
@@ -91,7 +79,6 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
   }, [allCategories, categoryId])
 
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [copiedCode, setCopiedCode] = React.useState(false)
 
   // Edit Form State
@@ -195,18 +182,6 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
     setEditDialogOpen(false)
   }
 
-  const handleDeleteConfirm = () => {
-    deleteCategory(category.id)
-    categoriesApi.delete(category.id).catch((err) => {
-      console.warn("API delete error:", err)
-    })
-
-    toast.success("Category Removed", {
-      description: `${category.name} has been deleted from institutional registers.`,
-    })
-    router.push("/admin/categories")
-  }
-
   const handleCopyCode = () => {
     navigator.clipboard.writeText(category.code)
     setCopiedCode(true)
@@ -238,17 +213,6 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
           >
             <Edit2 className="size-3.5 text-primary dark:text-sky-400" />
             <span>Edit Category & Fee</span>
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setDeleteDialogOpen(true)}
-            className="h-8 gap-1.5 text-xs font-semibold rounded-lg border-rose-200 dark:border-rose-900/50 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-          >
-            <Trash2 className="size-3.5" />
-            <span>Delete Category</span>
           </Button>
         </div>
       </div>
@@ -473,15 +437,6 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
                 <Edit2 className="size-3.5 mr-2" />
                 Edit Category & Fee Structure
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setDeleteDialogOpen(true)}
-                className="w-full justify-start text-body-sm font-bold h-9 text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-              >
-                <Trash2 className="size-3.5 mr-2" />
-                Delete Research Category
-              </Button>
             </div>
           </Card>
         </div>
@@ -701,34 +656,6 @@ export default function ResearchCategoryDetailPage({ params }: PageProps) {
           </form>
         </SheetContent>
       </Sheet>
-
-      {/* ── Modal: Delete Confirmation (AlertDialog) ──────────────────────── */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg font-black text-rose-600 dark:text-rose-400 flex items-center gap-2">
-              <AlertTriangle className="size-5" />
-              <span>Delete Category: {category.name}</span>
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-body-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Are you sure you want to permanently delete{" "}
-              <strong className="text-foreground">
-                {category.name} ({category.code})
-              </strong>
-              ? Its BDT fee schedule will be removed from future protocol clearance submissions.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 pt-2">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-body-sm"
-            >
-              Confirm Deletion
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }

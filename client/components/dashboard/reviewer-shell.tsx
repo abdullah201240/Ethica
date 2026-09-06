@@ -7,8 +7,6 @@ import {
   Inbox,
   Scale,
   Award,
-  User,
-  Bell,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
 import {
@@ -16,17 +14,33 @@ import {
   subscribeReviewers,
   type AccreditedReviewer,
 } from "@/lib/reviewer-roster"
-import {
-  getUnreadCountForRole,
-  subscribeNotifications,
-} from "@/lib/notifications-store"
+
+const reviewerNavItems: NavItem[] = [
+  {
+    label: "Dashboard",
+    href: "/reviewer/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Review Requests",
+    href: "/reviewer/requests",
+    icon: Inbox,
+  },
+  {
+    label: "Active Deliberations",
+    href: "/reviewer/deliberations",
+    icon: Scale,
+  },
+  {
+    label: "Completed Archive",
+    href: "/reviewer/completed",
+    icon: Award,
+  },
+]
 
 export function ReviewerShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [currentReviewer, setCurrentReviewer] = React.useState<AccreditedReviewer>(getActiveReviewer)
-  const [unreadCount, setUnreadCount] = React.useState<number>(() =>
-    getUnreadCountForRole("reviewer", getActiveReviewer().email)
-  )
 
   React.useEffect(() => {
     const syncReviewer = () => {
@@ -45,54 +59,6 @@ export function ReviewerShell({ children }: { children: React.ReactNode }) {
       window.removeEventListener("ethica:active-reviewer-changed", handleActiveChanged)
     }
   }, [])
-
-  React.useEffect(() => {
-    const updateCount = () => {
-      setUnreadCount(getUnreadCountForRole("reviewer", currentReviewer.email))
-    }
-    const unsubscribe = subscribeNotifications(updateCount)
-    return () => {
-      unsubscribe()
-    }
-  }, [currentReviewer.email])
-
-  const reviewerNavItems: NavItem[] = React.useMemo(
-    () => [
-      {
-        label: "Dashboard",
-        href: "/reviewer/dashboard",
-        icon: LayoutDashboard,
-      },
-      {
-        label: "Notifications",
-        href: "/reviewer/notifications",
-        icon: Bell,
-        badge: unreadCount > 0 ? String(unreadCount) : undefined,
-        badgeVariant: "warning",
-      },
-      {
-        label: "Review Requests",
-        href: "/reviewer/requests",
-        icon: Inbox,
-      },
-      {
-        label: "Active Deliberations",
-        href: "/reviewer/deliberations",
-        icon: Scale,
-      },
-      {
-        label: "Completed Archive",
-        href: "/reviewer/completed",
-        icon: Award,
-      },
-      {
-        label: "Reviewer Profile",
-        href: "/reviewer/profile",
-        icon: User,
-      },
-    ],
-    [unreadCount]
-  )
 
   const isPublicPage =
     pathname === "/reviewer/login" ||

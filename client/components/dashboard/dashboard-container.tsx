@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
  * ══════════════════════════════════════════════════════════════════════════════
  */
 export const DASHBOARD_LAYOUT_PADDING =
-  "px-4 sm:px-8 md:px-10 py-5 sm:py-6"
+  "px-0 sm:px-2 md:px-4 py-3 sm:py-4"
 
 export const DASHBOARD_CARD_BASE =
   "rounded-xl sm:rounded-2xl border border-slate-200/85 dark:border-slate-800 bg-white dark:bg-[#0C1E34] p-4 sm:p-6 shadow-xs select-text"

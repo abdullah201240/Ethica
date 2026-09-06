@@ -195,75 +195,75 @@ export type InvestigatorProfileInput = z.infer<typeof investigatorProfileSchema>
 
 // ── Reviewer Profile Edit Schema ───────────────────────────────────────────
 export const reviewerProfileSchema = z.object({
-  name: z
+  // Mockup Core Profile Information Fields
+  username: z
     .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(100, "Full name is too long")
-    .trim(),
-  degree: z
+    .min(2, "Username must be at least 2 characters")
+    .max(50, "Username is too long")
+    .trim()
+    .default("farzana.choudhury"),
+  firstName: z
     .string()
-    .min(2, "Academic credentials / degree is required")
-    .max(100, "Degree text is too long")
-    .trim(),
-  position: z
+    .min(1, "First name is required")
+    .max(50, "First name is too long")
+    .trim()
+    .default("Farzana"),
+  lastName: z
     .string()
-    .min(2, "Academic position / rank is required")
-    .max(100, "Position text is too long")
-    .trim(),
-  department: z
+    .min(1, "Last name is required")
+    .max(50, "Last name is too long")
+    .trim()
+    .default("Choudhury"),
+  nickname: z.string().max(50, "Nickname is too long").trim().optional().default("Farzana.C"),
+  role: z
     .string()
-    .min(2, "Department name is required")
-    .max(100, "Department name is too long")
-    .trim(),
-  institution: z
+    .min(1, "Role is required")
+    .max(80, "Role is too long")
+    .trim()
+    .default("Senior Voting Reviewer"),
+  displayName: z
     .string()
-    .min(2, "Institution name is required")
-    .max(150, "Institution name is too long")
-    .trim(),
+    .min(1, "Display name is required")
+    .max(100, "Display name is too long")
+    .trim()
+    .default("Dr. Farzana Choudhury"),
+
+  // Mockup Contact Information Fields
   email: z
     .string()
     .min(1, "Official institutional email is required")
     .email("Please enter a valid institutional email address")
-    .trim(),
-  phone: z
-    .string()
-    .min(5, "Official office phone must be at least 5 characters")
-    .max(50, "Phone number is too long")
-    .trim(),
-  mobile: z
-    .string()
-    .min(6, "Quorum emergency mobile must be at least 6 characters")
-    .max(50, "Mobile number is too long")
-    .trim(),
-  officeLocation: z
-    .string()
-    .min(3, "Chamber / office location is required")
-    .max(150, "Office location is too long")
-    .trim(),
-  consultationHours: z
-    .string()
-    .min(3, "Deliberation consultation hours are required")
-    .max(120, "Consultation hours text is too long")
-    .trim(),
-  orcid: z
-    .string()
     .trim()
-    .refine(
-      (val) => !val || /^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$/.test(val),
-      "Invalid ORCID format (e.g. 0000-0002-3841-8910)"
-    )
-    .optional(),
-  bioStatement: z
+    .default("farzana.choudhury@icddrb.org"),
+  whatsapp: z.string().max(50, "WhatsApp is too long").trim().optional().default("+880 1712-456789"),
+  website: z.string().max(150, "Website is too long").trim().optional().default("https://icddrb.org/faculty/farzana-choudhury"),
+  telegram: z.string().max(50, "Telegram is too long").trim().optional().default("@farzana_ethics"),
+
+  // Mockup About the User
+  bio: z
     .string()
-    .min(10, "Bioethics statement must be at least 10 characters")
-    .max(1000, "Bioethics statement cannot exceed 1000 characters")
-    .trim(),
-  specializations: z
-    .string()
-    .min(3, "Please list at least one specialization or ethics expertise domain")
-    .max(300, "Specializations text is too long")
-    .trim(),
-  avatarUrl: z.string().optional(),
+    .max(2000, "Bio statement cannot exceed 2000 characters")
+    .trim()
+    .default(
+      "Dedicated to upholding the Declaration of Helsinki and CIOMS guidelines in vulnerable population field trials across South Asia. Appointed to Biomedical & Maternal Sub-Committee."
+    ),
+
+  // Avatar & Identity
+  avatarUrl: z.string().optional().default(""),
+
+  // Backward Compatible Institutional Fields
+  name: z.string().max(100).trim().optional().default("Dr. Farzana Choudhury"),
+  degree: z.string().max(100).trim().optional().default("MBBS, MPH (Harvard), PhD"),
+  position: z.string().max(100).trim().optional().default("Senior Research Scientist"),
+  department: z.string().max(100).trim().optional().default("Infectious Diseases & Maternal Health"),
+  institution: z.string().max(150).trim().optional().default("icddr,b"),
+  phone: z.string().max(50).trim().optional().default("+880 1712-456789"),
+  mobile: z.string().max(50).trim().optional().default("+880 1712-456789"),
+  officeLocation: z.string().max(150).trim().optional().default("Chamber 701, Clinical Sciences Faculty"),
+  consultationHours: z.string().max(120).trim().optional().default("Tue & Thu, 02:00 PM – 05:00 PM BST"),
+  orcid: z.string().trim().optional().default("0000-0001-9032-6124"),
+  bioStatement: z.string().max(1000).trim().optional().default("Dedicated to upholding the Declaration of Helsinki and CIOMS guidelines."),
+  specializations: z.union([z.string(), z.array(z.string())]).optional().default("Public Health, Pediatric Research"),
 })
 
 export type ReviewerProfileInput = z.infer<typeof reviewerProfileSchema>
