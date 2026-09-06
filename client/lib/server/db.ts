@@ -28,9 +28,14 @@ import {
   initialCategories,
 } from "@/lib/categories-store"
 import {
+  initialNotifications,
+} from "@/lib/notifications-store"
+import {
   type ResearchCategory,
   type CreateResearchCategoryInput,
   type UpdateResearchCategoryInput,
+  type EthicaNotification,
+  type CreateNotificationInput,
 } from "@/lib/schemas"
 
 export interface InvestigatorProfile {
@@ -46,21 +51,39 @@ export interface InvestigatorProfile {
   bio: string
   avatarUrl?: string
   lastActive: string
+  username?: string
+  firstName?: string
+  lastName?: string
+  nickname?: string
+  role?: string
+  displayName?: string
+  whatsapp?: string
+  website?: string
+  telegram?: string
 }
 
 export const initialInvestigatorProfile: InvestigatorProfile = {
-  id: "INV-2026-001",
+  id: "USR-INV-002",
   name: "Dr. Elena Rostova",
-  title: "Principal Investigator & Associate Professor",
+  title: "Associate Professor, Public Health & Clinical Epidemiology",
   email: "elena.rostova@diu.edu.bd",
-  phone: "+880 1711-987654",
-  department: "Department of Clinical Pharmacology",
+  phone: "+880 1711-223344",
+  department: "Department of Public Health, Faculty of Allied Health Sciences",
   institution: "Daffodil International University",
-  degree: "MD, PhD in Bioethics & Pharmacology",
-  orcid: "0000-0002-4512-8971",
-  bio: "Specializing in randomized controlled clinical trials, pediatric bioethics, and digital informed consent protocols under Helsinki declaration standards.",
-  avatarUrl: undefined,
-  lastActive: "Active Session",
+  degree: "MBBS, MPH (Epidemiology), PhD (Global Public Health, Karolinska)",
+  orcid: "0000-0002-1825-0097",
+  bio: "Senior clinical epidemiologist specializing in non-communicable chronic disease surveillance, multi-center diabetes cohorts, and ethical human subject protections.",
+  avatarUrl: "",
+  lastActive: "Active today",
+  username: "elena.rostova",
+  firstName: "Elena",
+  lastName: "Rostova",
+  nickname: "Elena",
+  role: "Principal Investigator",
+  displayName: "Dr. Elena Rostova",
+  whatsapp: "+880 1711-223344",
+  website: "https://elena-rostova.diu.edu.bd",
+  telegram: "@elena_rostova",
 }
 
 interface EthicaServerStore {
@@ -71,6 +94,7 @@ interface EthicaServerStore {
   investigatorProfile: InvestigatorProfile
   protocols: Protocol[]
   categories: ResearchCategory[]
+  notifications: EthicaNotification[]
 }
 
 // Persist store on globalThis to survive Next.js HMR in development
@@ -88,6 +112,7 @@ function getStore(): EthicaServerStore {
       investigatorProfile: { ...initialInvestigatorProfile },
       protocols: [...initialProtocols],
       categories: [...initialCategories],
+      notifications: [...initialNotifications],
     }
   }
   return globalThis.__ethicaServerDb
@@ -543,6 +568,92 @@ export const serverDb = {
       if (!target) return undefined
       const nextStatus = target.status === "Active" ? "Inactive" : "Active"
       return serverDb.categories.update(id, { status: nextStatus })
+    },
+  },
+
+  // ── Notifications ──────────────────────────────────────────────────────────
+  notifications: {
+    getAll: (filters?: { role?: string; email?: string; unreadOnly?: boolean }): EthicaNotification[] => {
+      let list = [...getStore().notifications]
+      if (filters?.role && filters.role !== "all") {
+        list = list.filter((n) => n.role === "all" || n.role === filters.role)
+      }
+      if (filters?.email) {
+        list = list.filter((n) => !n.targetEmail || n.targetEmail.toLowerCase() === filters.email!.toLowerCase())
+      }
+      if (filters?.unreadOnly) {
+        list = list.filter((n) => !n.read)
+      }
+      return list
+    },
+    getById: (id: string): EthicaNotification | undefined => {
+      return getStore().notifications.find((n) => n.id === id)
+    },
+    create: (data: CreateNotificationInput): EthicaNotification => {
+      const store = getStore()
+      const randomSuffix = Math.floor(100 + Math.random() * 900)
+      const now = new Date()
+      const newNotif: EthicaNotification = {
+        id: data.id || `NOTIF-${data.role.toUpperCase()}-${randomSuffix}`,
+        role: data.role,
+        targetEmail: data.targetEmail,
+        targetId: data.targetId,
+        title: data.title,
+        message: data.message,
+        timestamp: data.timestamp || "Just now",
+        createdAt: data.createdAt || now.toISOString(),
+        read: data.read ?? false,
+        category: data.category ?? "protocol",
+        priority: data.priority ?? "normal",
+        actionUrl: data.actionUrl,
+        actionLabel: data.actionLabel,
+        metadata: data.metadata,
+      }
+      store.notifications = [newNotif, ...store.notifications]
+      return newNotif
+    },
+    markAsRead: (id: string): EthicaNotification | undefined => {
+      const store = getStore()
+      let updated: EthicaNotification | undefined
+      store.notifications = store.notifications.map((n) => {
+        if (n.id === id) {
+          updated = { ...n, read: true }
+          return updated
+        }
+        return n
+      })
+      return updated
+    },
+    markAllAsRead: (role?: string, email?: string): boolean => {
+      const store = getStore()
+      store.notifications = store.notifications.map((n) => {
+        if (!role || role === "all" || n.role === "all" || n.role === role) {
+          if (!email || !n.targetEmail || n.targetEmail.toLowerCase() === email.toLowerCase()) {
+            return { ...n, read: true }
+          }
+        }
+        return n
+      })
+      return true
+    },
+    delete: (id: string): boolean => {
+      const store = getStore()
+      const initialLength = store.notifications.length
+      store.notifications = store.notifications.filter((n) => n.id !== id)
+      return store.notifications.length < initialLength
+    },
+    clearRead: (role?: string, email?: string): boolean => {
+      const store = getStore()
+      store.notifications = store.notifications.filter((n) => {
+        if (!n.read) return true
+        if (!role || role === "all" || n.role === "all" || n.role === role) {
+          if (!email || !n.targetEmail || n.targetEmail.toLowerCase() === email.toLowerCase()) {
+            return false
+          }
+        }
+        return true
+      })
+      return true
     },
   },
 }

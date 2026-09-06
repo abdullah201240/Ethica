@@ -1,3 +1,5 @@
+import { dispatchNotification } from "@/lib/notifications-store"
+
 export interface ProtocolReviewerEvaluation {
   recommendation: "Clearance Approved" | "Revisions Required" | "Ethics Rejection"
   scientificMeritRating?: number
@@ -612,6 +614,22 @@ export function addProtocol(
     })
   }
 
+  // Dispatch notification to Governance Admin
+  try {
+    dispatchNotification({
+      role: "admin",
+      title: `New Protocol Submission: ${protocol.id}`,
+      message: `${protocol.piName || "Investigator"} submitted '${protocol.title}'. Compliance review triage required.`,
+      category: "protocol",
+      priority: "high",
+      actionUrl: `/admin/protocols/${protocol.id}`,
+      actionLabel: "Triage Protocol",
+      metadata: { protocolId: protocol.id, piName: protocol.piName },
+    })
+  } catch {
+    // Ignore notification dispatch error
+  }
+
   return protocol
 }
 
@@ -643,7 +661,7 @@ export function assignReviewerToProtocol(
     day: "2-digit",
     year: "numeric",
   })
-  return updateProtocol(protocolId, {
+  const updated = updateProtocol(protocolId, {
     assignedReviewerId: reviewer.id,
     assignedReviewerName: reviewer.name,
     assignedReviewerEmail: reviewer.email,
@@ -653,6 +671,25 @@ export function assignReviewerToProtocol(
     reviewStep: 4,
     committeeRemarks: `Review request dispatched to ${reviewer.name}. Awaiting reviewer acceptance.`,
   })
+
+  // Dispatch notification to assigned Reviewer
+  try {
+    dispatchNotification({
+      role: "reviewer",
+      targetEmail: reviewer.email,
+      title: `New Review Assignment: ${protocolId}`,
+      message: `Secretariat assigned you as peer reviewer for protocol ${protocolId}. Please accept or decline within 48 hours.`,
+      category: "deliberation",
+      priority: "urgent",
+      actionUrl: "/reviewer/requests",
+      actionLabel: "Review Request",
+      metadata: { protocolId, reviewerId: reviewer.id },
+    })
+  } catch {
+    // Continue
+  }
+
+  return updated
 }
 
 export function respondToReviewAssignment(
@@ -663,19 +700,39 @@ export function respondToReviewAssignment(
   const protocol = getProtocolById(protocolId)
   if (!protocol) return undefined
 
+  let result: Protocol | undefined
+
   if (response === "Accepted") {
-    return updateProtocol(protocolId, {
+    result = updateProtocol(protocolId, {
       assignmentStatus: "Accepted",
       reviewStep: 4,
       committeeRemarks: `${protocol.assignedReviewerName || "Reviewer"} accepted review assignment. Deliberation in progress.`,
     })
   } else {
-    return updateProtocol(protocolId, {
+    result = updateProtocol(protocolId, {
       assignmentStatus: "Declined",
       reviewerDeclineReason: reason || "Declined due to scheduling or conflict of interest.",
       committeeRemarks: `${protocol.assignedReviewerName || "Reviewer"} declined review request (${reason || "Unavailable"}). Secretariat reassignment required.`,
     })
   }
+
+  // Dispatch notification to Admin
+  try {
+    dispatchNotification({
+      role: "admin",
+      title: `Reviewer ${response}: ${protocolId}`,
+      message: `${protocol.assignedReviewerName || "Reviewer"} has ${response.toLowerCase()} review assignment for ${protocolId}.${reason ? ` (${reason})` : ""}`,
+      category: "deliberation",
+      priority: response === "Accepted" ? "normal" : "high",
+      actionUrl: `/admin/protocols/${protocolId}`,
+      actionLabel: "View Protocol",
+      metadata: { protocolId, status: response },
+    })
+  } catch {
+    // Continue
+  }
+
+  return result
 }
 
 export function submitReviewerEvaluation(
@@ -685,7 +742,7 @@ export function submitReviewerEvaluation(
   const isApproved = evaluation.recommendation === "Clearance Approved"
   const isRevision = evaluation.recommendation === "Revisions Required"
 
-  return updateProtocol(protocolId, {
+  const updated = updateProtocol(protocolId, {
     assignmentStatus: "Review Completed",
     reviewerEvaluation: evaluation,
     status: isApproved ? "Clearance Granted" : isRevision ? "Revision Requested" : "Rejected",
@@ -694,5 +751,36 @@ export function submitReviewerEvaluation(
     reviewStep: isApproved ? 5 : 4,
     committeeRemarks: `Formal determination submitted by ${evaluation.reviewerName}: ${evaluation.deliberationRemarks} (${evaluation.recommendation})`,
   })
+
+  // Dispatch notification to Admin & Investigator
+  try {
+    dispatchNotification({
+      role: "admin",
+      title: `Deliberation Determination: ${protocolId}`,
+      message: `${evaluation.reviewerName} submitted formal evaluation for ${protocolId}: ${evaluation.recommendation}.`,
+      category: "deliberation",
+      priority: "high",
+      actionUrl: `/admin/protocols/${protocolId}`,
+      actionLabel: "Inspect Determination",
+      metadata: { protocolId, recommendation: evaluation.recommendation },
+    })
+
+    const protocol = getProtocolById(protocolId)
+    dispatchNotification({
+      role: "user",
+      targetEmail: protocol?.piEmail || "elena.rostova@diu.edu.bd",
+      title: `Protocol Decision: ${protocolId}`,
+      message: `IRB Committee deliberation concluded for ${protocolId}: ${evaluation.recommendation}. ${isApproved ? "Cryptographic clearance certificate generated." : "Please review required amendments."}`,
+      category: "protocol",
+      priority: isApproved ? "high" : "urgent",
+      actionUrl: `/applications/${protocolId}`,
+      actionLabel: isApproved ? "View Certificate" : "Review Revisions",
+      metadata: { protocolId, recommendation: evaluation.recommendation },
+    })
+  } catch {
+    // Continue
+  }
+
+  return updated
 }
 

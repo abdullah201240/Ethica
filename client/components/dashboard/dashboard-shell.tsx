@@ -5,7 +5,6 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
   ShieldCheck,
-  Bell,
   LogOut,
   Menu,
   X,
@@ -14,6 +13,7 @@ import {
   ChevronDown,
 } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { NotificationPopover } from "./notification-popover"
 import { DASHBOARD_LAYOUT_PADDING } from "./dashboard-container"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -57,6 +57,7 @@ export interface DashboardShellProps {
 }
 
 export function DashboardShell({
+  role,
   roleTitle,
   roleBadge,
   roleColor,
@@ -292,8 +293,29 @@ export function DashboardShell({
                       }`}
                     />
                     {!collapsed && (
-                      <span className="flex-1 truncate">{item.label}</span>
+                      <>
+                        <span className="flex-1 truncate">{item.label}</span>
+                        {item.badge ? (
+                          <span
+                            className={cn(
+                              "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
+                              item.badgeVariant === "warning"
+                                ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                                : item.badgeVariant === "success"
+                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                                : item.badgeVariant === "info"
+                                ? "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300"
+                                : "bg-emerald-600 text-white dark:bg-emerald-500"
+                            )}
+                          >
+                            {item.badge}
+                          </span>
+                        ) : null}
+                      </>
                     )}
+                    {collapsed && item.badge ? (
+                      <span className="absolute top-1 right-1 size-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0C1E34]" />
+                    ) : null}
                   </Link>
                 )
               })}
@@ -376,16 +398,7 @@ export function DashboardShell({
           {/* Right: actions */}
           <div className="flex items-center gap-2 sm:gap-2.5 ml-auto shrink-0">
             {/* Notifications */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="relative flex size-9 sm:size-10 rounded-lg text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="size-5 sm:size-[22px]" />
-              <span className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0C1E34]" />
-            </Button>
+            <NotificationPopover role={role} userEmail={user.email} />
 
             {/* Theme toggle */}
             <ThemeToggle />

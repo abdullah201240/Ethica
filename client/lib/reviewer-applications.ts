@@ -6,6 +6,7 @@ import {
   type CreateReviewerApplicationInput,
 } from "@/lib/schemas"
 import { reviewerApplicationsApi } from "@/lib/api/reviewer-applications.api"
+import { dispatchNotification } from "@/lib/notifications-store"
 
 export interface ReviewerApplication {
   id: string
@@ -274,6 +275,22 @@ export function addReviewerApplication(
     // Retain optimistic cache
   })
 
+  // Dispatch notification to Admin
+  try {
+    dispatchNotification({
+      role: "admin",
+      title: `New Reviewer Intake Dossier: ${created.fullName}`,
+      message: `${created.fullName} (${created.institution}) submitted credentials for IRB accreditation review.`,
+      category: "accreditation",
+      priority: "normal",
+      actionUrl: `/admin/applications/${created.id}`,
+      actionLabel: "Verify Dossier",
+      metadata: { applicationId: created.id, applicantName: created.fullName },
+    })
+  } catch {
+    // Ignore notification dispatch error
+  }
+
   return created
 }
 
@@ -327,6 +344,23 @@ export function updateReviewerApplicationStatus(
       statement: targetApp.statement,
       decisionDate: dateStr,
     })
+
+    // Dispatch notification to Reviewer
+    try {
+      dispatchNotification({
+        role: "reviewer",
+        targetEmail: targetApp.email,
+        title: "Institutional Accreditation Approved",
+        message: `Your application for IRB Committee Reviewer accreditation has been formally approved by the Secretariat.`,
+        category: "accreditation",
+        priority: "high",
+        actionUrl: "/reviewer/profile",
+        actionLabel: "View Dossier",
+        metadata: { applicationId: targetApp.id },
+      })
+    } catch {
+      // Continue
+    }
   } else if (status === "Rejected") {
     updateReviewerStatus(id, "Inactive", "Accreditation rejected or revoked by Secretariat")
   }

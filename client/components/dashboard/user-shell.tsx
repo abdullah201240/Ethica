@@ -7,31 +7,14 @@ import {
   User,
   FilePlus,
   ClipboardList,
+  Bell,
 } from "lucide-react"
 import { DashboardShell, type NavItem } from "@/components/dashboard/dashboard-shell"
-
-const userNavItems: NavItem[] = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "My Applications",
-    href: "/applications",
-    icon: ClipboardList,
-  },
-  {
-    label: "Apply for Permission",
-    href: "/apply",
-    icon: FilePlus,
-  },
-  {
-    label: "Investigator Profile",
-    href: "/profile",
-    icon: User,
-  },
-]
+import {
+  getUnreadCountForRole,
+  subscribeNotifications,
+} from "@/lib/notifications-store"
+import { investigatorProfileApi } from "@/lib/api/investigator-profile.api"
 
 const DEFAULT_USER = {
   name: "Dr. Elena Rostova",
@@ -40,8 +23,6 @@ const DEFAULT_USER = {
   avatarInitials: "ER",
   avatarImage: undefined as string | undefined,
 }
-
-import { investigatorProfileApi } from "@/lib/api/investigator-profile.api"
 
 export function UserShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -90,6 +71,53 @@ export function UserShell({ children }: { children: React.ReactNode }) {
       window.removeEventListener("ethica:investigator-profile-updated", handleCustomSync)
     }
   }, [])
+
+  const [unreadCount, setUnreadCount] = React.useState<number>(() =>
+    getUnreadCountForRole("user", currentUser.email)
+  )
+
+  React.useEffect(() => {
+    const updateCount = () => {
+      setUnreadCount(getUnreadCountForRole("user", currentUser.email))
+    }
+    const unsubscribe = subscribeNotifications(updateCount)
+    return () => {
+      unsubscribe()
+    }
+  }, [currentUser.email])
+
+  const userNavItems: NavItem[] = React.useMemo(
+    () => [
+      {
+        label: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "My Applications",
+        href: "/applications",
+        icon: ClipboardList,
+      },
+      {
+        label: "Apply for Permission",
+        href: "/apply",
+        icon: FilePlus,
+      },
+      {
+        label: "Notifications",
+        href: "/notifications",
+        icon: Bell,
+        badge: unreadCount > 0 ? String(unreadCount) : undefined,
+        badgeVariant: "success",
+      },
+      {
+        label: "Investigator Profile",
+        href: "/profile",
+        icon: User,
+      },
+    ],
+    [unreadCount]
+  )
 
   if (isAuthPage) {
     return children

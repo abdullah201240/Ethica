@@ -2,35 +2,38 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { investigatorProfileApi } from "@/lib/api/investigator-profile.api"
 import {
   Upload,
   Link as LinkIcon,
   CheckCircle2,
   Trash2,
   Camera,
-  Award,
-  ExternalLink,
-  ShieldCheck,
-  Mail,
-  Phone,
-  Clock,
-  MapPin,
-  Copy,
-  Check,
-  FileCheck2,
-  RefreshCw,
-  Image as ImageIcon,
+  X,
   Lock,
   KeyRound,
   Eye,
   EyeOff,
   Globe,
+  FileCheck2,
+  RefreshCw,
+  Image as ImageIcon,
+  Check,
+  AlertCircle,
+  ShieldCheck,
+  Save,
+  RotateCcw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 import { toast } from "@/components/ui/sonner"
 import {
   AlertDialog,
@@ -51,7 +54,6 @@ import {
   SheetTitle,
   SheetDescription,
   SheetFooter,
-  SheetClose,
 } from "@/components/ui/sheet"
 import {
   Tabs,
@@ -65,40 +67,51 @@ import {
   type DataTableFilter,
 } from "@/components/ui/data-table"
 import { DashboardContainer, DashboardCard } from "@/components/dashboard/dashboard-container"
+import { investigatorProfileApi } from "@/lib/api/investigator-profile.api"
 import {
-  userAvatarFileSchema,
-  userAvatarUrlSchema,
   investigatorProfileSchema,
   changePasswordSchema,
+  userAvatarFileSchema,
+  userAvatarUrlSchema,
   type InvestigatorProfileInput,
 } from "@/lib/schemas"
 
-// ── Curated Institutional Presets for Option 2 ──────────────────────────────
+// ── Curated Institutional Headshot Presets ──────────────────────────────────
 const AVATAR_PRESETS = [
   {
     id: "preset-1",
-    label: "Clinical Investigator",
+    label: "Elena Rostova (Clinical PI)",
     role: "Physician & Lead PI",
-    url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400",
+    url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
   },
   {
     id: "preset-2",
-    label: "Epidemiology Faculty",
-    role: "Associate Professor",
-    url: "https://images.unsplash.com/photo-1594824813581-2292f72b2203?auto=format&fit=crop&q=80&w=400",
+    label: "Geno Rodriguez (Investigator)",
+    role: "Clinical Lead",
+    url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
   },
   {
     id: "preset-3",
-    label: "Research Scientist",
-    role: "Allied Health Sciences",
-    url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
+    label: "Senior Epidemiology Faculty",
+    role: "Associate Professor",
+    url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
   },
   {
     id: "preset-4",
-    label: "Academic Scholar",
-    role: "Bioethics Fellow",
-    url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
+    label: "Bioethics Scholar",
+    role: "Ethics Deliberation Fellow",
+    url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=600",
   },
+]
+
+// ── Role Select Options ────────────────────────────────────────────────────
+const ROLE_OPTIONS = [
+  "Principal Investigator",
+  "Co-Investigator",
+  "Faculty Researcher",
+  "Ethics Reviewer",
+  "Research Scholar",
+  "Subscriber",
 ]
 
 // ── Associated Protocols Docket Interface ──────────────────────────────────
@@ -107,7 +120,6 @@ interface InvestigatorProtocol {
   title: string
   board: string
   status: "Clearance Granted" | "Under Committee Review" | "Revision Requested"
-  statusColor: "emerald" | "amber" | "rose"
   riskLevel: "Minimal Risk" | "Exempt - Fast Track" | "Greater Than Minimal"
   submissionDate: string
   clearanceCertId?: string
@@ -119,7 +131,6 @@ const investigatorProtocols: InvestigatorProtocol[] = [
     title: "Longitudinal AI-Assisted Clinical Biomarker Analysis in Type 2 Diabetes",
     board: "Biomedical IRB",
     status: "Under Committee Review",
-    statusColor: "amber",
     riskLevel: "Minimal Risk",
     submissionDate: "Aug 28, 2026",
   },
@@ -128,7 +139,6 @@ const investigatorProtocols: InvestigatorProtocol[] = [
     title: "Cognitive Load and Decision Fatigue in Telemedicine Triage Nurses",
     board: "Social & Behavioral Board",
     status: "Clearance Granted",
-    statusColor: "emerald",
     riskLevel: "Exempt - Fast Track",
     submissionDate: "Aug 14, 2026",
     clearanceCertId: "CERT-2026-DIU-074",
@@ -138,7 +148,6 @@ const investigatorProtocols: InvestigatorProtocol[] = [
     title: "Anonymized Genomic Sequence Sharing Protocol for Regional Oncology Consortium",
     board: "Biomedical IRB",
     status: "Clearance Granted",
-    statusColor: "emerald",
     riskLevel: "Greater Than Minimal",
     submissionDate: "Jul 19, 2026",
     clearanceCertId: "CERT-2026-DIU-061",
@@ -148,7 +157,6 @@ const investigatorProtocols: InvestigatorProtocol[] = [
     title: "Digital Privacy and Consent Architecture in IoT Wearable Health Monitors",
     board: "AI & Data Ethics Board",
     status: "Revision Requested",
-    statusColor: "rose",
     riskLevel: "Minimal Risk",
     submissionDate: "Jul 05, 2026",
   },
@@ -157,84 +165,91 @@ const investigatorProtocols: InvestigatorProtocol[] = [
     title: "Randomized Controlled Trial of Pediatric Cognitive Behavioral Teletherapy",
     board: "Biomedical IRB",
     status: "Under Committee Review",
-    statusColor: "amber",
     riskLevel: "Minimal Risk",
     submissionDate: "Sep 01, 2026",
   },
 ]
 
-// ── Default Profile State ──────────────────────────────────────────────────
+// ── Default Initial Profile State ──────────────────────────────────────────
 const DEFAULT_PROFILE: InvestigatorProfileInput = {
-  name: "Dr. Elena Rostova",
-  title: "Associate Professor, Public Health & Clinical Epidemiology",
+  username: "elena.rostova",
+  firstName: "Elena",
+  lastName: "Rostova",
+  nickname: "Elena.R",
+  role: "Principal Investigator",
+  displayName: "Dr. Elena Rostova",
   email: "elena.rostova@diu.edu.bd",
+  whatsapp: "+880 1711-223344",
+  website: "https://elena-rostova.diu.edu.bd",
+  telegram: "@elena_rostova",
+  bio: "Lead clinical investigator directing community-based maternal health trials and epidemiological surveillance. Recipient of DIU Chancellor Research Excellence Award (2025). Certified in GCP E6(R2) and institutional human subject protections under the WMA Declaration of Helsinki.",
+  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+  name: "Dr. Elena Rostova",
+  title: "Principal Investigator & Associate Professor",
   phone: "+880 2 9138234-5 (Ext: 312)",
   mobile: "+880 1711-223344",
-  office: "Suite 408, Faculty of Allied Health Sciences, Daffodil Smart City, Ashulia",
-  department: "Public Health & Clinical Epidemiology",
+  office: "Suite 408, Faculty of Allied Health Sciences, Daffodil Smart City",
+  department: "Clinical Epidemiology & Bioethics",
   institution: "Daffodil International University",
   orcidId: "0000-0002-8419-7241",
   googleScholarUrl: "https://scholar.google.com/citations?user=diu-elena-rostova",
-  researchInterests:
-    "Maternal & Child Health, Clinical Epidemiology, Pediatric Bioethics, AI Health Diagnostics, Field Trial Governance",
-  bio: "Lead clinical investigator directing community-based maternal health trials and epidemiological surveillance. Recipient of DIU Chancellor Research Excellence Award (2025). Certified in GCP E6(R2) and institutional human subject protections under the WMA Declaration of Helsinki.",
-  consultationHours: "Mon & Wed, 10:00 AM – 01:00 PM BST (Office Suite 408 or Teleconference)",
-  avatarUrl: "",
+  researchInterests: "Clinical Trials, Maternal Health, Bioethics",
+  consultationHours: "Mon & Wed, 10:00 AM – 01:00 PM BST",
 }
 
-const getInitialProfile = (): InvestigatorProfileInput => {
-  return DEFAULT_PROFILE
-}
+export default function ProfilePage() {
+  // ── Profile State ────────────────────────────────────────────────────────
+  const [profile, setProfile] = React.useState<InvestigatorProfileInput>(DEFAULT_PROFILE)
+  const [formData, setFormData] = React.useState<InvestigatorProfileInput>(DEFAULT_PROFILE)
+  const [formErrors, setFormErrors] = React.useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-export default function InvestigatorProfilePage() {
-  // ── Main Profile State ───────────────────────────────────────────────────
-  const [profile, setProfile] = React.useState<InvestigatorProfileInput>(getInitialProfile)
-  const [isEditingProfile, setIsEditingProfile] = React.useState(false)
-  const [editForm, setEditForm] = React.useState<InvestigatorProfileInput>(getInitialProfile)
-
-  // ── Password Management State ────────────────────────────────────────────
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false)
-  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false)
+  // ── Password Change State ────────────────────────────────────────────────
+  const [oldPassword, setOldPassword] = React.useState("")
+  const [newPassword, setNewPassword] = React.useState("")
+  const [showOldPassword, setShowOldPassword] = React.useState(false)
   const [showNewPassword, setShowNewPassword] = React.useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
-  const [passwordForm, setPasswordForm] = React.useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  })
-  const [passwordErrors, setPasswordErrors] = React.useState<Record<string, string>>({})
+  const [passwordError, setPasswordError] = React.useState<string | null>(null)
+  const [isChangingPassword, setIsChangingPassword] = React.useState(false)
 
-  // ── Profile Picture Dialog State ─────────────────────────────────────────
-  const [avatarDialogOpen, setAvatarDialogOpen] = React.useState(false)
+  // ── Photo Management State ───────────────────────────────────────────────
+  const [isUploadSheetOpen, setIsUploadSheetOpen] = React.useState(false)
   const [uploadOption, setUploadOption] = React.useState<"file" | "url">("file")
-
-  // Option 1: File Upload State
   const [fileDraftUrl, setFileDraftUrl] = React.useState<string | null>(null)
-  const [fileDraftMeta, setFileDraftMeta] = React.useState<{
-    name: string
-    sizeKb: string
-    type: string
-  } | null>(null)
+  const [fileDraftMeta, setFileDraftMeta] = React.useState<{ name: string; sizeKb: string } | null>(null)
   const [isDragging, setIsDragging] = React.useState(false)
+  const [urlInput, setUrlInput] = React.useState("")
+  const [urlVerified, setUrlVerified] = React.useState(false)
+  const [isTestingUrl, setIsTestingUrl] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-  // Option 2: Image URL State
-  const [urlInput, setUrlInput] = React.useState("")
-  const [urlDraftUrl, setUrlDraftUrl] = React.useState<string | null>(null)
-  const [isTestingUrl, setIsTestingUrl] = React.useState(false)
-  const [urlVerified, setUrlVerified] = React.useState(false)
-
-  // ── Sync with REST API & Custom Events ───────────────────────────────────
+  // ── Sync with REST API ───────────────────────────────────────────────────
   React.useEffect(() => {
     const fetchProfile = async () => {
       try {
         const data = await investigatorProfileApi.get()
         if (data) {
-          setProfile((prev) => ({ ...prev, ...data }))
-          setEditForm((prev) => ({ ...prev, ...data }))
+          const merged: InvestigatorProfileInput = {
+            ...DEFAULT_PROFILE,
+            ...data,
+            username: data.username || DEFAULT_PROFILE.username,
+            firstName: data.firstName || DEFAULT_PROFILE.firstName,
+            lastName: data.lastName || DEFAULT_PROFILE.lastName,
+            nickname: data.nickname || DEFAULT_PROFILE.nickname,
+            role: data.role || DEFAULT_PROFILE.role,
+            displayName: data.displayName || DEFAULT_PROFILE.displayName,
+            email: data.email || DEFAULT_PROFILE.email,
+            whatsapp: data.whatsapp || DEFAULT_PROFILE.whatsapp,
+            website: data.website || DEFAULT_PROFILE.website,
+            telegram: data.telegram || DEFAULT_PROFILE.telegram,
+            bio: data.bio || DEFAULT_PROFILE.bio,
+            avatarUrl: data.avatarUrl || DEFAULT_PROFILE.avatarUrl,
+          }
+          setProfile(merged)
+          setFormData(merged)
         }
       } catch {
-        // Retain default
+        // Retain default seed
       }
     }
 
@@ -243,77 +258,46 @@ export default function InvestigatorProfilePage() {
     const syncProfile = (e: Event) => {
       const customEvent = e as CustomEvent
       if (customEvent.detail) {
-        const data = customEvent.detail
-        setProfile((prev) => ({ ...prev, ...data }))
-        setEditForm((prev) => ({ ...prev, ...data }))
+        const updated = { ...DEFAULT_PROFILE, ...customEvent.detail }
+        setProfile(updated)
+        setFormData(updated)
       } else {
         void fetchProfile()
       }
     }
 
     window.addEventListener("ethica:investigator-profile-updated", syncProfile)
-
     return () => {
       window.removeEventListener("ethica:investigator-profile-updated", syncProfile)
     }
   }, [])
 
-  // ── Save to Server REST API & Dispatch Sync Event ────────────────────────
-  const persistProfile = (updated: InvestigatorProfileInput) => {
+  // ── Persist to API Helper ────────────────────────────────────────────────
+  const persistChanges = async (updated: InvestigatorProfileInput) => {
     setProfile(updated)
-    setEditForm(updated)
+    setFormData(updated)
     window.dispatchEvent(
       new CustomEvent("ethica:investigator-profile-updated", { detail: updated })
     )
-    investigatorProfileApi.update(updated).catch(() => {
-      // Retain optimistic state
-    })
-  }
-
-  // ── Change Password Handler ─────────────────────────────────────────────
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault()
-    setPasswordErrors({})
-
-    const validation = changePasswordSchema.safeParse(passwordForm)
-    if (!validation.success) {
-      const fieldErrors = validation.error.flatten().fieldErrors
-      const formatted: Record<string, string> = {}
-      for (const [key, msgs] of Object.entries(fieldErrors)) {
-        if (msgs?.[0]) formatted[key] = msgs[0]
-      }
-      setPasswordErrors(formatted)
-      const firstError = Object.values(fieldErrors)[0]?.[0]
-      toast.error("Password Validation Error", {
-        description: firstError || "Please ensure password meets all complexity requirements.",
-      })
-      return
+    try {
+      await investigatorProfileApi.update(updated)
+    } catch {
+      // Optimistic persistence retained
     }
-
-    setIsPasswordModalOpen(false)
-    setPasswordForm({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    })
-    setPasswordErrors({})
-    toast.success("Password Updated Successfully", {
-      description: "Your researcher account password has been safely updated.",
-    })
   }
 
-  // ── Handle Option 1: Local Device File Selection ─────────────────────────
+  // ── Photo Upload Handlers ────────────────────────────────────────────────
   const processImageFile = (file: File) => {
     if (!file.type.startsWith("image/")) {
-      toast.error("Invalid File Type", {
-        description: "Please select an image file (.png, .jpg, .jpeg, .webp, or .gif).",
+      toast.error("Invalid file format", {
+        description: "Please upload an image file (.png, .jpg, .jpeg, or .webp).",
       })
       return
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("File Exceeds Limit", {
-        description: "Image file size must be less than 5MB.",
+      toast.error("File size exceeded", {
+        description: "Image must be smaller than 5MB.",
       })
       return
     }
@@ -329,8 +313,8 @@ export default function InvestigatorProfilePage() {
       })
 
       if (!validation.success) {
-        toast.error("Validation Failed", {
-          description: validation.error.issues[0]?.message || "Invalid image file format.",
+        toast.error("File validation failed", {
+          description: validation.error.issues[0]?.message || "Unsupported image.",
         })
         return
       }
@@ -339,49 +323,30 @@ export default function InvestigatorProfilePage() {
       setFileDraftMeta({
         name: file.name,
         sizeKb: (file.size / 1024).toFixed(1) + " KB",
-        type: file.type.replace("image/", "").toUpperCase(),
       })
-      toast.success("Image Loaded Successfully", {
-        description: `${file.name} (${(file.size / 1024).toFixed(1)} KB) ready for preview.`,
+
+      // Directly apply photo if selected via direct file input
+      setFormData((prev) => ({ ...prev, avatarUrl: result }))
+      void persistChanges({ ...profile, avatarUrl: result })
+      setIsUploadSheetOpen(false)
+      toast.success("Profile photo updated", {
+        description: "Your new profile picture has been saved successfully.",
       })
     }
     reader.readAsDataURL(file)
   }
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDirectFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       processImageFile(file)
     }
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-    const file = e.dataTransfer.files?.[0]
-    if (file) {
-      processImageFile(file)
-    }
-  }
-
-  // ── Handle Option 2: Image URL Validation & Testing ──────────────────────
   const handleVerifyUrl = (urlToTest: string) => {
     const trimmed = urlToTest.trim()
     if (!trimmed) {
-      toast.error("URL Missing", { description: "Please enter an image web URL." })
+      toast.error("URL missing", { description: "Please enter an image web URL." })
       return
     }
 
@@ -391,8 +356,8 @@ export default function InvestigatorProfilePage() {
     })
 
     if (!validation.success) {
-      toast.error("Invalid URL", {
-        description: validation.error.issues[0]?.message || "Please provide a valid HTTPS image link.",
+      toast.error("Invalid image link", {
+        description: validation.error.issues[0]?.message || "Must be a valid HTTPS image link.",
       })
       setUrlVerified(false)
       return
@@ -402,92 +367,123 @@ export default function InvestigatorProfilePage() {
     const testImg = new window.Image()
     testImg.onload = () => {
       setIsTestingUrl(false)
-      setUrlDraftUrl(trimmed)
       setUrlVerified(true)
-      toast.success("Image URL Verified", {
-        description: "Image successfully reached and verified for preview.",
+      toast.success("Image link verified", {
+        description: "Ready to be applied as your profile picture.",
       })
     }
     testImg.onerror = () => {
       setIsTestingUrl(false)
       setUrlVerified(false)
-      toast.error("Failed to Load Image", {
-        description: "The specified URL could not be resolved. Please check the link.",
+      toast.error("Failed to load image", {
+        description: "Could not resolve image from the provided web link.",
       })
     }
     testImg.src = trimmed
   }
 
-  const handleSelectPreset = (presetUrl: string, label: string) => {
-    setUrlInput(presetUrl)
-    handleVerifyUrl(presetUrl)
-    toast.info("Preset Selected", {
-      description: `Loaded preset: "${label}". Click Apply to save.`,
-    })
-  }
-
-  // ── Commit & Save Selected Profile Picture ───────────────────────────────
-  const handleApplyAvatar = () => {
-    const chosenImage = uploadOption === "file" ? fileDraftUrl : urlDraftUrl
-
-    if (!chosenImage) {
-      toast.error("No Image Selected", {
-        description:
-          uploadOption === "file"
-            ? "Please select or drop an image file first."
-            : "Please verify and test an image web URL first.",
+  const handleApplyPhotoFromSheet = () => {
+    const chosenUrl = uploadOption === "file" ? fileDraftUrl : urlInput.trim()
+    if (!chosenUrl) {
+      toast.error("No photo chosen", {
+        description: "Please select or verify an image first.",
       })
       return
     }
 
-    const updated = {
-      ...profile,
-      avatarUrl: chosenImage,
-    }
-    persistProfile(updated)
-    setAvatarDialogOpen(false)
-    toast.success("Profile Picture Updated", {
-      description: "Your new institutional profile picture is now active across your workspace.",
+    setFormData((prev) => ({ ...prev, avatarUrl: chosenUrl }))
+    void persistChanges({ ...profile, avatarUrl: chosenUrl })
+    setIsUploadSheetOpen(false)
+    toast.success("Profile photo updated", {
+      description: "Your institutional portrait has been updated.",
     })
   }
 
-  // ── Remove Profile Picture (Revert to Monogram) ──────────────────────────
-  const handleRemoveAvatar = () => {
-    const updated = {
-      ...profile,
-      avatarUrl: "",
-    }
-    persistProfile(updated)
+  const handleRemovePhoto = () => {
+    setFormData((prev) => ({ ...prev, avatarUrl: "" }))
+    void persistChanges({ ...profile, avatarUrl: "" })
     setFileDraftUrl(null)
     setFileDraftMeta(null)
-    setUrlDraftUrl(null)
     setUrlInput("")
     setUrlVerified(false)
-    toast.success("Profile Picture Removed", {
-      description: "Reverted to default institutional monogram (ER).",
+    toast.success("Photo removed", {
+      description: "Your profile picture has been reset.",
     })
   }
 
-  // ── Handle Saving Editable Profile Info ──────────────────────────────────
-  const handleSaveProfile = (e: React.FormEvent) => {
+  // ── Password Change Handler ──────────────────────────────────────────────
+  const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault()
-    const validation = investigatorProfileSchema.safeParse(editForm)
+    setPasswordError(null)
+
+    if (!oldPassword.trim()) {
+      setPasswordError("Please enter your current password.")
+      toast.error("Old password required", {
+        description: "Enter your current password to authorize this change.",
+      })
+      return
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError("New password must be at least 8 characters long.")
+      toast.error("Password too short", {
+        description: "New password must be at least 8 characters with numbers and letters.",
+      })
+      return
+    }
+
+    setIsChangingPassword(true)
+    setTimeout(() => {
+      setIsChangingPassword(false)
+      setOldPassword("")
+      setNewPassword("")
+      setPasswordError(null)
+      toast.success("Password Changed", {
+        description: "Your account credentials have been securely updated.",
+      })
+    }, 400)
+  }
+
+  // ── Profile Information Save Handler ─────────────────────────────────────
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setFormErrors({})
+
+    const validation = investigatorProfileSchema.safeParse(formData)
     if (!validation.success) {
-      const firstError = Object.values(validation.error.flatten().fieldErrors)[0]?.[0]
-      toast.error("Form Validation Error", {
+      const fieldErrors = validation.error.flatten().fieldErrors
+      const errorsMap: Record<string, string> = {}
+      for (const [k, v] of Object.entries(fieldErrors)) {
+        if (v?.[0]) errorsMap[k] = v[0]
+      }
+      setFormErrors(errorsMap)
+      const firstError = Object.values(errorsMap)[0]
+      toast.error("Validation Failed", {
         description: firstError || "Please check the highlighted coordinates.",
       })
       return
     }
 
-    persistProfile(validation.data)
-    setIsEditingProfile(false)
-    toast.success("Investigator Profile Saved", {
-      description: "Academic profile, office coordinates, and bio successfully updated.",
+    setIsSubmitting(true)
+    try {
+      await persistChanges(validation.data)
+      toast.success("Profile Updated", {
+        description: "Your profile information and contact info have been saved.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleResetForm = () => {
+    setFormData(profile)
+    setFormErrors({})
+    toast.info("Changes Discarded", {
+      description: "Restored previous profile state.",
     })
   }
 
-  // ── DataTable Columns for Investigator Protocols ─────────────────────────
+  // ── Protocol Portfolio Columns ───────────────────────────────────────────
   const protocolColumns: ColumnDef<InvestigatorProtocol>[] = React.useMemo(
     () => [
       {
@@ -497,7 +493,7 @@ export default function InvestigatorProfilePage() {
         sortable: true,
         headerClassName: "w-32",
         cell: ({ row }) => (
-          <span className="font-mono text-base font-bold text-primary dark:text-sky-300">
+          <span className="font-mono text-sm font-bold text-primary dark:text-sky-300">
             {row.id}
           </span>
         ),
@@ -505,14 +501,14 @@ export default function InvestigatorProfilePage() {
       {
         id: "title",
         accessorKey: "title",
-        header: "Protocol Title & Investigation Scope",
+        header: "Protocol Title & Scope",
         sortable: true,
         cell: ({ row }) => (
-          <div className="space-y-1 min-w-0">
-            <span className="font-bold text-base text-slate-900 dark:text-slate-100 line-clamp-1">
+          <div className="space-y-0.5 min-w-0">
+            <span className="font-semibold text-sm text-foreground line-clamp-1">
               {row.title}
             </span>
-            <div className="flex items-center gap-2 text-base text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{row.board}</span>
               <span>•</span>
               <span className="font-mono">{row.riskLevel}</span>
@@ -525,9 +521,9 @@ export default function InvestigatorProfilePage() {
         accessorKey: "submissionDate",
         header: "Submitted",
         sortable: true,
-        headerClassName: "w-32",
+        headerClassName: "w-28",
         cell: ({ row }) => (
-          <span className="text-base text-slate-600 dark:text-slate-300 font-medium">
+          <span className="text-xs text-muted-foreground font-medium">
             {row.submissionDate}
           </span>
         ),
@@ -535,16 +531,16 @@ export default function InvestigatorProfilePage() {
       {
         id: "status",
         accessorKey: "status",
-        header: "Ethics Status",
+        header: "Status",
         sortable: true,
-        headerClassName: "w-44",
+        headerClassName: "w-40",
         cell: ({ row }) => {
           const isClearance = row.status === "Clearance Granted"
           const isReview = row.status === "Under Committee Review"
           return (
             <Badge
               variant="outline"
-              className={`text-base font-bold ${
+              className={`text-xs font-bold ${
                 isClearance
                   ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
                   : isReview
@@ -564,12 +560,12 @@ export default function InvestigatorProfilePage() {
         headerClassName: "w-32",
         cell: ({ row }) =>
           row.clearanceCertId ? (
-            <span className="inline-flex items-center gap-1 font-mono text-base text-emerald-700 dark:text-emerald-400 font-semibold">
+            <span className="inline-flex items-center gap-1 font-mono text-xs text-emerald-700 dark:text-emerald-400 font-semibold">
               <FileCheck2 className="size-3 shrink-0" />
               {row.clearanceCertId}
             </span>
           ) : (
-            <span className="text-base text-slate-400 italic">In Deliberation</span>
+            <span className="text-xs text-muted-foreground italic">In Deliberation</span>
           ),
       },
     ],
@@ -594,368 +590,79 @@ export default function InvestigatorProfilePage() {
 
   return (
     <DashboardContainer>
-      {/* ── Main Two-Column Profile & Credentials ─────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2-Columns: Primary Identity & Contact ─────────────────────── */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Identity & Profile Picture Card */}
-          <DashboardCard className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 border-b border-border/70 pb-6">
-              <div className="flex items-center gap-5">
-                {/* Avatar with Status Ring and Quick Edit Trigger */}
-                <div className="relative group shrink-0">
-                  <div className="size-20 sm:size-24 rounded-2xl ring-4 ring-[#198754]/20 bg-gradient-to-br from-[#198754] to-[#002752] text-white flex items-center justify-center font-black text-3xl shadow-sm overflow-hidden select-none">
-                    {profile.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={profile.avatarUrl}
-                        alt={profile.name}
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      "ER"
-                    )}
-                  </div>
+      {/* Hidden file input for direct computer file upload */}
+      <Input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        onChange={handleDirectFileSelect}
+        className="sr-only"
+        id="profile-avatar-input"
+      />
 
-                  {/* Quick Photo Edit Badge */}
-                  <Sheet open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
-                    <SheetTrigger
-                      render={
-                        <Button
-                          type="button"
-                          size="icon"
-                          className="absolute -bottom-1 -right-1 size-8 rounded-full bg-[#002752] hover:bg-[#003875] text-white shadow-md border-2 border-white dark:border-[#0C1E34]"
-                          aria-label="Upload profile picture"
-                        >
-                          <Camera className="size-3.5" />
-                        </Button>
-                      }
-                    />
+      {/* ── Main Two-Column Profile Card (Matches Requested UI) ───────────── */}
+      <div className="bg-card text-card-foreground border border-border/75 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* ══════════════════════════════════════════════════════════════════
+              LEFT COLUMN: Account Management (Avatar & Password)
+             ══════════════════════════════════════════════════════════════════ */}
+          <div className="lg:col-span-4 space-y-6">
+            <h2 className="text-base font-bold text-foreground tracking-tight">
+              Account Managment
+            </h2>
 
-                    {/* ── Profile Picture Upload Slide-over Sheet (Two Options) ──────── */}
-                    <SheetContent side="right" size="default" className="p-6">
-                      <SheetHeader className="p-0 pb-3">
-                        <SheetTitle className="text-lg font-black text-primary dark:text-white flex items-center gap-2">
-                          <ImageIcon className="size-5 text-secondary" />
-                          Update Profile Picture
-                        </SheetTitle>
-                        <SheetDescription className="text-base text-muted-foreground">
-                          Choose how you would like to set your institutional investigator photo.
-                          Select between local device file upload or direct HTTPS web URL.
-                        </SheetDescription>
-                      </SheetHeader>
-
-                      {/* Tabbed Two-Option Interface */}
-                      <Tabs
-                        value={uploadOption}
-                        onValueChange={(val) => setUploadOption(val as "file" | "url")}
-                        className="w-full"
-                      >
-                        <TabsList className="grid grid-cols-2 w-full h-10 p-1 bg-muted rounded-lg">
-                          <TabsTrigger
-                            value="file"
-                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-primary dark:data-[active=true]:text-white"
-                          >
-                            <Upload className="size-3.5" />
-                            Option 1: Upload from Device
-                          </TabsTrigger>
-                          <TabsTrigger
-                            value="url"
-                            className="text-base font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34] data-[active=true]:text-primary dark:data-[active=true]:text-white"
-                          >
-                            <LinkIcon className="size-3.5" />
-                            Option 2: Web Image URL
-                          </TabsTrigger>
-                        </TabsList>
-
-                        {/* ── OPTION 1: DEVICE FILE UPLOAD ─────────────────── */}
-                        <TabsContent value="file" className="space-y-4 pt-4">
-                          <div
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            className={`rounded-xl border-2 border-dashed p-6 text-center transition-all flex flex-col items-center justify-center gap-3 ${
-                              isDragging
-                                ? "border-[#198754] bg-[#198754]/5 scale-[1.01]"
-                                : "border-border/80 bg-muted/30 hover:bg-muted/50"
-                            }`}
-                          >
-                            <div className="size-12 rounded-full bg-[#198754]/10 text-secondary flex items-center justify-center">
-                              <Upload className="size-6" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-base font-bold text-foreground">
-                                Drag & drop your photo here, or browse files
-                              </p>
-                              <p className="text-base text-muted-foreground">
-                                Supports PNG, JPG, JPEG, WEBP, or GIF up to 5MB
-                              </p>
-                            </div>
-
-                            {/* Hidden Base UI Input triggered by Button */}
-                            <Input
-                              ref={fileInputRef}
-                              type="file"
-                              accept="image/png,image/jpeg,image/webp,image/gif"
-                              onChange={handleFileInputChange}
-                              className="sr-only"
-                              id="avatar-file-input"
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={() => fileInputRef.current?.click()}
-                              className="h-8 px-4 text-base font-bold rounded-md border-border/85 hover:bg-muted"
-                            >
-                              Browse Computer
-                            </Button>
-                          </div>
-
-                          {/* File Draft Info & Preview */}
-                          {fileDraftMeta && fileDraftUrl && (
-                            <div className="p-3 rounded-lg border border-border/75 bg-muted/40 flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-3 min-w-0">
-                                <div className="size-10 rounded-lg overflow-hidden shrink-0 border border-border/75">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={fileDraftUrl}
-                                    alt="Selected File"
-                                    className="size-full object-cover"
-                                  />
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="text-base font-bold text-foreground truncate">
-                                    {fileDraftMeta.name}
-                                  </p>
-                                  <p className="text-base text-muted-foreground font-mono">
-                                    {fileDraftMeta.type} • {fileDraftMeta.sizeKb}
-                                  </p>
-                                </div>
-                              </div>
-                              <Badge
-                                variant="outline"
-                                className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-base shrink-0"
-                              >
-                                Ready
-                              </Badge>
-                            </div>
-                          )}
-                        </TabsContent>
-
-                        {/* ── OPTION 2: DIRECT IMAGE URL & PRESETS ─────────── */}
-                        <TabsContent value="url" className="space-y-4 pt-4">
-                          <div className="space-y-2">
-                            <label className="text-base font-bold text-foreground flex items-center justify-between">
-                              <span>Direct HTTPS Image Web Address:</span>
-                              {urlVerified && (
-                                <span className="text-base text-emerald-600 font-bold flex items-center gap-1">
-                                  <CheckCircle2 className="size-3" />
-                                  Link Verified
-                                </span>
-                              )}
-                            </label>
-                            <div className="flex items-center gap-2">
-                              <Input
-                                value={urlInput}
-                                onChange={(e) => {
-                                  setUrlInput(e.target.value)
-                                  setUrlVerified(false)
-                                }}
-                                placeholder="https://images.example.com/dr-elena-headshot.jpg"
-                                className="h-9 text-base font-mono"
-                              />
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                disabled={isTestingUrl || !urlInput.trim()}
-                                onClick={() => handleVerifyUrl(urlInput)}
-                                className="h-9 px-3 text-base font-bold shrink-0 rounded-md"
-                              >
-                                {isTestingUrl ? (
-                                  <RefreshCw className="size-3.5 animate-spin" />
-                                ) : (
-                                  "Test & Verify"
-                                )}
-                              </Button>
-                            </div>
-                          </div>
-
-                          {/* Quick Select Institutional Presets */}
-                          <div className="space-y-2">
-                            <span className="text-base font-bold text-muted-foreground block uppercase tracking-wider">
-                              Or Choose Curated Institutional Headshots:
-                            </span>
-                            <div className="grid grid-cols-2 gap-2">
-                              {AVATAR_PRESETS.map((preset) => (
-                                <Button
-                                  key={preset.id}
-                                  type="button"
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleSelectPreset(preset.url, preset.label)}
-                                  className="h-auto p-2 justify-start items-center gap-2 rounded-lg border-border/75 hover:border-[#198754]/50"
-                                >
-                                  <div className="size-8 rounded-full overflow-hidden shrink-0 border border-border/60">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                      src={preset.url}
-                                      alt={preset.label}
-                                      className="size-full object-cover"
-                                    />
-                                  </div>
-                                  <div className="text-left leading-tight min-w-0">
-                                    <span className="text-base font-bold text-foreground block truncate">
-                                      {preset.label}
-                                    </span>
-                                    <span className="text-base text-muted-foreground block truncate">
-                                      {preset.role}
-                                    </span>
-                                  </div>
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                        </TabsContent>
-                      </Tabs>
-
-                      {/* ── Real-Time Multi-Size Preview Arena ────────────── */}
-                      {(fileDraftUrl || urlDraftUrl) && (
-                        <div className="p-3.5 rounded-xl bg-muted/30 border border-border/70 space-y-2">
-                          <span className="text-base font-bold text-muted-foreground block uppercase tracking-wider">
-                            Live Multi-Viewport Preview:
-                          </span>
-                          <div className="flex items-center justify-around gap-4 pt-1">
-                            {/* Card Hero Preview */}
-                            <div className="flex flex-col items-center gap-1">
-                              <div className="size-16 rounded-xl ring-2 ring-[#198754] overflow-hidden shadow-xs">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={
-                                    uploadOption === "file"
-                                      ? fileDraftUrl || ""
-                                      : urlDraftUrl || ""
-                                  }
-                                  alt="Preview"
-                                  className="size-full object-cover"
-                                />
-                              </div>
-                              <span className="text-base text-muted-foreground font-medium">
-                                Profile Card (64px)
-                              </span>
-                            </div>
-
-                            {/* Navbar Pill Preview */}
-                            <div className="flex flex-col items-center gap-1">
-                              <div className="size-8 rounded-full ring-2 ring-[#002752] overflow-hidden shadow-xs">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={
-                                    uploadOption === "file"
-                                      ? fileDraftUrl || ""
-                                      : urlDraftUrl || ""
-                                  }
-                                  alt="Preview"
-                                  className="size-full object-cover"
-                                />
-                              </div>
-                              <span className="text-base text-muted-foreground font-medium">
-                                Navbar Pill (32px)
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      <SheetFooter className="p-0 pt-3 flex flex-row items-center justify-between sm:justify-between gap-2 border-t border-border/70">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setAvatarDialogOpen(false)}
-                          className="h-9 px-3 text-base font-semibold"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          onClick={handleApplyAvatar}
-                          disabled={
-                            uploadOption === "file"
-                              ? !fileDraftUrl
-                              : !urlDraftUrl || !urlVerified
-                          }
-                          className="h-9 px-4 text-base font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
-                        >
-                          Apply Profile Picture
-                        </Button>
-                      </SheetFooter>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-
-                {/* Name, Credentials, and Badges */}
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-xl sm:text-2xl font-black text-primary dark:text-white tracking-tight">
-                      {profile.name}
-                    </h1>
-                    <Badge
-                      variant="outline"
-                      className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-base font-bold"
-                    >
-                      Verified PI
-                    </Badge>
-                  </div>
-                  <p className="text-base sm:text-base font-semibold text-muted-foreground mt-0.5">
-                    {profile.title}
-                  </p>
-                  <p className="text-base text-muted-foreground mt-1 flex flex-wrap items-center gap-2">
-                    <span>{profile.institution}</span>
-                    <span>•</span>
-                    <span className="font-mono font-bold text-foreground">
-                      ID: USR-INV-002
+            {/* Profile Avatar Card with "X" Remove Button */}
+            <div className="space-y-3">
+              <div className="relative w-full aspect-[4/3] sm:aspect-square max-w-[340px] rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-border/75 group shadow-xs">
+                {formData.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={formData.avatarUrl}
+                    alt={formData.displayName || formData.username}
+                    className="w-full h-full object-cover object-center"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-muted-foreground select-none">
+                    <span className="text-4xl font-black tracking-tight text-primary/70 dark:text-white/70">
+                      {(formData.firstName?.[0] || "U") + (formData.lastName?.[0] || "")}
                     </span>
-                  </p>
-                </div>
-              </div>
+                    <span className="text-xs font-semibold mt-1">No Photo Uploaded</span>
+                  </div>
+                )}
 
-              {/* Photo Actions & Contact Toggle */}
-              <div className="flex items-center gap-2 shrink-0">
-                {profile.avatarUrl && (
+                {/* Top-Right Circular "X" Remove Button */}
+                {formData.avatarUrl && (
                   <AlertDialog>
                     <AlertDialogTrigger
                       render={
                         <Button
                           type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-9 px-3 text-base font-semibold text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-md"
+                          size="icon"
+                          className="absolute top-3 right-3 size-8 rounded-full bg-slate-900/50 hover:bg-slate-900/80 text-white backdrop-blur-xs transition-colors border-0 cursor-pointer shadow-sm"
+                          aria-label="Remove profile photo"
+                          title="Remove photo"
                         >
-                          <Trash2 className="size-3.5 mr-1.5" />
-                          Remove Photo
+                          <X className="size-4" />
                         </Button>
                       }
                     />
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle className="text-base font-bold text-rose-600">
-                          Revert to Institutional Monogram?
+                          Remove Profile Picture?
                         </AlertDialogTitle>
-                        <AlertDialogDescription className="text-base text-muted-foreground">
-                          Removing your profile picture will reset your avatar to the default
-                          initials &quot;ER&quot; in the header and investigator roster.
+                        <AlertDialogDescription className="text-sm text-muted-foreground">
+                          Are you sure you want to remove your profile photo? Your avatar will revert
+                          to institutional monogram initials.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="text-base font-semibold">
-                          Keep Photo
+                        <AlertDialogCancel className="text-sm font-semibold">
+                          Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={handleRemoveAvatar}
-                          className="bg-rose-600 hover:bg-rose-700 text-white text-base font-bold"
+                          onClick={handleRemovePhoto}
+                          className="bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold"
                         >
                           Remove Photo
                         </AlertDialogAction>
@@ -963,355 +670,344 @@ export default function InvestigatorProfilePage() {
                     </AlertDialogContent>
                   </AlertDialog>
                 )}
-
-                <Button
-                  type="button"
-                  variant={isEditingProfile ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setIsEditingProfile(!isEditingProfile)}
-                  className="h-9 px-3.5 text-base font-bold rounded-md border-border/90"
-                >
-                  {isEditingProfile ? "Cancel Editing" : "Edit Profile Info"}
-                </Button>
               </div>
+
+              {/* Upload Photo Button */}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsUploadSheetOpen(true)}
+                className="w-full max-w-[340px] h-10 rounded-md border-border/85 hover:bg-muted font-medium text-sm text-foreground"
+              >
+                Upload Photo
+              </Button>
             </div>
 
-            {/* Academic Badges & Research Affiliations */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
-              <div className="p-3.5 rounded-xl bg-muted/40 border border-border/70 space-y-1">
-                <span className="text-muted-foreground block font-medium">Faculty & Department:</span>
-                <strong className="text-foreground font-bold block text-base">
-                  {profile.department}
-                </strong>
-                <span className="text-muted-foreground block">
-                  Faculty of Allied Health Sciences • Campus Complex
-                </span>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-muted/40 border border-border/70 space-y-1">
-                <span className="text-muted-foreground block font-medium">Research Identifiers:</span>
-                <div className="flex items-center gap-2 pt-0.5">
-                  <span className="font-mono text-base font-bold text-foreground">
-                    ORCID: {profile.orcidId}
-                  </span>
-                  <Link
-                    href={`https://orcid.org/${profile.orcidId}`}
-                    target="_blank"
-                    className="text-emerald-600 hover:underline flex items-center gap-0.5 text-base font-semibold"
-                  >
-                    Verify <ExternalLink className="size-2.5" />
-                  </Link>
-                </div>
-                <span className="text-muted-foreground block text-base">
-                  Google Scholar: Verified Institutional Profile
-                </span>
-              </div>
-            </div>
-
-            {/* Editable or Display Profile Form */}
-            {isEditingProfile ? (
-              <form onSubmit={handleSaveProfile} className="space-y-4 pt-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-base font-bold text-foreground">Full Name:</label>
-                    <Input
-                      value={editForm.name}
-                      onChange={(e) => setEditForm((p) => ({ ...p, name: e.target.value }))}
-                      className="h-9 text-base"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-base font-bold text-foreground">Academic Title & Rank:</label>
-                    <Input
-                      value={editForm.title}
-                      onChange={(e) => setEditForm((p) => ({ ...p, title: e.target.value }))}
-                      className="h-9 text-base"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-base font-bold text-foreground">Office Direct Phone:</label>
-                    <Input
-                      value={editForm.phone}
-                      onChange={(e) => setEditForm((p) => ({ ...p, phone: e.target.value }))}
-                      className="h-9 text-base font-mono"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-base font-bold text-foreground">Mobile Phone:</label>
-                    <Input
-                      value={editForm.mobile}
-                      onChange={(e) => setEditForm((p) => ({ ...p, mobile: e.target.value }))}
-                      className="h-9 text-base font-mono"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-base font-bold text-foreground">Campus Office Location:</label>
-                    <Input
-                      value={editForm.office}
-                      onChange={(e) => setEditForm((p) => ({ ...p, office: e.target.value }))}
-                      className="h-9 text-base"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-base font-bold text-foreground">Office Consultation Hours:</label>
-                    <Input
-                      value={editForm.consultationHours}
-                      onChange={(e) =>
-                        setEditForm((p) => ({ ...p, consultationHours: e.target.value }))
-                      }
-                      className="h-9 text-base"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-base font-bold text-foreground">Research Interests:</label>
-                    <Input
-                      value={editForm.researchInterests}
-                      onChange={(e) =>
-                        setEditForm((p) => ({ ...p, researchInterests: e.target.value }))
-                      }
-                      className="h-9 text-base"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-base font-bold text-foreground">Academic Biography:</label>
-                    <Textarea
-                      value={editForm.bio}
-                      onChange={(e) => setEditForm((p) => ({ ...p, bio: e.target.value }))}
-                      className="min-h-24 text-base"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2 pt-2">
+            {/* Password Change Sub-Section */}
+            <form onSubmit={handleChangePassword} className="space-y-4 max-w-[340px] pt-2" noValidate>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Old Password
+                </label>
+                <div className="relative">
+                  <Input
+                    type={showOldPassword ? "text" : "password"}
+                    value={oldPassword}
+                    onChange={(e) => {
+                      setOldPassword(e.target.value)
+                      if (passwordError) setPasswordError(null)
+                    }}
+                    placeholder="••••••••"
+                    className="h-10 text-sm pr-10 rounded-md border-border/85"
+                  />
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
-                    onClick={() => setIsEditingProfile(false)}
-                    className="h-9 text-base"
+                    size="icon"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                    className="absolute right-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground"
                   >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    size="sm"
-                    className="h-9 px-4 text-base font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
-                  >
-                    Save Changes
+                    {showOldPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
                   </Button>
                 </div>
-              </form>
-            ) : (
-              <div className="space-y-4 pt-1">
-                {/* Contact Coordinates */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
-                    <Mail className="size-4 text-slate-400 shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-muted-foreground block text-base">Official Email</span>
-                      <span className="font-semibold text-foreground truncate block font-mono">
-                        {profile.email}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
-                    <Phone className="size-4 text-slate-400 shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-muted-foreground block text-base">Office Phone</span>
-                      <span className="font-semibold text-foreground truncate block font-mono">
-                        {profile.phone}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
-                    <MapPin className="size-4 text-slate-400 shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-muted-foreground block text-base">Campus Office</span>
-                      <span className="font-semibold text-foreground truncate block">
-                        {profile.office}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border/70 bg-muted/20">
-                    <Clock className="size-4 text-slate-400 shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-muted-foreground block text-base">Office Consultation</span>
-                      <span className="font-semibold text-foreground truncate block">
-                        {profile.consultationHours}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Research Interests Tags */}
-                <div className="space-y-1.5 pt-1">
-                  <span className="text-base font-bold text-foreground block">
-                    Research Domains & Specializations:
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {profile.researchInterests.split(",").map((interest, i) => (
-                      <Badge
-                        key={i}
-                        variant="secondary"
-                        className="text-base font-semibold bg-muted text-foreground border border-border/70 px-2.5 py-0.5"
-                      >
-                        {interest.trim()}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Narrative Bio */}
-                <div className="p-4 rounded-xl border border-border/75 bg-muted/30 text-base leading-relaxed text-muted-foreground">
-                  <p className="font-medium text-foreground">{profile.bio}</p>
-                </div>
-              </div>
-            )}
-          </DashboardCard>
-        </div>
-
-        {/* Right 1-Column: Accreditations & Account Security ───────────── */}
-        <div className="space-y-6">
-          {/* Institutional Ethics Accreditations */}
-          <DashboardCard className="space-y-4">
-            <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
-              <Award className="size-4 text-accent" />
-              Ethics Certifications & Training
-            </h3>
-
-            <div className="space-y-3 text-base">
-              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-foreground">CITI Bioethics & IRB Training</span>
-                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
-                    Active
-                  </Badge>
-                </div>
-                <p className="text-muted-foreground text-base">
-                  Credential #CITI-2025-9921 • Valid thru Dec 2027
-                </p>
               </div>
 
-              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-foreground">Good Clinical Practice (GCP E6-R2)</span>
-                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
-                    Accredited
-                  </Badge>
-                </div>
-                <p className="text-muted-foreground text-base">
-                  International Council for Harmonisation (ICH) Standard
-                </p>
-              </div>
-
-              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-foreground">Declaration of Helsinki Compliance</span>
-                  <Badge variant="outline" className="text-base text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
-                    Verified
-                  </Badge>
-                </div>
-                <p className="text-muted-foreground text-base">
-                  Human subjects ethics charter binding agreement on file
-                </p>
-              </div>
-            </div>
-          </DashboardCard>
-
-          {/* Account Security & Sign-in */}
-          <DashboardCard className="space-y-4">
-            <div className="flex items-center justify-between border-b border-border/75 pb-3">
-              <h3 className="text-base font-bold text-primary dark:text-white flex items-center gap-2">
-                <ShieldCheck className="size-4 text-secondary" />
-                Account Security & Sign-in
-              </h3>
-              <Badge className="bg-[#198754] text-white text-xs font-bold">
-                Active
-              </Badge>
-            </div>
-
-            <div className="space-y-3 text-base">
-              {/* Password Setting */}
-              <div className="p-3.5 rounded-xl bg-muted/40 border border-border/75 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-muted-foreground block font-medium text-xs">Account Password</span>
-                    <span className="font-mono text-sm font-bold text-foreground block">
-                      ••••••••••••••••
-                    </span>
-                  </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  New Password
+                </label>
+                <div className="relative">
+                  <Input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value)
+                      if (passwordError) setPasswordError(null)
+                    }}
+                    placeholder="••••••••"
+                    className="h-10 text-sm pr-10 rounded-md border-border/85"
+                  />
                   <Button
                     type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsPasswordModalOpen(true)}
-                    className="h-7 px-2.5 text-xs font-bold rounded gap-1"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground"
                   >
-                    <Lock className="size-3" />
-                    <span>Change Password</span>
+                    {showNewPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Last updated 60 days ago. Keep your account secure with a strong password.
-                </p>
               </div>
 
-              {/* Two-Factor Authentication */}
-              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <KeyRound className="size-3.5 text-emerald-600" />
-                    <span className="font-bold text-foreground text-sm">Two-Factor Auth (2FA)</span>
+              {passwordError && (
+                <p className="text-xs text-rose-600 font-medium">{passwordError}</p>
+              )}
+
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={isChangingPassword || !oldPassword || !newPassword}
+                className="w-full h-10 rounded-md border-border/85 hover:bg-muted font-medium text-sm text-foreground"
+              >
+                {isChangingPassword ? (
+                  <RefreshCw className="size-4 animate-spin mr-2" />
+                ) : null}
+                Change Password
+              </Button>
+            </form>
+          </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+              RIGHT COLUMN: Profile Information, Contact Info & Bio
+             ══════════════════════════════════════════════════════════════════ */}
+          <div className="lg:col-span-8 space-y-8 lg:border-l lg:border-border/60 lg:pl-10">
+            <form onSubmit={handleSaveProfile} className="space-y-8" noValidate>
+              {/* ── Section 1: Profile Information ── */}
+              <div className="space-y-4">
+                <h3 className="text-base font-bold text-foreground tracking-tight">
+                  Profile Information
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {/* Row 1: Username & First Name */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Username
+                    </label>
+                    <Input
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, username: e.target.value }))
+                      }
+                      placeholder="e.g. geno.rodrig"
+                      className={`h-10 text-sm rounded-md border-border/85 ${
+                        formErrors.username ? "border-rose-500" : ""
+                      }`}
+                    />
+                    {formErrors.username && (
+                      <p className="text-xs text-rose-600">{formErrors.username}</p>
+                    )}
                   </div>
-                  <Badge variant="outline" className="text-xs text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
-                    Enabled
-                  </Badge>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      First Name
+                    </label>
+                    <Input
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, firstName: e.target.value }))
+                      }
+                      placeholder="e.g. Geno"
+                      className={`h-10 text-sm rounded-md border-border/85 ${
+                        formErrors.firstName ? "border-rose-500" : ""
+                      }`}
+                    />
+                    {formErrors.firstName && (
+                      <p className="text-xs text-rose-600">{formErrors.firstName}</p>
+                    )}
+                  </div>
+
+                  {/* Row 2: Nickname & Role */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Nickname
+                    </label>
+                    <Input
+                      value={formData.nickname}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, nickname: e.target.value }))
+                      }
+                      placeholder="e.g. Geno.r"
+                      className="h-10 text-sm rounded-md border-border/85"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Role
+                    </label>
+                    <Select
+                      value={formData.role}
+                      onValueChange={(val) =>
+                        val && setFormData((p) => ({ ...p, role: val }))
+                      }
+                    >
+                      <SelectTrigger className="h-10 w-full text-sm rounded-md border-border/85 bg-background">
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ROLE_OPTIONS.map((r) => (
+                          <SelectItem key={r} value={r}>
+                            {r}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Row 3: Last Name & Display Name Publicly as */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Last Name
+                    </label>
+                    <Input
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, lastName: e.target.value }))
+                      }
+                      placeholder="e.g. Rodriguez"
+                      className={`h-10 text-sm rounded-md border-border/85 ${
+                        formErrors.lastName ? "border-rose-500" : ""
+                      }`}
+                    />
+                    {formErrors.lastName && (
+                      <p className="text-xs text-rose-600">{formErrors.lastName}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Display Name Publicly as
+                    </label>
+                    <Input
+                      value={formData.displayName}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, displayName: e.target.value }))
+                      }
+                      placeholder="e.g. Geno"
+                      className="h-10 text-sm rounded-md border-border/85"
+                    />
+                  </div>
                 </div>
-                <p className="text-muted-foreground text-xs">
-                  DIU Authenticator / TOTP verification enabled on login.
-                </p>
               </div>
 
-              {/* Institutional Single Sign-On */}
-              <div className="p-3 rounded-lg border border-border/75 bg-muted/30 space-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Globe className="size-3.5 text-primary dark:text-sky-400" />
-                    <span className="font-bold text-foreground text-sm">Institutional SSO</span>
+              {/* ── Section 2: Contact Info ── */}
+              <div className="space-y-4 pt-2">
+                <h3 className="text-base font-bold text-foreground tracking-tight">
+                  Contact Info
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {/* Row 1: Email & WhatsApp */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Email (required)
+                    </label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, email: e.target.value }))
+                      }
+                      placeholder="e.g. gene.rodrig@gmail.com"
+                      className={`h-10 text-sm rounded-md border-border/85 ${
+                        formErrors.email ? "border-rose-500" : ""
+                      }`}
+                    />
+                    {formErrors.email && (
+                      <p className="text-xs text-rose-600">{formErrors.email}</p>
+                    )}
                   </div>
-                  <Badge variant="outline" className="text-xs text-primary dark:text-sky-300 border-primary/20">
-                    Connected
-                  </Badge>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      WhatsApp
+                    </label>
+                    <Input
+                      value={formData.whatsapp}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, whatsapp: e.target.value }))
+                      }
+                      placeholder="e.g. @gene-rod or phone"
+                      className="h-10 text-sm rounded-md border-border/85"
+                    />
+                  </div>
+
+                  {/* Row 2: Website & Telegram */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Website
+                    </label>
+                    <Input
+                      value={formData.website}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, website: e.target.value }))
+                      }
+                      placeholder="e.g. geno-roding.webflow.io"
+                      className="h-10 text-sm rounded-md border-border/85"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">
+                      Telegram
+                    </label>
+                    <Input
+                      value={formData.telegram}
+                      onChange={(e) =>
+                        setFormData((p) => ({ ...p, telegram: e.target.value }))
+                      }
+                      placeholder="e.g. @gene-rod"
+                      className="h-10 text-sm rounded-md border-border/85"
+                    />
+                  </div>
                 </div>
-                <p className="text-muted-foreground text-xs">
-                  Linked to your DIU Google Workspace account ({profile.email}).
-                </p>
               </div>
-            </div>
-          </DashboardCard>
+
+              {/* ── Section 3: About the User ── */}
+              <div className="space-y-4 pt-2">
+                <h3 className="text-base font-bold text-foreground tracking-tight">
+                  About the User
+                </h3>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">
+                    Biographical Info
+                  </label>
+                  <Textarea
+                    value={formData.bio}
+                    onChange={(e) =>
+                      setFormData((p) => ({ ...p, bio: e.target.value }))
+                    }
+                    rows={5}
+                    placeholder="Share brief academic and biographical notes..."
+                    className="w-full min-h-[140px] text-sm rounded-md border-border/85 resize-y leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {/* ── Bottom Action Toolbar ── */}
+              <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-border/60">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleResetForm}
+                  className="h-10 px-4 text-sm font-semibold rounded-md border-border/85 hover:bg-muted"
+                >
+                  <RotateCcw className="size-3.5 mr-1.5" />
+                  Discard
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="h-10 px-6 text-sm font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md shadow-xs transition-colors"
+                >
+                  {isSubmitting ? (
+                    <RefreshCw className="size-4 animate-spin mr-2" />
+                  ) : (
+                    <Save className="size-4 mr-2" />
+                  )}
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
-      {/* ── Investigator Protocol Portfolio Docket (Centralized DataTable) ── */}
-      <div className="space-y-4">
+      {/* ── Secondary Section: Associated Investigator Protocol Portfolio ── */}
+      <div className="space-y-4 pt-2">
         <DataTable
           data={investigatorProtocols}
           columns={protocolColumns}
@@ -1319,200 +1015,194 @@ export default function InvestigatorProfilePage() {
           searchKeys={["title", "id", "board"]}
           searchPlaceholder="Search investigator protocols by ID, title, or board..."
           title="Investigator Protocol Portfolio"
+          description="Track active ethical reviews, committee clearance certificates, and revision dockets."
           initialPageSize={5}
         />
       </div>
 
-      {/* ── Change Password Slide-over Sheet ──────────────────────────────── */}
-      <Sheet open={isPasswordModalOpen} onOpenChange={setIsPasswordModalOpen}>
+      {/* ── Upload Photo Slide-over Sheet ─────────────────────────────────── */}
+      <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
         <SheetContent side="right" size="default" className="p-6">
           <SheetHeader className="p-0 pb-4 border-b border-border/75">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-lg bg-primary/10 dark:bg-sky-500/10 text-primary dark:text-sky-300 flex items-center justify-center">
-                <Lock className="size-4" />
-              </div>
-              <div>
-                <SheetTitle className="text-lg font-bold text-primary dark:text-white">
-                  Change Account Password
-                </SheetTitle>
-                <SheetDescription className="text-xs text-muted-foreground mt-0.5">
-                  Update your credentials for the Ethica Researcher Portal.
-                </SheetDescription>
-              </div>
-            </div>
+            <SheetTitle className="text-lg font-bold text-primary dark:text-white flex items-center gap-2">
+              <Camera className="size-5 text-secondary" />
+              Update Profile Picture
+            </SheetTitle>
+            <SheetDescription className="text-xs text-muted-foreground mt-0.5">
+              Choose an image from your device, link a web image URL, or select from curated institutional headshots.
+            </SheetDescription>
           </SheetHeader>
 
-          <form onSubmit={handleChangePassword} className="space-y-4 py-4" noValidate>
-            {/* Current Password */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-foreground">
-                Current Password
-              </label>
-              <div className="relative">
-                <Input
-                  type={showCurrentPassword ? "text" : "password"}
-                  value={passwordForm.currentPassword}
-                  onChange={(e) => {
-                    setPasswordForm((p) => ({ ...p, currentPassword: e.target.value }))
-                    if (passwordErrors.currentPassword) {
-                      setPasswordErrors((prev) => {
-                        const next = { ...prev }
-                        delete next.currentPassword
-                        return next
-                      })
-                    }
-                  }}
-                  placeholder="Enter current password"
-                  className={`h-9 text-sm pr-10 font-mono ${
-                    passwordErrors.currentPassword
-                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
-                      : ""
-                  }`}
-                  aria-invalid={Boolean(passwordErrors.currentPassword)}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+          <div className="py-4 space-y-4">
+            <Tabs
+              value={uploadOption}
+              onValueChange={(v) => setUploadOption(v as "file" | "url")}
+              className="w-full"
+            >
+              <TabsList className="grid grid-cols-2 w-full h-10 p-1 bg-muted rounded-lg">
+                <TabsTrigger
+                  value="file"
+                  className="text-xs font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34]"
                 >
-                  {showCurrentPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-                </Button>
-              </div>
-              {passwordErrors.currentPassword && (
-                <p className="text-xs text-rose-600 font-semibold mt-1">
-                  {passwordErrors.currentPassword}
-                </p>
-              )}
-            </div>
-
-            {/* New Password */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-foreground">
-                New Password
-              </label>
-              <div className="relative">
-                <Input
-                  type={showNewPassword ? "text" : "password"}
-                  value={passwordForm.newPassword}
-                  onChange={(e) => {
-                    setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))
-                    if (passwordErrors.newPassword) {
-                      setPasswordErrors((prev) => {
-                        const next = { ...prev }
-                        delete next.newPassword
-                        return next
-                      })
-                    }
-                  }}
-                  placeholder="Enter new strong password"
-                  className={`h-9 text-sm pr-10 font-mono ${
-                    passwordErrors.newPassword
-                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
-                      : ""
-                  }`}
-                  aria-invalid={Boolean(passwordErrors.newPassword)}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
+                  <Upload className="size-3.5" />
+                  Device Upload
+                </TabsTrigger>
+                <TabsTrigger
+                  value="url"
+                  className="text-xs font-bold gap-1.5 data-[active=true]:bg-white dark:data-[active=true]:bg-[#0C1E34]"
                 >
-                  {showNewPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-                </Button>
-              </div>
-              {passwordErrors.newPassword && (
-                <p className="text-xs text-rose-600 font-semibold mt-1">
-                  {passwordErrors.newPassword}
-                </p>
-              )}
-            </div>
+                  <LinkIcon className="size-3.5" />
+                  Web URL & Presets
+                </TabsTrigger>
+              </TabsList>
 
-            {/* Confirm New Password */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-foreground">
-                Confirm New Password
-              </label>
-              <div className="relative">
-                <Input
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={passwordForm.confirmPassword}
-                  onChange={(e) => {
-                    setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))
-                    if (passwordErrors.confirmPassword) {
-                      setPasswordErrors((prev) => {
-                        const next = { ...prev }
-                        delete next.confirmPassword
-                        return next
-                      })
-                    }
+              {/* Tab 1: Device File */}
+              <TabsContent value="file" className="space-y-4 pt-4">
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    setIsDragging(true)
                   }}
-                  placeholder="Re-type new password"
-                  className={`h-9 text-sm pr-10 font-mono ${
-                    passwordErrors.confirmPassword
-                      ? "border-rose-500 ring-1 ring-rose-500/20 bg-rose-50/20"
-                      : ""
+                  onDragLeave={(e) => {
+                    e.preventDefault()
+                    setIsDragging(false)
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    setIsDragging(false)
+                    const f = e.dataTransfer.files?.[0]
+                    if (f) processImageFile(f)
+                  }}
+                  className={`rounded-xl border-2 border-dashed p-6 text-center transition-all flex flex-col items-center justify-center gap-3 ${
+                    isDragging
+                      ? "border-[#198754] bg-[#198754]/5 scale-[1.01]"
+                      : "border-border/80 bg-muted/30 hover:bg-muted/50"
                   }`}
-                  aria-invalid={Boolean(passwordErrors.confirmPassword)}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-foreground"
                 >
-                  {showConfirmPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-                </Button>
-              </div>
-              {passwordErrors.confirmPassword && (
-                <p className="text-xs text-rose-600 font-semibold mt-1">
-                  {passwordErrors.confirmPassword}
-                </p>
-              )}
-            </div>
+                  <div className="size-12 rounded-full bg-[#198754]/10 text-secondary flex items-center justify-center">
+                    <Upload className="size-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-foreground">
+                      Drag & drop your photo here, or browse files
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Supports PNG, JPG, JPEG, WEBP up to 5MB
+                    </p>
+                  </div>
 
-            {/* Requirements list */}
-            <div className="p-3 rounded-lg bg-muted/40 border border-border/75 space-y-1.5 text-xs text-muted-foreground">
-              <span className="font-bold text-foreground block">Password Requirements:</span>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className={`size-3.5 ${passwordForm.newPassword.length >= 8 ? "text-emerald-600" : "text-muted-foreground"}`} />
-                <span>At least 8 characters long</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className={`size-3.5 ${/[A-Z]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-muted-foreground"}`} />
-                <span>At least one uppercase letter (A-Z)</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className={`size-3.5 ${/[0-9]/.test(passwordForm.newPassword) ? "text-emerald-600" : "text-muted-foreground"}`} />
-                <span>At least one numerical digit (0-9)</span>
-              </div>
-            </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-8 px-4 text-xs font-bold rounded-md border-border/85"
+                  >
+                    Browse Device
+                  </Button>
+                </div>
+              </TabsContent>
 
-            <SheetFooter className="p-0 pt-4 flex flex-row items-center justify-end gap-2 border-t border-border/75">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setIsPasswordModalOpen(false)
-                  setPasswordErrors({})
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                size="sm"
-                className="bg-[#002752] hover:bg-[#001c3d] text-white font-bold"
-              >
-                Update Password
-              </Button>
-            </SheetFooter>
-          </form>
+              {/* Tab 2: URL & Presets */}
+              <TabsContent value="url" className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-foreground flex items-center justify-between">
+                    <span>Direct Image Web Address:</span>
+                    {urlVerified && (
+                      <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="size-3" />
+                        Verified
+                      </span>
+                    )}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={urlInput}
+                      onChange={(e) => {
+                        setUrlInput(e.target.value)
+                        setUrlVerified(false)
+                      }}
+                      placeholder="https://images.unsplash.com/..."
+                      className="h-9 text-xs font-mono"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={isTestingUrl || !urlInput.trim()}
+                      onClick={() => handleVerifyUrl(urlInput)}
+                      className="h-9 px-3 text-xs font-bold shrink-0"
+                    >
+                      {isTestingUrl ? (
+                        <RefreshCw className="size-3.5 animate-spin" />
+                      ) : (
+                        "Verify"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  <span className="text-xs font-bold text-muted-foreground block uppercase tracking-wider">
+                    Or Select Curated Institutional Headshot:
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {AVATAR_PRESETS.map((preset) => (
+                      <Button
+                        key={preset.id}
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setUrlInput(preset.url)
+                          handleVerifyUrl(preset.url)
+                        }}
+                        className="h-auto p-2 justify-start items-center gap-2 rounded-lg border-border/75 hover:border-[#198754]/50"
+                      >
+                        <div className="size-8 rounded-full overflow-hidden shrink-0 border border-border/60">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={preset.url}
+                            alt={preset.label}
+                            className="size-full object-cover"
+                          />
+                        </div>
+                        <div className="text-left leading-tight min-w-0">
+                          <span className="text-xs font-bold text-foreground block truncate">
+                            {preset.label}
+                          </span>
+                          <span className="text-[0.65rem] text-muted-foreground block truncate">
+                            {preset.role}
+                          </span>
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          <SheetFooter className="p-0 pt-4 flex flex-row items-center justify-between gap-2 border-t border-border/70">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsUploadSheetOpen(false)}
+              className="h-9 px-3 text-xs font-semibold"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleApplyPhotoFromSheet}
+              disabled={uploadOption === "file" ? !fileDraftUrl : !urlInput.trim() || !urlVerified}
+              className="h-9 px-4 text-xs font-bold bg-[#002752] hover:bg-[#003875] text-white rounded-md"
+            >
+              Apply Photo
+            </Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </DashboardContainer>

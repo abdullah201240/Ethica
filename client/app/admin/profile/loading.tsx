@@ -1,10 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { DataTableSkeleton } from "@/components/ui/data-table"
 
-export default function ProfileLoading() {
+export default function AdminProfileLoading() {
   return (
-    <div className="space-y-6 sm:space-y-8 select-none w-full" aria-busy="true" aria-label="Loading profile">
-      {/* Main Profile 2-Column Card Skeleton */}
+    <div className="space-y-6 sm:space-y-8 select-none w-full" aria-busy="true" aria-label="Loading administrator profile">
+      {/* Main Admin Profile 2-Column Card Skeleton */}
       <div className="bg-card border border-border/75 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Account Management */}
@@ -72,9 +72,9 @@ export default function ProfileLoading() {
         </div>
       </div>
 
-      {/* Associated Protocols Docket Skeleton */}
+      {/* Device Sessions Docket Skeleton */}
       <DataTableSkeleton
-        columnCount={5}
+        columnCount={7}
         rowCount={4}
         showHeader={true}
         showToolbar={true}
